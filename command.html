@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob: data:;">
+  <meta name="description" content="Maharashtra Police — Vehicle Intelligence & Movement Tracking System (VIMS). Integrated Command & Control Centre (Pune Command).">
+  <title>Maharashtra Police — VIMS ICCC Command Centre</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="tricolor-strip" role="presentation"></div>
+  <header class="sys-header" role="banner">
+    <div class="sys-brand">
+      <div class="sys-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="#FF9933" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="12" r="1.4" fill="#FFFFFF"/>
+          <g stroke="#FFFFFF" stroke-width="0.6">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.3" y1="5.3" x2="18.7" y2="18.7"/>
+            <line x1="18.7" y1="5.3" x2="5.3" y2="18.7"/>
+            <line x1="7.6" y1="3.9" x2="16.4" y2="20.1"/>
+            <line x1="16.4" y1="3.9" x2="7.6" y2="20.1"/>
+            <line x1="3.9" y1="7.6" x2="20.1" y2="16.4"/>
+            <line x1="3.9" y1="16.4" x2="20.1" y2="7.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sys-brand-textblock">
+        <span class="sys-brand-tagline">Government of Maharashtra</span>
+        <span class="sys-brand-name" data-i18n="sys_title">Maharashtra Police — VIMS ICCC</span>
+        <span class="sys-brand-sub" data-i18n="sys_subtitle">Pune City Police Command</span>
+      </div>
+    </div>
+    <div class="sys-meta">
+      <div class="sys-clock" id="istClock" aria-live="off">--:--:-- IST</div>
+      <div class="sys-status">
+        <span class="dot" id="wsStatusDot" role="presentation"></span>
+        <span id="nodeStatusLabel" data-i18n="sys_status_active">VIMS Node: Active</span>
+      </div>
+      <span class="sys-classification">Restricted &middot; Official Use Only</span>
+      <button class="sys-lang-toggle" id="langToggle" aria-label="Toggle language">EN | हि</button>
+      <div class="user-profile" id="userProfileComponent">
+        <select class="user-rank-dropdown" id="officerRankSelect" aria-label="Maharashtra Police Officer Profile and Rank">
+          <option value="DGP">DGP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="CP">CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="Joint CP">Joint CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="Addl. CP">Addl. CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="DCP">DCP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="ACP">ACP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PI" selected>PI Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="API">API Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PSI">PSI Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="ASI">ASI Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="HC">HC Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PC">PC Arjun Deshmukh [Badge: MH-PI-4501]</option>
+        </select>
+      </div>
+    </div>
+  </header>
+  <div class="dashboard-wrap">
+    <aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Police Operations">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Operations</div>
+        <a class="sidebar-link active" data-view="command-centre" id="nav-command-centre" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span data-i18n="nav_command_centre">Command Centre</span>
+        </a>
+        <a class="sidebar-link" data-view="vehicle-lookup" id="nav-vehicle-lookup" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="nav_vehicle_lookup">Vehicle Registry Query</span>
+        </a>
+        <a class="sidebar-link" data-view="video-ingest" id="nav-video-ingest" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span data-i18n="nav_video_ingest">Video Ingest & CCTV</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Surveillance & Tracking</div>
+        <a class="sidebar-link" data-view="detection-log" id="nav-detection-log" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span data-i18n="nav_detection_log">Detection Trail</span>
+        </a>
+        <a class="sidebar-link" data-view="camera-network" id="nav-camera-network" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span data-i18n="nav_camera_network">Junction Cameras</span>
+        </a>
+        <a class="sidebar-link" data-view="watchlist" id="nav-watchlist" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span data-i18n="nav_watchlist">Active Watchlist</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-link" id="sidebarSignOut" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span data-i18n="sign_out">Sign Out</span>
+        </a>
+      </div>
+    </aside>
+    <main class="main" role="main">
+      <section class="view active" id="view-command-centre" role="region" aria-label="Command Centre Overview">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_command_centre">Command Centre</h1>
+          <p id="commandUnitSubtitle" data-i18n="command_unit_subtitle">Pune City Police — Traffic Branch & Central Surveillance Desk</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-icon blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+              <div class="stat-val" id="statLookups">482</div>
+              <div class="stat-lbl" data-i18n="lbl_vahan_queries">VAHAN Registry Queries</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon red" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <div class="stat-val" id="statStolenAlerts">3</div>
+              <div class="stat-lbl" data-i18n="lbl_stolen_bulletins">Stolen Vehicle Bulletins</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon amber" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+              <div class="stat-val" id="statWatchlistHits">4</div>
+              <div class="stat-lbl" data-i18n="lbl_watchlist_hits">Active Watchlist Hits</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon green" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div>
+              <div class="stat-val" id="statActiveNodes">10 / 10</div>
+              <div class="stat-lbl" data-i18n="lbl_cameras_online">Junction Cameras Online</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <span data-i18n="card_quick_controls">Quick Controls</span>
+          </div>
+          <div class="card-body">
+            <div class="flex gap-10">
+              <button class="btn btn-primary" data-action="goto-lookup" data-i18n-btn="btn_goto_lookup">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Query Vehicle Registry
+              </button>
+              <button class="btn btn-outline" data-action="goto-ingest" data-i18n-btn="btn_goto_ingest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Ingest CCTV Footage
+              </button>
+              <button class="btn btn-outline" data-action="goto-watchlist" data-i18n-btn="btn_goto_watchlist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Active Watchlist
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <span data-i18n="card_priority_alerts">Recent Priority Alerts</span>
+            <span class="badge badge-red" role="status" data-i18n="badge_live_feed">Live Feed</span>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Priority Discrepancy Alerts">
+              <caption class="hidden">Live surveillance alerts and vehicle discrepancies</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_time_ist">Time (IST)</th>
+                  <th scope="col" data-i18n="th_junction_node">Junction Node</th>
+                  <th scope="col" data-i18n="th_plate_number">Number Plate</th>
+                  <th scope="col" data-i18n="th_observed_vehicle">Observed Vehicle</th>
+                  <th scope="col" data-i18n="th_vahan_record">VAHAN Record</th>
+                  <th scope="col" data-i18n="th_operational_status">Operational Status</th>
+                  <th scope="col" data-i18n="th_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="commandAlertsBody">
+                <tr><td colspan="10" class="text-center text-muted">No active records found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card" id="atscTelemetryCard">
+          <div class="card-hdr">
+            <span data-i18n="card_atsc_telemetry">Live Junction Telemetry: ATSC Node-01</span>
+            <span class="badge" id="atscConnBadge" style="background:var(--alert-amber-bg);color:var(--alert-amber);">Connecting…</span>
+          </div>
+          <div class="card-body">
+            <div class="atsc-phase-row">
+              <div class="atsc-phase-block">
+                <div class="atsc-phase-label" data-i18n="lbl_phase_status">Current Phase Status</div>
+                <div class="atsc-phase-value" id="atscPhaseStatus">—</div>
+              </div>
+              <div class="atsc-phase-block">
+                <div class="atsc-phase-label" data-i18n="lbl_phase_elapsed">Phase Elapsed Time</div>
+                <div class="atsc-phase-value font-mono" id="atscElapsedTime">0s</div>
+              </div>
+              <div class="atsc-phase-block">
+                <div class="atsc-phase-label" data-i18n="lbl_min_green_remain">Min Green Remaining</div>
+                <div class="atsc-phase-value font-mono" id="atscMinGreenRemain">—</div>
+              </div>
+              <div class="atsc-phase-block">
+                <div class="atsc-phase-label" data-i18n="lbl_signal_cycle">Signal Cycle</div>
+                <div class="atsc-phase-value font-mono" id="atscCycleCount">0</div>
+              </div>
+            </div>
+            <div class="atsc-corridors">
+              <div class="atsc-corridor">
+                <div class="atsc-corridor-hdr">
+                  <span class="atsc-corridor-name" data-i18n="corridor_ns_name">North–South Corridor</span>
+                  <div class="atsc-signal-cluster" id="atscSignalNS" aria-label="North-South signal state">
+                    <span class="atsc-lamp" data-state="RED"></span>
+                    <span class="atsc-lamp" data-state="AMBER"></span>
+                    <span class="atsc-lamp" data-state="GREEN"></span>
+                  </div>
+                </div>
+                <div class="atsc-gauge-wrap">
+                  <div class="atsc-gauge-label">
+                    <span data-i18n="lbl_pcu_demand">PCU Demand</span>
+                    <span class="font-mono" id="atscNsPcuVal">0</span>
+                  </div>
+                  <div class="atsc-gauge-track">
+                    <div class="atsc-gauge-fill" id="atscNsPcuBar" role="meter" aria-valuenow="0" aria-valuemin="0" aria-valuemax="80" aria-label="North-South Corridor PCU Demand" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="atsc-corridor">
+                <div class="atsc-corridor-hdr">
+                  <span class="atsc-corridor-name" data-i18n="corridor_ew_name">East–West Corridor</span>
+                  <div class="atsc-signal-cluster" id="atscSignalEW" aria-label="East-West signal state">
+                    <span class="atsc-lamp" data-state="RED"></span>
+                    <span class="atsc-lamp" data-state="AMBER"></span>
+                    <span class="atsc-lamp" data-state="GREEN"></span>
+                  </div>
+                </div>
+                <div class="atsc-gauge-wrap">
+                  <div class="atsc-gauge-label">
+                    <span data-i18n="lbl_pcu_demand">PCU Demand</span>
+                    <span class="font-mono" id="atscEwPcuVal">0</span>
+                  </div>
+                  <div class="atsc-gauge-track">
+                    <div class="atsc-gauge-fill" id="atscEwPcuBar" role="meter" aria-valuenow="0" aria-valuemin="0" aria-valuemax="80" aria-label="East-West Corridor PCU Demand" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="atsc-video-section">
+              <div class="atsc-video-hdr">
+                <div class="atsc-video-title" data-i18n="card_camera_feed">Junction Camera Feed & Traffic Regulation Input</div>
+                <div class="flex gap-8 items-center">
+                  <span class="badge" id="atscActiveFeedBadge" style="background:var(--alert-blue-bg);color:var(--alert-blue);" data-i18n="badge_predownloaded">Pre-Downloaded Feed</span>
+                  <span class="badge" id="atscRegulationModeBadge" style="background:var(--alert-green-bg);color:var(--alert-green);" data-i18n="badge_adaptive_atsc">Adaptive ATSC</span>
+                </div>
+              </div>
+              <div class="atsc-feed-toolbar">
+                <div class="form-group" style="margin-bottom:0; flex:1; min-width:220px;">
+                  <label class="form-label" for="atscFeedSourceSelect">Camera Feed Input Source</label>
+                  <select class="form-input" id="atscFeedSourceSelect">
+                    <option value="pre_downloaded" selected>Schematic Traffic Simulation (Virtual Grid)</option>
+                    <option value="local_file">Upload Local Video (.mp4, .webm) — AI Detection</option>
+                    <option value="mjpeg_stream">Remote Edge Stream (MJPEG / RTSP) — Edge YOLO</option>
+                    <option value="webcam">Local Device Camera — Real-time Detection</option>
+                  </select>
+                </div>
+                <div class="form-group atsc-feed-subcontrol" id="atscPredownloadGroup" style="margin-bottom:0; flex:1.2; min-width:240px;">
+                  <label class="form-label" for="atscScenarioSelect">Simulated Traffic Pattern (schematic only, not camera data)</label>
+                  <select class="form-input" id="atscScenarioSelect">
+                    <option value="scen_ns_dense" selected>Peak N–S Congestion (High NS PCU)</option>
+                    <option value="scen_ew_dense">Peak E–W Rush Hour (High EW PCU)</option>
+                    <option value="scen_balanced">Balanced Equilibrium Flow</option>
+                    <option value="scen_emergency">Emergency Ambulance Inbound — Priority Wave</option>
+                  </select>
+                </div>
+                <div class="form-group atsc-feed-subcontrol hidden" id="atscLocalFileGroup" style="margin-bottom:0; flex:1.2; min-width:240px;">
+                  <label class="form-label">Select Local Video for Real Detection</label>
+                  <div class="flex gap-6 items-center flex-wrap">
+                    <button type="button" class="btn btn-outline btn-sm" id="btnBrowseLocalVideo">
+                      Browse .mp4 / .webm
+                    </button>
+                    <input type="file" id="atscLocalFileInput" accept="video/mp4,video/webm,video/x-m4v,video/*" class="hidden">
+                    <span class="text-xs text-muted" id="atscLocalFileLabel">No file selected</span>
+                    <button type="button" class="btn btn-sm btn-outline" id="btnScanEntireVideo" disabled>
+                      Scan Entire Video (full-file analysis)
+                    </button>
+                  </div>
+                  <div class="hidden" id="atscScanProgressWrap" style="margin-top:8px;">
+                    <div class="atsc-gauge-track"><div class="atsc-gauge-fill" id="atscScanProgressBar" style="width:0%"></div></div>
+                    <div class="text-xs text-muted" id="atscScanProgressText">Scanning…</div>
+                  </div>
+                </div>
+                <div class="form-group atsc-feed-subcontrol hidden" id="atscRemoteStreamGroup" style="margin-bottom:0; flex:1.2; min-width:240px;">
+                  <label class="form-label" for="atscStreamUrlInput">MJPEG / RTSP Stream Endpoint</label>
+                  <div class="flex gap-6 items-center">
+                    <input type="text" class="form-input font-mono text-xs" id="atscStreamUrlInput" value="http://localhost:8000/api/junction/video-feed" placeholder="http://... or rtsp://...">
+                    <button type="button" class="btn btn-outline btn-sm" id="btnConnectStream">Connect</button>
+                  </div>
+                </div>
+                <div class="form-group atsc-feed-subcontrol hidden" id="atscWebcamGroup" style="margin-bottom:0; flex:1.2; min-width:240px;">
+                  <label class="form-label">Device Video Capture</label>
+                  <div class="flex gap-6 items-center">
+                    <button type="button" class="btn btn-outline btn-sm" id="btnStartWebcam">Start Device Camera</button>
+                    <span class="text-xs text-muted" id="atscWebcamStatus">Camera Idle</span>
+                  </div>
+                </div>
+              </div>
+              <div class="atsc-video-frame" id="atscVideoFrame">
+                <img id="atscMjpegStream" src="" alt="ATSC junction camera feed" style="display:none;">
+                <video id="atscVideoPlayer" autoplay loop muted playsinline style="display:none;"></video>
+                <canvas id="atscDetectionCanvas" width="640" height="360"></canvas>
+                <div class="atsc-video-offline" id="atscVideoOffline" style="display:none;">Feed Offline</div>
+                <div class="atsc-hud-top-left">
+                  <span class="atsc-hud-dot"></span>
+                  <span id="atscHudNode">CAM-01 [PUNE-ICCC]</span> |
+                  <span id="atscHudSource">LOCAL_PRE_DOWNLOADED</span> |
+                  <span id="atscHudFps">25 FPS</span>
+                </div>
+                <div class="atsc-hud-top-right" id="atscHudPcu">
+                  PCU: NS 0.0 | EW 0.0
+                </div>
+                <div class="atsc-hud-bottom-left" id="atscHudTimestamp">
+                  --:--:-- IST
+                </div>
+              </div>
+              <div class="hidden" id="atscScanResultsPanel" style="margin-top:10px;"></div>
+              <div class="atsc-regulation-bar">
+                <div class="atsc-regulation-label">Traffic Regulation Actuation (Police Signal Override):</div>
+                <div class="atsc-regulation-actions">
+                  <button type="button" class="btn btn-sm btn-outline active" id="btnRegAuto" title="Adaptive density algorithm governs signals">
+                    AUTO ATSC (Adaptive Density)
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" id="btnRegForceNs" title="Force North-South Corridor Green">
+                    FORCE N–S CORRIDOR
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" id="btnRegForceEw" title="Force East-West Corridor Green">
+                    FORCE E–W CORRIDOR
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" id="btnRegEmergency" title="Trigger All-Red clear and emergency wave">
+                    EMERGENCY ALL-RED CLEAR
+                  </button>
+                </div>
+                <div class="text-xs text-muted" id="atscRegulationStatusMsg">
+                  Regulation status: Automated density feedback active.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+      <section class="view" id="view-vehicle-lookup" role="region" aria-label="Vehicle Registry Verification">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_vehicle_lookup">Vehicle Registry Query</h1>
+          <p>Query centralized VAHAN database across Maharashtra and national transport portals</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>National Transport Registry Search</span>
+            <span class="text-xs text-muted" id="rateQuotaLabel">Quota: 10 / 10 remaining</span>
+          </div>
+          <div class="card-body">
+            <form id="vehicleLookupForm" novalidate>
+              <div class="lookup-bar">
+                <div class="form-group">
+                  <label class="form-label" for="lookupPlateInput">Vehicle Registration Number</label>
+                  <input class="form-input font-mono" type="text" id="lookupPlateInput" placeholder="e.g. MH 12 DE 1433 or 22BH1234A" maxlength="14" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary" id="lookupSubmitBtn" data-i18n="btn_query_registry">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Query VAHAN Registry
+                </button>
+              </div>
+              <div id="lookupValidationError" class="form-error hidden" role="alert" aria-live="polite"></div>
+            </form>
+
+            <div class="flex gap-10 mt-12 items-center">
+              <span class="text-xs text-muted">Pune Context Samples:</span>
+              <button type="button" class="btn btn-outline btn-sm test-plate-btn" data-plate="MH12DE1433">MH 12 DE 1433 (Pending Challan)</button>
+              <button type="button" class="btn btn-outline btn-sm test-plate-btn" data-plate="DL04CAF5571">DL 04 C AF 5571 (Stolen Bulletin)</button>
+              <button type="button" class="btn btn-outline btn-sm test-plate-btn" data-plate="MH14EU4092">MH 14 EU 4092 (Creta - Clear)</button>
+              <button type="button" class="btn btn-outline btn-sm test-plate-btn" data-plate="22BH1234A">22 BH 1234 A (Bharat Series)</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="lookupResultContainer" class="hidden"></div>
+      </section>
+      <section class="view" id="view-video-ingest" role="region" aria-label="Video Ingest and Edge RTSP Streaming">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_video_ingest">Video Ingest & CCTV Stream</h1>
+          <p>Dissect traffic junction recording (.mp4) or bind edge camera RTSP stream</p>
+        </div>
+        <div class="card mb-12">
+          <div class="card-hdr">
+            <span>Pune Traffic CCTV Stream Binding (NVDEC Hardware Decode)</span>
+            <span class="badge badge-blue">RTSP Pipeline</span>
+          </div>
+          <div class="card-body">
+            <form id="rtspConfigForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="rtspJunctionSelect">Junction Camera Node</label>
+                  <select class="form-input" id="rtspJunctionSelect">
+                    <option value="CAM-01">CAM-01: Swargate Bus Depot Junction</option>
+                    <option value="CAM-02">CAM-02: FC Road — Goodluck Chowk</option>
+                    <option value="CAM-03" selected>CAM-03: JM Road — Balgandharva Chowk</option>
+                    <option value="CAM-05">CAM-05: Hinjewadi Phase-1 Circle</option>
+                    <option value="CAM-08">CAM-08: Airport Road 509 Junction</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rtspUrlInput">RTSP Stream URI</label>
+                  <input class="form-input font-mono" type="text" id="rtspUrlInput" value="rtsp://192.168.1.120:554/live/traffic_feed" placeholder="rtsp://camera-ip:554/stream">
+                </div>
+              </div>
+              <div class="flex gap-10 items-center">
+                <button type="submit" class="btn btn-outline btn-sm" id="btnBindRtsp">
+                  Bind Camera Stream to Edge Daemon
+                </button>
+                <span id="rtspBindStatus" class="text-xs text-muted">Ready</span>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <span>Recorded CCTV Incident Footage Dissection (.mp4)</span>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" id="videoUploadZone" role="button" tabindex="0" aria-label="Upload incident recording">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <h3 id="uploadZoneTitle">Select or Drag Traffic CCTV Recording (.mp4)</h3>
+              <p id="uploadZoneSub">Hardware accelerated NVDEC decode | 8 FPS sampling</p>
+            </div>
+            <input type="file" id="videoFileInput" accept="video/mp4,video/x-m4v,video/*" class="hidden" aria-hidden="true">
+
+            <div class="mt-12 text-center" id="runPipelineAction" style="display:none;">
+              <button class="btn btn-primary" id="btnRunPipeline" data-i18n="btn_execute_pipeline">
+                Execute 5-Stage Detection Pipeline
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card hidden" id="pipelineSection">
+          <div class="card-hdr">
+            <span>Detection Lifecycle</span>
+            <span id="pipelineStatusText" class="text-xs text-muted">Ready</span>
+          </div>
+          <div class="card-body">
+            <div class="pipeline" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+              <div class="pipeline-step" id="step-0">
+                <div class="step-num">1</div>
+                <div class="step-name">Frame Ingestion<br>(8 FPS)</div>
+              </div>
+              <div class="pipeline-step" id="step-1">
+                <div class="step-num">2</div>
+                <div class="step-name">Vehicle<br>Localization</div>
+              </div>
+              <div class="pipeline-step" id="step-2">
+                <div class="step-num">3</div>
+                <div class="step-name">ANPR Plate<br>OCR</div>
+              </div>
+              <div class="pipeline-step" id="step-3">
+                <div class="step-num">4</div>
+                <div class="step-name">VAHAN<br>Cross-Reference</div>
+              </div>
+              <div class="pipeline-step" id="step-4">
+                <div class="step-num">5</div>
+                <div class="step-name">Discrepancy<br>Verdict</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="pipelineOutputContainer" class="hidden"></div>
+      </section>
+      <section class="view" id="view-detection-log" role="region" aria-label="Detection Audit Trail">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_detection_log">Detection Trail (Audit Log)</h1>
+          <p>Optical ANPR readings across Pune City CCTV camera network</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Junction Filter</span>
+            <div class="flex gap-10 items-center">
+              <select class="form-input" id="logFilterCamera" style="padding:4px 8px; font-size:var(--font-xs); width:160px;">
+                <option value="ALL">All Junction Nodes</option>
+                <option value="CAM-01">CAM-01 (Swargate)</option>
+                <option value="CAM-02">CAM-02 (FC Road)</option>
+                <option value="CAM-03">CAM-03 (JM Road)</option>
+                <option value="CAM-05">CAM-05 (Hinjewadi)</option>
+                <option value="CAM-08">CAM-08 (Airport Rd)</option>
+              </select>
+              <select class="form-input" id="logFilterVerdict" style="padding:4px 8px; font-size:var(--font-xs); width:160px;">
+                <option value="ALL">All Statuses</option>
+                <option value="VERIFIED">Registry Verified</option>
+                <option value="MISMATCH">Registry Mismatch</option>
+                <option value="STOLEN">Stolen Vehicle Alert</option>
+                <option value="CHALLAN">Pending Challan</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Detection Audit Log Table">
+              <thead>
+                <tr>
+                  <th scope="col">Time (IST)</th>
+                  <th scope="col">Junction Node</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Plate Number</th>
+                  <th scope="col">Vehicle Silhouette</th>
+                  <th scope="col">Observed Color</th>
+                  <th scope="col">Registry Record</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="detectionLogBody">
+                <tr><td colspan="10" class="text-center text-muted">No active records found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-camera-network" role="region" aria-label="Camera Network">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_camera_network">Junction Cameras (Pune City CCTV Grid)</h1>
+          <p>Active traffic junction optical sensors and edge ANPR processors</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Camera Nodes Telemetry</span>
+            <span class="badge badge-green" role="status">10 / 10 Connected</span>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Camera Telemetry Table">
+              <thead>
+                <tr>
+                  <th scope="col">Node ID</th>
+                  <th scope="col">Junction / Corridor</th>
+                  <th scope="col">Zone</th>
+                  <th scope="col">Resolution & FPS</th>
+                  <th scope="col">Edge Hardware</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="cameraNetworkBody">
+                <tr><td colspan="10" class="text-center text-muted">No active records found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-watchlist" role="region" aria-label="Active Watchlist">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_watchlist">Active Watchlist & Stolen Alerts</h1>
+          <p>Registered police bulletins for stolen vehicles, duplicate plates, and intercept warrants</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Police Hotlist Bulletins (Pune Police Commissionerate)</span>
+            <span class="badge badge-red">Active Priority</span>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Active Watchlist Table">
+              <thead>
+                <tr>
+                  <th scope="col">Bulletin ID</th>
+                  <th scope="col">Vehicle Plate</th>
+                  <th scope="col">Registered Model</th>
+                  <th scope="col">Police Station</th>
+                  <th scope="col">FIR / Reference</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="watchlistBody">
+                <tr><td colspan="10" class="text-center text-muted">No active records found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <div class="toast-wrap" id="toastContainer" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script src="js/sanitize.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/telemetry_socket.js"></script>
+  <script src="js/command.js"></script>
+
+  <footer class="gov-footer">
+    <div class="gov-footer-left">
+      <span>&copy; Government of Maharashtra. Content owned by Pune City Police Commissionerate.</span>
+    </div>
+    <div class="gov-footer-links">
+      <span>Best viewed in latest Chrome / Firefox / Edge, 1280x800 resolution</span>
+      <span class="gov-footer-ref" id="footerRefId">SYS-REF: VIMS-ICCC-2026</span>
+    </div>
+  </footer>
+</body>
+</html>

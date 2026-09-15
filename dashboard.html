@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob: data:;">
+  <meta name="description" content="Maharashtra Police — Vehicle Intelligence & Movement Tracking System (VIMS). Integrated Command & Control Centre (Pune Command).">
+  <title>Maharashtra Police — VIMS ICCC Command Centre</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="tricolor-strip" role="presentation"></div>
+
+  <!-- ═══ SYSTEM HEADER ═══ -->
+  <header class="sys-header" role="banner">
+    <div class="sys-brand">
+      <div class="sys-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="#FF9933" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="12" r="1.4" fill="#FFFFFF"/>
+          <g stroke="#FFFFFF" stroke-width="0.6">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.3" y1="5.3" x2="18.7" y2="18.7"/>
+            <line x1="18.7" y1="5.3" x2="5.3" y2="18.7"/>
+            <line x1="7.6" y1="3.9" x2="16.4" y2="20.1"/>
+            <line x1="16.4" y1="3.9" x2="7.6" y2="20.1"/>
+            <line x1="3.9" y1="7.6" x2="20.1" y2="16.4"/>
+            <line x1="3.9" y1="16.4" x2="20.1" y2="7.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sys-brand-textblock">
+        <span class="sys-brand-tagline" data-i18n="sys_tagline">Vehicle Intelligence & Movement Tracking System</span>
+        <span class="sys-brand-name" data-i18n="sys_title">VIMS ICCC</span>
+        <span class="sys-brand-sub" data-i18n="sys_subtitle">INTEGRATED COMMAND & CONTROL CENTER</span>
+      </div>
+    </div>
+    <div class="sys-meta">
+      <div class="sys-clock" id="istClock" aria-live="off">--:--:-- IST</div>
+      <div class="sys-status">
+        <span class="dot" id="wsStatusDot" role="presentation"></span>
+        <span id="nodeStatusLabel" data-i18n="sys_status_secure">Secure</span>
+      </div>
+      <button class="sys-lang-toggle" id="langToggle" aria-label="Toggle language">EN | हि</button>
+      <div class="user-profile" id="userProfileComponent">
+        <div class="user-avatar" id="userAvatarInitial">RS</div>
+        <select class="user-rank-dropdown" id="officerRankSelect" aria-label="Officer Profile">
+          <option value="DGP">DGP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="CP">CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="Joint CP">Joint CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="Addl. CP">Addl. CP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="DCP">DCP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="ACP">ACP Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PI" selected>Officer R. Sharma — Inspector</option>
+          <option value="API">API Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PSI">PSI Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="ASI">ASI Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="HC">HC Arjun Deshmukh [Badge: MH-PI-4501]</option>
+          <option value="PC">PC Arjun Deshmukh [Badge: MH-PI-4501]</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-wrap">
+    <!-- ═══ LEFT SIDEBAR ═══ -->
+    <aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Operations">
+      <div class="sidebar-section">
+        <a class="sidebar-link active" data-view="command-centre" id="nav-command-centre" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.5-6.5l-2.8 2.8m-7.4 7.4l-2.8 2.8m0-13l2.8 2.8m7.4 7.4l2.8 2.8"/></svg>
+          <span data-i18n="nav_live_tracking">Live Tracking</span>
+        </a>
+        <a class="sidebar-link" data-view="diff-analysis" id="nav-diff-analysis" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/><path d="M10 8h4M10 16h4"/></svg>
+          <span data-i18n="nav_diff_analysis">Diff Analysis</span>
+        </a>
+        <a class="sidebar-link" data-view="fleet-overview" id="nav-fleet-overview" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span data-i18n="nav_fleet_overview">Fleet Overview</span>
+        </a>
+        <a class="sidebar-link" data-view="incident-logs" id="nav-incident-logs" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span data-i18n="nav_incident_logs">Incident Logs</span>
+        </a>
+        <a class="sidebar-link" data-view="route-mgmt" id="nav-route-mgmt" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="nav_route_mgmt">Route Mgmt</span>
+        </a>
+        <a class="sidebar-link" data-view="asset-database" id="nav-asset-database" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="nav_asset_database">Asset Database</span>
+        </a>
+        <a class="sidebar-link" data-view="staff" id="nav-staff" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span data-i18n="nav_staff">Staff</span>
+        </a>
+        <a class="sidebar-link" data-view="system-logs" id="nav-system-logs" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span data-i18n="nav_system_logs">System Logs</span>
+        </a>
+      </div>
+
+      <!-- Map Legend -->
+      <div class="sidebar-legend">
+        <div class="legend-item"><div class="legend-dot green"></div><span data-i18n="legend_active">Active</span></div>
+        <div class="legend-item"><div class="legend-dot red"></div><span data-i18n="legend_alert">Alert</span></div>
+        <div class="legend-item"><div class="legend-dot amber"></div><span data-i18n="legend_warning">Warning</span></div>
+      </div>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-link" id="sidebarSignOut" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span data-i18n="sign_out">Sign Out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="main" role="main">
+
+      <!-- ──── COMMAND CENTRE (DASHBOARD VIEW) ──── -->
+      <section class="view active" id="view-command-centre" role="region" aria-label="Command Centre Dashboard">
+        <div class="dash-grid">
+
+          <!-- LEFT: Single Junction Minimap (2 Perpendicular Lanes) -->
+          <div class="map-area">
+            <div class="fleet-map-card junction-minimap-card">
+              <div class="fleet-map-hdr junction-map-hdr">
+                <div class="junction-title-group">
+                  <span class="fleet-map-title" data-i18n="map_title">SINGLE JUNCTION MINIMAP (2 PERPENDICULAR LANES)</span>
+                  <span class="junction-badge" id="junctionNodeBadge" data-i18n="junction_node">JUNC-01 CENTRAL</span>
+                  <span class="junction-mode-badge" id="junctionModeBadge">● AUTO ATSC</span>
+                </div>
+                <div class="junction-toolbar-actions">
+                  <button class="junction-act-btn active" id="btnJunctionAuto" data-i18n="btn_auto" title="Resume adaptive ATSC density balancing">AUTO ATSC</button>
+                  <button class="junction-act-btn" id="btnJunctionForceL1" data-i18n="btn_force_lane_1" title="Flow Lane 1 (NS) and Stop Lane 2 (EW)">FLOW L1 (STOP L2)</button>
+                  <button class="junction-act-btn" id="btnJunctionForceL2" data-i18n="btn_force_lane_2" title="Flow Lane 2 (EW) and Stop Lane 1 (NS)">FLOW L2 (STOP L1)</button>
+                  <button class="junction-act-btn danger" id="btnJunctionAllRed" data-i18n="btn_all_red" title="Emergency All-Red: Stop both lanes">ALL RED (STOP ALL)</button>
+                </div>
+              </div>
+
+              <div class="fleet-map-canvas junction-canvas-container" id="fleetMapCanvas">
+                <!-- Background Grid -->
+                <div class="map-grid"></div>
+
+                <!-- SVG for 2 Perpendicular Lanes: Lane 1 (NS) & Lane 2 (EW) -->
+                <div class="map-roads junction-roads-layer">
+                  <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="roadAsphaltV" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#0a0a0c"/>
+                        <stop offset="50%" stop-color="#141418"/>
+                        <stop offset="100%" stop-color="#0a0a0c"/>
+                      </linearGradient>
+                      <linearGradient id="roadAsphaltH" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#0a0a0c"/>
+                        <stop offset="50%" stop-color="#141418"/>
+                        <stop offset="100%" stop-color="#0a0a0c"/>
+                      </linearGradient>
+                      <pattern id="junctionBoxHatch" width="16" height="16" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1.5" />
+                      </pattern>
+                    </defs>
+
+                    <!-- Surrounding terrain & sidewalk blocks (Pure OLED Black) -->
+                    <rect x="0" y="0" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+                    <rect x="448" y="0" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+                    <rect x="0" y="218" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+                    <rect x="448" y="218" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+                    <!-- ══ LANE 1: NORTH-SOUTH PERPENDICULAR ROAD (Vertical) ══ -->
+                    <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+                    <!-- Concrete Curb Edges -->
+                    <line x1="352" y1="0" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="352" y1="218" x2="352" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+
+                    <!-- Lane 1 Center divider (dashed yellow) -->
+                    <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+                    <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+
+                    <!-- Lane 1 Sub-Lane Dividers (Dashed White - 2 Vehicles per lane, both incoming & outgoing) -->
+                    <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+                    <!-- ══ LANE 2: EAST-WEST PERPENDICULAR ROAD (Horizontal) ══ -->
+                    <rect x="0" y="122" width="800" height="96" fill="url(#roadAsphaltH)"/>
+                    <!-- Concrete Curb Edges -->
+                    <line x1="0" y1="122" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+                    <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+
+                    <!-- Lane 2 Center divider (dashed yellow) -->
+                    <line x1="0" y1="170" x2="335" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+                    <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+
+                    <!-- Lane 2 Sub-Lane Dividers (Dashed White - 2 Vehicles per lane, both incoming & outgoing) -->
+                    <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="0" y1="194" x2="335" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                    <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+                    <!-- ══ CENTER JUNCTION INTERSECTION BOX ══ -->
+                    <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
+                    <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+                    <!-- ══ PEDESTRIAN CROSSWALKS (Zebra Stripes) ══ -->
+                    <!-- North Zebra -->
+                    <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                      <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
+                      <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                    </g>
+                    <!-- South Zebra -->
+                    <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                      <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
+                      <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
+                    </g>
+                    <!-- West Zebra -->
+                    <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                      <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
+                      <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
+                    </g>
+                    <!-- East Zebra -->
+                    <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                      <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
+                      <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+                    </g>
+
+                    <!-- ══ STOP LINES ══ -->
+                    <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/><!-- North approach stop line -->
+                    <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/><!-- South approach stop line -->
+                    <line x1="350" y1="170" x2="350" y2="218" stroke="#ffffff" stroke-width="3.5"/><!-- West approach stop line -->
+                    <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/><!-- East approach stop line -->
+
+                    <!-- ══ DIRECTIONAL ARROWS ON ROAD ══ -->
+                    <path d="M376 75 L376 50 M372 58 L376 48 L380 58" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M424 265 L424 290 M420 282 L424 292 L428 282" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M230 194 L255 194 M247 190 L257 194 L247 198" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M570 146 L545 146 M553 142 L543 146 L553 150" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                    <!-- ══ TRAFFIC SIGNALS (4 INTERSECTION HEADS SITUATED OUTSIDE ROADWAY ON SIDEWALK) ══ -->
+                    <!-- North Signal (governs Lane 1 Southbound, mounted on sidewalk to the west of road x=352) -->
+                    <rect x="324" y="68" width="4" height="54" rx="1.5" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+                    <line x1="328" y1="92" x2="334" y2="92" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="326" cy="122" r="3.5" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                    <g id="sigHeadNorth" class="signal-group" transform="translate(328, 68)">
+                      <rect x="0" y="0" width="18" height="50" rx="3" fill="#0b1120" stroke="#334155" stroke-width="1.2"/>
+                      <circle id="sigLensN_R" cx="9" cy="7" r="4" fill="#450a0a" class="sig-lens red"/>
+                      <circle id="sigLensN_A" cx="9" cy="19" r="4" fill="#451a03" class="sig-lens amber"/>
+                      <circle id="sigLensN_G" cx="9" cy="31" r="4" fill="#052e16" class="sig-lens green"/>
+                      <!-- Auxiliary Left/Right Green Turn Arrow Indicators -->
+                      <g id="sigLensN_ArrowL" class="sig-lens sig-arrow" title="Left Turn Protected Filter">
+                        <circle cx="5.2" cy="42" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M6.2 40.5 L4.5 42 L6.2 43.5 M4.7 42 L6.7 42" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                      <g id="sigLensN_ArrowR" class="sig-lens sig-arrow" title="Right Turn Protected Filter">
+                        <circle cx="12.8" cy="42" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M11.8 40.5 L13.5 42 L11.8 43.5 M13.3 42 L11.3 42" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                    </g>
+
+                    <!-- South Signal (governs Lane 1 Northbound, mounted on sidewalk to the east of road x=448) -->
+                    <rect x="472" y="230" width="4" height="54" rx="1.5" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+                    <line x1="472" y1="254" x2="466" y2="254" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="474" cy="232" r="3.5" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                    <g id="sigHeadSouth" class="signal-group" transform="translate(454, 230)">
+                      <rect x="0" y="0" width="18" height="50" rx="3" fill="#0b1120" stroke="#334155" stroke-width="1.2"/>
+                      <circle id="sigLensS_R" cx="9" cy="7" r="4" fill="#450a0a" class="sig-lens red"/>
+                      <circle id="sigLensS_A" cx="9" cy="19" r="4" fill="#451a03" class="sig-lens amber"/>
+                      <circle id="sigLensS_G" cx="9" cy="31" r="4" fill="#052e16" class="sig-lens green"/>
+                      <!-- Auxiliary Left/Right Green Turn Arrow Indicators -->
+                      <g id="sigLensS_ArrowL" class="sig-lens sig-arrow" title="Left Turn Protected Filter">
+                        <circle cx="5.2" cy="42" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M6.2 40.5 L4.5 42 L6.2 43.5 M4.7 42 L6.7 42" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                      <g id="sigLensS_ArrowR" class="sig-lens sig-arrow" title="Right Turn Protected Filter">
+                        <circle cx="12.8" cy="42" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M11.8 40.5 L13.5 42 L11.8 43.5 M13.3 42 L11.3 42" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                    </g>
+
+                    <!-- West Signal (governs Lane 2 Eastbound, mounted on sidewalk south of road y=218) -->
+                    <rect x="296" y="240" width="54" height="4" rx="1.5" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+                    <line x1="322" y1="240" x2="322" y2="236" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="350" cy="242" r="3.5" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                    <g id="sigHeadWest" class="signal-group" transform="translate(296, 226)">
+                      <rect x="0" y="0" width="52" height="18" rx="3" fill="#0b1120" stroke="#334155" stroke-width="1.2"/>
+                      <circle id="sigLensW_R" cx="7" cy="9" r="4" fill="#450a0a" class="sig-lens red"/>
+                      <circle id="sigLensW_A" cx="19" cy="9" r="4" fill="#451a03" class="sig-lens amber"/>
+                      <circle id="sigLensW_G" cx="31" cy="9" r="4" fill="#052e16" class="sig-lens green"/>
+                      <!-- Auxiliary Left/Right Green Turn Arrow Indicators -->
+                      <g id="sigLensW_ArrowL" class="sig-lens sig-arrow" title="Left Turn Protected Filter">
+                        <circle cx="39" cy="9" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M40 7.5 L38.2 9 L40 10.5 M38.4 9 L40.5 9" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                      <g id="sigLensW_ArrowR" class="sig-lens sig-arrow" title="Right Turn Protected Filter">
+                        <circle cx="46.5" cy="9" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M45.5 7.5 L47.3 9 L45.5 10.5 M47.1 9 L45 9" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                    </g>
+
+                    <!-- East Signal (governs Lane 2 Westbound, mounted on sidewalk north of road y=122) -->
+                    <rect x="466" y="96" width="54" height="4" rx="1.5" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+                    <line x1="492" y1="100" x2="492" y2="104" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="466" cy="98" r="3.5" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                    <g id="sigHeadEast" class="signal-group" transform="translate(466, 96)">
+                      <rect x="0" y="0" width="52" height="18" rx="3" fill="#0b1120" stroke="#334155" stroke-width="1.2"/>
+                      <circle id="sigLensE_R" cx="7" cy="9" r="4" fill="#450a0a" class="sig-lens red"/>
+                      <circle id="sigLensE_A" cx="19" cy="9" r="4" fill="#451a03" class="sig-lens amber"/>
+                      <circle id="sigLensE_G" cx="31" cy="9" r="4" fill="#052e16" class="sig-lens green"/>
+                      <!-- Auxiliary Left/Right Green Turn Arrow Indicators -->
+                      <g id="sigLensE_ArrowL" class="sig-lens sig-arrow" title="Left Turn Protected Filter">
+                        <circle cx="39" cy="9" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M40 7.5 L38.2 9 L40 10.5 M38.4 9 L40.5 9" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                      <g id="sigLensE_ArrowR" class="sig-lens sig-arrow" title="Right Turn Protected Filter">
+                        <circle cx="46.5" cy="9" r="3" fill="#021c0e" stroke="#052e16" stroke-width="0.5"/>
+                        <path d="M45.5 7.5 L47.3 9 L45.5 10.5 M47.1 9 L45 9" stroke="#052e16" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- High Performance HTML5 Canvas for Vehicles on 2 Perpendicular Lanes -->
+                <canvas id="junctionVehicleCanvas" width="800" height="340"></canvas>
+
+                <!-- Interactive Vehicle Hover Telemetry Popover -->
+                <div id="vehicleTooltip" class="vehicle-telemetry-tooltip hidden" aria-hidden="true"></div>
+
+                <!-- Markers / DOM Elements container -->
+                <div id="mapMarkersContainer"></div>
+
+                <!-- ══ HUD OVERLAYS FOR 2 PERPENDICULAR LANES ══ -->
+                <!-- Top-Left HUD: Lane 1 (North-South) -->
+                <div class="lane-hud-card hud-lane-1">
+                  <div class="lane-hud-header">
+                    <span class="lane-hud-title" data-i18n="lane_1_label">LANE 1: NORTH-SOUTH</span>
+                    <span class="signal-badge" id="hudLane1SignalBadge">● GREEN</span>
+                  </div>
+                  <div class="lane-hud-body">
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="pcu_load">PCU Load</span>
+                      <span class="stat-v" id="hudLane1Pcu">18.4</span>
+                    </div>
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="stat_vehicles">Vehicles</span>
+                      <span class="stat-v" id="hudLane1Veh">12</span>
+                    </div>
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="queue_len">Queue</span>
+                      <span class="stat-v" id="hudLane1Queue">24m</span>
+                    </div>
+                  </div>
+                  <div class="lane-hud-bar">
+                    <div class="lane-hud-bar-fill" id="hudLane1PcuBar" style="width: 46%;"></div>
+                  </div>
+                  <button type="button" class="hud-stop-btn" id="btnToggleStopL1" data-i18n="btn_stop_lane_1" title="Manually take over and stop Lane 1">STOP LANE 1 (RED)</button>
+                </div>
+
+                <!-- Top-Right HUD: Lane 2 (East-West) -->
+                <div class="lane-hud-card hud-lane-2">
+                  <div class="lane-hud-header">
+                    <span class="lane-hud-title" data-i18n="lane_2_label">LANE 2: EAST-WEST</span>
+                    <span class="signal-badge" id="hudLane2SignalBadge">● RED</span>
+                  </div>
+                  <div class="lane-hud-body">
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="pcu_load">PCU Load</span>
+                      <span class="stat-v" id="hudLane2Pcu">11.2</span>
+                    </div>
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="stat_vehicles">Vehicles</span>
+                      <span class="stat-v" id="hudLane2Veh">7</span>
+                    </div>
+                    <div class="lane-hud-stat">
+                      <span class="stat-k" data-i18n="queue_len">Queue</span>
+                      <span class="stat-v" id="hudLane2Queue">15m</span>
+                    </div>
+                  </div>
+                  <div class="lane-hud-bar">
+                    <div class="lane-hud-bar-fill" id="hudLane2PcuBar" style="width: 28%;"></div>
+                  </div>
+                  <button type="button" class="hud-stop-btn" id="btnToggleStopL2" data-i18n="btn_stop_lane_2" title="Manually take over and stop Lane 2">STOP LANE 2 (RED)</button>
+                </div>
+
+                <!-- Bottom Telemetry Pill -->
+                <div class="junction-bottom-telemetry">
+                  <span id="hudPhaseTimer">Phase: 12.4s</span>
+                  <span class="telemetry-dot">•</span>
+                  <span id="hudMinGreenTimer">Min Green: 2.6s left</span>
+                  <span class="telemetry-dot">•</span>
+                  <span id="hudCycleCount">Cycle #1</span>
+                </div>
+
+                <!-- Map controls -->
+                <div class="map-controls">
+                  <button class="map-ctrl-btn" id="btnJuncDensityUp" title="Increase Vehicle Density" aria-label="Increase Density">▲</button>
+                  <button class="map-ctrl-btn" id="btnJuncDensityDown" title="Decrease Vehicle Density" aria-label="Decrease Density">▼</button>
+                  <button class="map-ctrl-btn" id="btnJuncCenter" title="Center Junction" aria-label="Center Map">⊙</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Stats Cards Column -->
+          <div class="stats-area">
+            <!-- Active Fleet -->
+            <div class="stat-card" id="activeFleetCard">
+              <div class="stat-card-hdr">
+                <span class="stat-card-title" data-i18n="stat_active_fleet">ACTIVE FLEET</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="stat-big-row">
+                <span class="stat-big-num" id="statActiveFleetNum">14,892</span>
+                <span class="stat-big-denom" id="statActiveFleetDenom">/18,500</span>
+              </div>
+              <div class="stat-sub-text" data-i18n="stat_vehicles_on_road">Vehicles On Road</div>
+              <div class="stat-operational">
+                <span class="stat-pct" id="statOperationalPct">94.8%</span>
+                <span class="stat-pct-label" data-i18n="stat_operational">Operational</span>
+                <div class="sparkline-container" id="sparklineFleet">
+                  <svg viewBox="0 0 80 30">
+                    <polyline fill="none" stroke="#22c55e" stroke-width="1.5" points="0,20 10,18 20,15 30,17 40,12 50,14 60,10 70,8 80,5"/>
+                    <polyline fill="rgba(34,197,94,0.1)" stroke="none" points="0,30 0,20 10,18 20,15 30,17 40,12 50,14 60,10 70,8 80,5 80,30"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total Alerts -->
+            <div class="stat-card" id="totalAlertsCard">
+              <div class="stat-card-hdr">
+                <span class="stat-card-title" data-i18n="stat_total_alerts">TOTAL ALERTS</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="alert-nums">
+                <div class="alert-num-block">
+                  <div class="alert-num-val critical" id="statCriticalCount">21</div>
+                  <div class="alert-num-label" data-i18n="stat_critical">Critical</div>
+                </div>
+                <div class="alert-num-block">
+                  <div class="alert-num-val warning" id="statWarningCount">105</div>
+                  <div class="alert-num-label" data-i18n="stat_warnings">Warnings</div>
+                </div>
+              </div>
+              <button class="btn-view-details" data-i18n="btn_view_details">View Details</button>
+            </div>
+
+            <!-- Total Alerts Trend (sparkline) -->
+            <div class="stat-card" id="alertsTrendCard">
+              <div class="stat-card-hdr">
+                <span class="stat-card-title" data-i18n="stat_total_alerts">TOTAL ALERTS</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="alert-nums">
+                <div class="alert-num-block">
+                  <div class="alert-num-val critical" id="statCriticalCount2">21</div>
+                  <div class="alert-num-label" data-i18n="stat_critical">Critical</div>
+                </div>
+                <div class="alert-num-block">
+                  <div class="alert-num-val warning" id="statWarningCount2">105</div>
+                  <div class="alert-num-label" data-i18n="stat_warnings">Warnings</div>
+                </div>
+              </div>
+              <div class="sparkline-container" style="width:100%;height:40px;margin-top:8px;">
+                <svg viewBox="0 0 240 40" style="width:100%;height:100%;">
+                  <polyline fill="none" stroke="#ef4444" stroke-width="1.5" points="0,30 20,28 40,22 60,25 80,18 100,20 120,15 140,22 160,12 180,18 200,10 220,14 240,8"/>
+                  <polyline fill="rgba(239,68,68,0.08)" stroke="none" points="0,40 0,30 20,28 40,22 60,25 80,18 100,20 120,15 140,22 160,12 180,18 200,10 220,14 240,8 240,40"/>
+                  <polyline fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 2" points="0,35 20,32 40,30 60,28 80,25 100,27 120,22 140,26 160,20 180,23 200,18 220,21 240,16"/>
+                </svg>
+              </div>
+              <button class="btn-view-details" data-i18n="btn_view_details">View Details</button>
+            </div>
+
+            <!-- Vehicle Utilization -->
+            <div class="stat-card" id="vehicleUtilCard">
+              <div class="stat-card-hdr">
+                <span class="stat-card-title" data-i18n="stat_vehicle_utilization">VEHICLE UTILIZATION</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="donut-chart-wrap">
+                <div class="donut-chart" id="utilizationDonut">
+                  <svg viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="14" stroke="rgba(59,130,246,0.3)" stroke-dasharray="88 88" stroke-dashoffset="0"/>
+                    <circle cx="18" cy="18" r="14" stroke="#3b82f6" stroke-dasharray="39.6 88" stroke-dashoffset="0"/>
+                    <circle cx="18" cy="18" r="14" stroke="#22c55e" stroke-dasharray="26.4 88" stroke-dashoffset="-39.6"/>
+                    <circle cx="18" cy="18" r="14" stroke="#f59e0b" stroke-dasharray="22 88" stroke-dashoffset="-66"/>
+                  </svg>
+                </div>
+                <div class="donut-legend">
+                  <div class="donut-legend-item">
+                    <div class="donut-legend-dot" style="background:#3b82f6;"></div>
+                    <span data-i18n="util_heavy">Heavy</span>
+                    <span class="donut-legend-pct">45%</span>
+                  </div>
+                  <div class="donut-legend-item">
+                    <div class="donut-legend-dot" style="background:#22c55e;"></div>
+                    <span data-i18n="util_commercial">Commercial</span>
+                    <span class="donut-legend-pct">30%</span>
+                  </div>
+                  <div class="donut-legend-item">
+                    <div class="donut-legend-dot" style="background:#f59e0b;"></div>
+                    <span data-i18n="util_private">Private</span>
+                    <span class="donut-legend-pct">25%</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-view-details" data-i18n="btn_view_details">View Details</button>
+            </div>
+          </div>
+
+          <!-- BOTTOM: Alerts Feed + Recent Incidents -->
+          <div class="bottom-area">
+            <!-- Active Alerts Feed -->
+            <div class="card">
+              <div class="card-hdr">
+                <span data-i18n="card_active_alerts_feed">ACTIVE ALERTS FEED</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="card-body flush">
+                <table class="data-table" aria-label="Active Alerts Feed">
+                  <thead>
+                    <tr>
+                      <th scope="col" data-i18n="th_time">Time</th>
+                      <th scope="col" data-i18n="th_alert_level">Alert Level</th>
+                      <th scope="col" data-i18n="th_vehicle_id">Vehicle ID</th>
+                      <th scope="col" data-i18n="th_location">Location</th>
+                      <th scope="col" data-i18n="th_type">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody id="alertsFeedBody">
+                    <tr>
+                      <td>10:32 AM</td>
+                      <td><span class="badge badge-red" data-i18n="alert_critical">CRITICAL</span></td>
+                      <td class="cell-mono">VIMS-4592</td>
+                      <td data-i18n="loc_ring_road">Ring Road</td>
+                      <td data-i18n="type_speeding">Speeding</td>
+                    </tr>
+                    <tr>
+                      <td>10:30 AM</td>
+                      <td><span class="badge badge-amber" data-i18n="alert_warning">WARNING</span></td>
+                      <td class="cell-mono">DL8C-1122</td>
+                      <td data-i18n="loc_nh8">NH8</td>
+                      <td data-i18n="type_route_deviation">Route Deviation</td>
+                    </tr>
+                    <tr>
+                      <td>10:28 AM</td>
+                      <td><span class="badge badge-red" data-i18n="alert_critical">CRITICAL</span></td>
+                      <td class="cell-mono">VIMS-4592</td>
+                      <td data-i18n="loc_ring_road">Ring Road</td>
+                      <td data-i18n="type_speeding">Speeding</td>
+                    </tr>
+                    <tr>
+                      <td>10:25 AM</td>
+                      <td><span class="badge badge-amber" data-i18n="alert_warning">WARNING</span></td>
+                      <td class="cell-mono">MH12-AB-9981</td>
+                      <td data-i18n="loc_swargate">Swargate Junction</td>
+                      <td data-i18n="type_unauthorized_stop">Unauthorized Stop</td>
+                    </tr>
+                    <tr>
+                      <td>10:22 AM</td>
+                      <td><span class="badge badge-red" data-i18n="alert_critical">CRITICAL</span></td>
+                      <td class="cell-mono">VIMS-3301</td>
+                      <td data-i18n="loc_hinjewadi">Hinjewadi Phase-1</td>
+                      <td data-i18n="type_geofence_breach">Geofence Breach</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Recent Incidents -->
+            <div class="card">
+              <div class="card-hdr">
+                <span data-i18n="card_recent_incidents">RECENT INCIDENTS</span>
+                <span class="card-menu">⋮</span>
+              </div>
+              <div class="card-body flush">
+                <table class="data-table" aria-label="Recent Incidents">
+                  <thead>
+                    <tr>
+                      <th scope="col" data-i18n="th_id">ID</th>
+                      <th scope="col" data-i18n="th_vehicle">Vehicle</th>
+                      <th scope="col" data-i18n="th_location">Location</th>
+                      <th scope="col" data-i18n="th_status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="incidentsBody">
+                    <tr>
+                      <td class="cell-mono">INC-2401</td>
+                      <td class="cell-mono">TRK-9871</td>
+                      <td data-i18n="loc_noida_sec18">Noida Sec 18</td>
+                      <td><span class="badge badge-blue" data-i18n="status_dispatched">Dispatched</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-mono">INC-2402</td>
+                      <td class="cell-mono">TRK-9871</td>
+                      <td data-i18n="loc_noida_sec18">Noida Sec 18</td>
+                      <td><span class="badge badge-blue" data-i18n="status_dispatched">Dispatched</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-mono">INC-2403</td>
+                      <td class="cell-mono">TRK-9871</td>
+                      <td data-i18n="loc_noida_sec18">Noida Sec 18</td>
+                      <td><span class="badge badge-blue" data-i18n="status_dispatched">Dispatched</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-mono">INC-2404</td>
+                      <td class="cell-mono">MH12-CC-4455</td>
+                      <td data-i18n="loc_wakad">Wakad Bridge</td>
+                      <td><span class="badge badge-green" data-i18n="status_resolved">Resolved</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-mono">INC-2405</td>
+                      <td class="cell-mono">DL04-XY-7788</td>
+                      <td data-i18n="loc_airport_rd">Airport Road</td>
+                      <td><span class="badge badge-amber" data-i18n="status_investigating">Investigating</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ──── DIFF ANALYSIS: CORRIDOR FLOW & ANPR DISCREPANCY ──── -->
+      <section class="view" id="view-diff-analysis" role="region" aria-label="Corridor Flow and ANPR Discrepancy Diff">
+        <div class="page-hdr">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 data-i18n="diff_title">Corridor Flow & ANPR Discrepancy Diff</h1>
+              <p data-i18n="diff_subtitle">Comparative real-time analytics between Corridor 1 (North-South) and Corridor 2 (East-West), plus automated ANPR vs VAHAN database cross-audit discrepancies.</p>
+            </div>
+            <div class="flex gap-10 items-center">
+              <span class="badge badge-blue" id="diffLivePulse">● LIVE COMPARATIVE STREAM</span>
+              <button class="btn btn-outline btn-sm" id="btnRefreshDiff" data-i18n="btn_refresh_diff">Resync Telemetry</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="diff-container">
+          <!-- Corridor Flow Comparative Diff -->
+          <div class="diff-hero-grid">
+            <!-- Lane 1 Card -->
+            <div class="diff-col-card lane-1">
+              <div class="card-title">
+                <span data-i18n="diff_lane1_title">CORRIDOR 1: JM ROAD (NS)</span>
+                <span class="badge badge-blue" id="diffL1PhaseBadge">GREEN WAVE</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_pcu">Active PCU Weight</span>
+                <span class="diff-metric-val" id="diffL1Pcu">16.0 PCU</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_veh">Vehicles in Approach</span>
+                <span class="diff-metric-val" id="diffL1Veh">4 units</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_queue">Queue Tail Length</span>
+                <span class="diff-metric-val" id="diffL1Queue">0m (Fluid)</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_throughput">Est. Flow Throughput</span>
+                <span class="diff-metric-val" id="diffL1Throughput">1,420 veh/hr</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_balancing">Sub-Lane Distribution</span>
+                <span class="diff-metric-val" id="diffL1Balance">50% L / 50% R</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_speed">Approach Velocity</span>
+                <span class="diff-metric-val" id="diffL1Speed">38 km/h</span>
+              </div>
+            </div>
+
+            <!-- Center Comparative Delta -->
+            <div class="diff-center-delta">
+              <div style="font-size:10.5px;font-weight:700;color:#94a3b8;letter-spacing:0.8px;text-transform:uppercase;" data-i18n="diff_center_title">CORRIDOR VARIANCE</div>
+              <div class="delta-badge favorable" id="diffPcuDeltaBadge">Δ +4.0 PCU</div>
+              <div style="font-size:11px;color:#cbd5e1;" id="diffPcuDesc">Corridor 1 Demand +33% Higher</div>
+              
+              <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);margin:4px 0;"></div>
+              
+              <div style="font-size:10px;color:#94a3b8;" data-i18n="diff_queue_variance">Queue Variance</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#38bdf8;" id="diffQueueDelta">0m Delta</div>
+              
+              <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);margin:4px 0;"></div>
+
+              <div style="font-size:10px;color:#94a3b8;" data-i18n="diff_signal_bias">Adaptive ATSC Bias</div>
+              <div class="badge badge-green" id="diffSignalBias" style="font-size:10px;">PRIORITY TO CORRIDOR 1</div>
+            </div>
+
+            <!-- Lane 2 Card -->
+            <div class="diff-col-card lane-2">
+              <div class="card-title">
+                <span data-i18n="diff_lane2_title">CORRIDOR 2: FC ROAD (EW)</span>
+                <span class="badge badge-amber" id="diffL2PhaseBadge">RED HOLD</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_pcu">Active PCU Weight</span>
+                <span class="diff-metric-val" id="diffL2Pcu">12.0 PCU</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_veh">Vehicles in Approach</span>
+                <span class="diff-metric-val" id="diffL2Veh">4 units</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_queue">Queue Tail Length</span>
+                <span class="diff-metric-val" id="diffL2Queue">0m (Fluid)</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_throughput">Est. Flow Throughput</span>
+                <span class="diff-metric-val" id="diffL2Throughput">1,080 veh/hr</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_balancing">Sub-Lane Distribution</span>
+                <span class="diff-metric-val" id="diffL2Balance">50% L / 50% R</span>
+              </div>
+              <div class="diff-metric-row">
+                <span class="diff-metric-label" data-i18n="diff_metric_speed">Approach Velocity</span>
+                <span class="diff-metric-val" id="diffL2Speed">0 km/h (Halted)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ANPR vs VAHAN Registry Discrepancy Inspector -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="flex items-center gap-10">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span data-i18n="diff_anpr_vahan_inspector">ANPR Optical vs VAHAN National Registry Discrepancy Inspector</span>
+              </div>
+              <div class="flex items-center gap-8">
+                <label for="diffVehicleSelect" class="text-xs text-muted" data-i18n="diff_select_vehicle">Select Active Vehicle:</label>
+                <select class="form-input" id="diffVehicleSelect" style="padding:3px 8px;font-size:11px;min-width:180px;height:28px;">
+                  <option value="">-- Active Minimap Vehicles --</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="diff-inspector-grid">
+                <!-- Optical ANPR Read -->
+                <div class="diff-inspect-card">
+                  <div class="diff-inspect-hdr">
+                    <span style="color:#38bdf8;" data-i18n="diff_anpr_header">Live Optical ANPR Detection</span>
+                    <span class="badge badge-blue">EDGE OCR (YOLOv8 + LPRNet)</span>
+                  </div>
+                  <div class="diff-field-row" id="rowAnprPlate">
+                    <span class="diff-metric-label" data-i18n="diff_field_plate">License Plate</span>
+                    <span class="diff-metric-val" id="diffAnprPlate">MH 12 RN 4501</span>
+                    <span class="diff-tag-match" id="tagAnprPlate">OCR 98.6%</span>
+                  </div>
+                  <div class="diff-field-row" id="rowAnprClass">
+                    <span class="diff-metric-label" data-i18n="diff_field_class">Vehicle Class</span>
+                    <span class="diff-metric-val" id="diffAnprClass">Four-Wheeler (Car / SUV)</span>
+                    <span class="diff-tag-match" id="tagAnprClass">MATCH</span>
+                  </div>
+                  <div class="diff-field-row" id="rowAnprColor">
+                    <span class="diff-metric-label" data-i18n="diff_field_color">Detected Color</span>
+                    <span class="diff-metric-val" id="diffAnprColor">Arctic Silver / White</span>
+                    <span class="diff-tag-match" id="tagAnprColor">MATCH</span>
+                  </div>
+                  <div class="diff-field-row" id="rowAnprCorridor">
+                    <span class="diff-metric-label" data-i18n="diff_field_corridor">Corridor Track</span>
+                    <span class="diff-metric-val" id="diffAnprCorridor">Lane 1 (North-South)</span>
+                    <span class="diff-tag-match" id="tagAnprCorridor">TRACKING</span>
+                  </div>
+                  <div class="diff-field-row" id="rowAnprSpeed">
+                    <span class="diff-metric-label" data-i18n="diff_field_speed">Doppler Radar Speed</span>
+                    <span class="diff-metric-val" id="diffAnprSpeed">36 km/h</span>
+                    <span class="diff-tag-match" id="tagAnprSpeed">WITHIN LIMIT</span>
+                  </div>
+                </div>
+
+                <!-- VAHAN Registry Cross-Check -->
+                <div class="diff-inspect-card">
+                  <div class="diff-inspect-hdr">
+                    <span style="color:#10b981;" data-i18n="diff_vahan_header">VAHAN National Registry Record</span>
+                    <span class="badge badge-green">MoRTH NIC REST BINDING</span>
+                  </div>
+                  <div class="diff-field-row" id="rowVahanPlate">
+                    <span class="diff-metric-label" data-i18n="diff_field_plate">Registered Plate</span>
+                    <span class="diff-metric-val" id="diffVahanPlate">MH 12 RN 4501</span>
+                    <span class="diff-tag-match" id="tagVahanPlate">VERIFIED</span>
+                  </div>
+                  <div class="diff-field-row" id="rowVahanClass">
+                    <span class="diff-metric-label" data-i18n="diff_field_class">Registered Make/Model</span>
+                    <span class="diff-metric-val" id="diffVahanClass">Mahindra Scorpio-N (SUV)</span>
+                    <span class="diff-tag-match" id="tagVahanClass">MATCH</span>
+                  </div>
+                  <div class="diff-field-row" id="rowVahanColor">
+                    <span class="diff-metric-label" data-i18n="diff_field_color">Registered Color</span>
+                    <span class="diff-metric-val" id="diffVahanColor">Silver Metallic</span>
+                    <span class="diff-tag-match" id="tagVahanColor">MATCH</span>
+                  </div>
+                  <div class="diff-field-row" id="rowVahanFuel">
+                    <span class="diff-metric-label" data-i18n="diff_field_fuel">Engine / Emission Norm</span>
+                    <span class="diff-metric-val" id="diffVahanFuel">mHawk 2.2L Diesel (BS-VI)</span>
+                    <span class="diff-tag-match" id="tagVahanFuel">VALID PUC</span>
+                  </div>
+                  <div class="diff-field-row" id="rowVahanInsurance">
+                    <span class="diff-metric-label" data-i18n="diff_field_status">Insurance / Blacklist</span>
+                    <span class="diff-metric-val" id="diffVahanInsurance">Valid through 2027 • Clean</span>
+                    <span class="diff-tag-match" id="tagVahanInsurance">CLEARED</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-12 p-10 rounded flex items-center justify-between" id="diffVerdictBox" style="background:rgba(16, 185, 129, 0.08);border:1px solid rgba(16, 185, 129, 0.25);">
+                <div class="flex items-center gap-10">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#10b981;" id="diffVerdictTitle" data-i18n="diff_verdict_title">VERDICT: 100% REGISTRY COMPLIANT — NO DISCREPANCY</div>
+                    <div style="font-size:11px;color:#94a3b8;" id="diffVerdictSub" data-i18n="diff_verdict_sub">Optical vehicle dimensions, classification, and license plate match NIC VAHAN national motor database.</div>
+                  </div>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btnExportDiffAudit" data-i18n="btn_export_audit">Export Audit Cert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 1. FLEET OVERVIEW ──── -->
+      <section class="view" id="view-fleet-overview" role="region" aria-label="Fleet Overview">
+        <div class="page-hdr">
+          <h1 data-i18n="fleet_overview_title">Active Fleet Inventory & Deployment</h1>
+          <p data-i18n="fleet_overview_sub">Real-time telemetry, patrol sectors, and readiness status across Pune Metropolitan Region</p>
+        </div>
+
+        <div class="kpi-row-grid">
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_total_fleet">TOTAL REGISTERED FLEET</span>
+            <span class="kpi-value" id="kpiTotalFleet">18,500</span>
+            <span class="kpi-sub" data-i18n="kpi_total_fleet_sub">Pune & Pimpri-Chinchwad Metro</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_active_units">ACTIVE PATROL UNITS</span>
+            <span class="kpi-value" style="color:#10b981;" id="kpiActiveUnits">14,892</span>
+            <span class="kpi-sub" data-i18n="kpi_active_units_sub">94.8% Operational Availability</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_pcr_interceptors">POLICE PCR INTERCEPTORS</span>
+            <span class="kpi-value" style="color:#38bdf8;" id="kpiPcrCount">342</span>
+            <span class="kpi-sub" data-i18n="kpi_pcr_sub">GPS Stream 1 Hz Active</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_ems_units">EMERGENCY MEDICAL UNITS</span>
+            <span class="kpi-value" style="color:#f59e0b;" id="kpiEmsCount">78</span>
+            <span class="kpi-sub" data-i18n="kpi_ems_sub">Green Corridor Priority Preempt</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_heavy_recovery">HEAVY RECOVERY CRANES</span>
+            <span class="kpi-value" id="kpiTowCount">46</span>
+            <span class="kpi-sub" data-i18n="kpi_heavy_recovery_sub">Gridlock & Obstruction Clearance</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <div class="filter-group">
+              <input type="text" class="search-input-tactical" id="fleetSearchInput" placeholder="Filter unit callsign, plate, or sector..." data-i18n-placeholder="placeholder_filter_fleet">
+              <select class="filter-input" id="fleetSectorFilter">
+                <option value="ALL" data-i18n="opt_all_sectors">All Patrol Sectors</option>
+                <option value="Swargate" data-i18n="opt_sector_swargate">Sector 1: Swargate Zone</option>
+                <option value="JM Road" data-i18n="opt_sector_jm">Sector 2: JM-FC Arterial</option>
+                <option value="Hinjewadi" data-i18n="opt_sector_hinjewadi">Sector 3: Hinjewadi IT Park</option>
+                <option value="Airport" data-i18n="opt_sector_airport">Sector 4: Airport Expressway</option>
+                <option value="NH-4" data-i18n="opt_sector_nh4">Sector 5: Pune-Solapur NH Bypass</option>
+              </select>
+              <select class="filter-input" id="fleetClassFilter">
+                <option value="ALL" data-i18n="opt_all_classes">All Vehicle Classes</option>
+                <option value="PCR" data-i18n="opt_class_pcr">Police PCR Interceptor</option>
+                <option value="MOTO" data-i18n="opt_class_moto">Traffic Quick Strike Bike</option>
+                <option value="TOW" data-i18n="opt_class_tow">Heavy Tow Recovery</option>
+                <option value="EMS" data-i18n="opt_class_ems">Emergency Ambulance</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-sm" id="btnExportFleet" data-i18n="btn_export_fleet">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Fleet CSV
+            </button>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Fleet Inventory">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_unit_id">Unit ID</th>
+                  <th scope="col" data-i18n="th_plate_number">Plate Number</th>
+                  <th scope="col" data-i18n="th_class_model">Class / Model</th>
+                  <th scope="col" data-i18n="th_sector_zone">Assigned Sector</th>
+                  <th scope="col" data-i18n="th_commander">Officer in Command</th>
+                  <th scope="col" data-i18n="th_telemetry">Speed / Fuel</th>
+                  <th scope="col" data-i18n="th_status">Status</th>
+                  <th scope="col" data-i18n="th_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="fleetTableBody">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 2. INCIDENT LOGS ──── -->
+      <section class="view" id="view-incident-logs" role="region" aria-label="Incident Logs">
+        <div class="page-hdr">
+          <h1 data-i18n="incident_logs_title">Traffic & Security Incident Ledger</h1>
+          <p data-i18n="incident_logs_sub">Live dispatch logs, ANPR discrepancy alerts, and enforcement actions</p>
+        </div>
+
+        <div class="kpi-row-grid">
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_critical_alerts">CRITICAL ALERTS (ACTIVE)</span>
+            <span class="kpi-value" style="color:#ef4444;" id="incKpiCritical">21</span>
+            <span class="kpi-sub" data-i18n="kpi_critical_alerts_sub">Priority Intercept Required</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_warnings_review">WARNINGS UNDER REVIEW</span>
+            <span class="kpi-value" style="color:#f59e0b;" id="incKpiWarning">105</span>
+            <span class="kpi-sub" data-i18n="kpi_warnings_review_sub">E-Challan Pending Verification</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_resolved_today">RESOLVED INCIDENTS TODAY</span>
+            <span class="kpi-value" style="color:#10b981;">412</span>
+            <span class="kpi-sub" data-i18n="kpi_resolved_today_sub">Clearance Rate 92.4%</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_avg_dispatch">AVERAGE DISPATCH TIME</span>
+            <span class="kpi-value" style="color:#38bdf8;">3.8 min</span>
+            <span class="kpi-sub" data-i18n="kpi_avg_dispatch_sub">Target &lt; 5.0 min</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <div class="filter-group">
+              <input type="text" class="search-input-tactical" id="incSearchInput" placeholder="Search Incident ID, Plate, or Violation..." data-i18n-placeholder="placeholder_search_incidents">
+              <select class="filter-input" id="incSeverityFilter">
+                <option value="ALL" data-i18n="opt_all_severities">All Severities</option>
+                <option value="CRITICAL" data-i18n="opt_sev_critical">Critical</option>
+                <option value="WARNING" data-i18n="opt_sev_warning">Warning</option>
+                <option value="ADVISORY" data-i18n="opt_sev_advisory">Advisory</option>
+              </select>
+              <select class="filter-input" id="incTypeFilter">
+                <option value="ALL" data-i18n="opt_all_inc_types">All Incident Types</option>
+                <option value="Signal" data-i18n="opt_type_signal">Red Light Violation</option>
+                <option value="Speed" data-i18n="opt_type_speed">Over-speeding &gt;85km/h</option>
+                <option value="Geofence" data-i18n="opt_type_geofence">Geofence / Route Breach</option>
+                <option value="Wrong" data-i18n="opt_type_wrong">Wrong-side Entry</option>
+                <option value="Stolen" data-i18n="opt_type_stolen">Hotlist Vehicle Match</option>
+              </select>
+            </div>
+            <div class="flex gap-8 items-center">
+              <button class="btn btn-outline btn-sm" id="btnIssueChallan" data-i18n="btn_issue_challan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Issue E-Challan
+              </button>
+            </div>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Incidents Table">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_incident_id">Incident ID</th>
+                  <th scope="col" data-i18n="th_time_ist">Time (IST)</th>
+                  <th scope="col" data-i18n="th_severity">Severity</th>
+                  <th scope="col" data-i18n="th_vehicle">Vehicle Plate</th>
+                  <th scope="col" data-i18n="th_location">Location</th>
+                  <th scope="col" data-i18n="th_violation">Violation Description</th>
+                  <th scope="col" data-i18n="th_unit_dispatched">Responding Unit</th>
+                  <th scope="col" data-i18n="th_status">Status</th>
+                  <th scope="col" data-i18n="th_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="incidentsTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 3. ROUTE MGMT ──── -->
+      <section class="view" id="view-route-mgmt" role="region" aria-label="Route Management">
+        <div class="page-hdr">
+          <h1 data-i18n="route_mgmt_title">Corridor Flow & Autonomous Green Corridors</h1>
+          <p data-i18n="route_mgmt_sub">Emergency preemption, transit progression, and congestion management across Pune Metro</p>
+        </div>
+
+        <!-- Interactive Green Wave Corridor Preemption Banner -->
+        <div class="green-wave-banner" id="greenWaveBanner" style="display:none;">
+          <div class="green-wave-info">
+            <div class="green-wave-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px; font-weight:800; color:#f8fafc;" id="gwActiveRouteTitle" data-i18n="gw_active_route_title">GREEN CORRIDOR ACTIVE: SASSOON HOSP &rarr; SWARGATE JUNC</div>
+              <div style="font-size:11px; color:#a7f3d0;" id="gwActiveRouteSub" data-i18n="gw_active_route_sub">5 ATSC Nodes Preempted to Continuous Green · Intersections Locked</div>
+            </div>
+          </div>
+          <div class="flex gap-16 items-center">
+            <div class="text-right">
+              <div style="font-size:10px; color:#86efac; text-transform:uppercase; font-weight:700;" data-i18n="gw_eta_label">ETA TO DESTINATION</div>
+              <div class="green-wave-timer" id="gwCountdownTimer">05:38</div>
+            </div>
+            <button class="btn btn-outline btn-sm" id="btnCancelGreenWave" data-i18n="btn_terminate_preemption" style="border-color:#ef4444; color:#fca5a5;">Terminate Preemption</button>
+          </div>
+        </div>
+
+        <div class="card mb-14">
+          <div class="card-hdr">
+            <span data-i18n="card_green_wave">Emergency Preemption Dispatcher</span>
+            <span class="badge badge-green" data-i18n="badge_atsc_wave">ATSC Priority Wave Protocol</span>
+          </div>
+          <div class="card-body">
+            <form id="greenWaveDispatchForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="gwOriginSelect" data-i18n="label_origin_facility">Origin Junction / Facility</label>
+                  <select class="form-input" id="gwOriginSelect">
+                    <option value="Sassoon Hospital (Node 01)">Sassoon General Hospital (Node 01)</option>
+                    <option value="Ruby Hall Clinic (Node 03)">Ruby Hall Clinic Transit Point (Node 03)</option>
+                    <option value="Deenanath Mangeshkar (Node 05)">Deenanath Mangeshkar Hospital (Node 05)</option>
+                    <option value="Pune Railway Station (Node 02)">Pune Junction Railway Station (Node 02)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="gwDestSelect" data-i18n="label_dest_corridor">Destination Corridor Junction</label>
+                  <select class="form-input" id="gwDestSelect">
+                    <option value="Swargate Bus Depot Junction (Node 07)">Swargate Bus Depot Junction (Node 07)</option>
+                    <option value="Airport Road 509 Junction (Node 12)">Airport Road 509 Junction (Node 12)</option>
+                    <option value="JM-FC Central Junction (Node 01)">JM-FC Central Junction (Node 01)</option>
+                    <option value="Hinjewadi Phase-1 Circle (Node 09)">Hinjewadi Phase-1 Circle (Node 09)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="gwPriorityClass" data-i18n="label_priority_class">Emergency Priority Class</label>
+                  <select class="form-input" id="gwPriorityClass">
+                    <option value="Ambulance Code Red">Critical ICU Ambulance (Code Red)</option>
+                    <option value="Fire Brigade Strike">Fire & Rescue Quick Strike</option>
+                    <option value="Police High-Risk Convoy">Police High-Risk Tactical Escort</option>
+                    <option value="VIP VVIP Motorcade">State Protocol / VVIP Motorcade</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="gwVehiclePlate" data-i18n="label_callsign_plate">Vehicle Call Sign / Plate</label>
+                  <input class="form-input font-mono" type="text" id="gwVehiclePlate" value="AMB-MH12-0991" placeholder="e.g. AMB-01">
+                </div>
+              </div>
+              <div class="flex gap-10 items-center mt-12">
+                <button type="submit" class="btn btn-primary" id="btnTriggerGreenWave">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  <span data-i18n="btn_trigger_green_wave">Trigger Autonomous Green Corridor</span>
+                </button>
+                <span class="text-xs text-muted" data-i18n="gw_auto_coord_hint">Automatically coordinates signal cycle offsets across corridor nodes</span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Pune Metro Arterial Corridors Live Status -->
+        <div class="card">
+          <div class="card-hdr">
+            <span data-i18n="card_arterial_status">Pune Metro Arterial Corridors</span>
+            <span class="badge badge-blue" data-i18n="badge_corridor_telemetry">4 Corridors Live Telemetry</span>
+          </div>
+          <div class="card-body">
+            <div class="corridor-cards-grid">
+              <!-- Corridor 1 -->
+              <div class="corridor-card">
+                <div class="corridor-header">
+                  <span class="corridor-name" data-i18n="corridor_jm_title">JM Road Arterial Corridor</span>
+                  <span class="badge badge-green" data-i18n="badge_optimal_flow">OPTIMAL FLOW</span>
+                </div>
+                <p class="text-xs text-muted" data-i18n="corridor_jm_sub">Chhatrapati Sambhajinagar to Deccan Gymkhana (3.8 km · 6 ATSC Nodes)</p>
+                <div class="corridor-metrics">
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_avg_speed">AVG SPEED</span>
+                    <span>42 km/h</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_pcu_density">PCU DENSITY</span>
+                    <span>18.4 / 40</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_queue_time">QUEUE TIME</span>
+                    <span>28 sec</span>
+                  </div>
+                </div>
+                <div class="flex gap-6 mt-4">
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_optimize_cycle" onclick="alert('Cycle re-timing command sent to JM Road corridor')">Optimize Cycle</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_flush_queue" onclick="alert('Queue flush cycle triggered')">Flush Queue</button>
+                </div>
+              </div>
+
+              <!-- Corridor 2 -->
+              <div class="corridor-card">
+                <div class="corridor-header">
+                  <span class="corridor-name" data-i18n="corridor_fc_title">FC Road Commercial Belt</span>
+                  <span class="badge badge-amber" data-i18n="badge_moderate_congestion">MODERATE CONGESTION</span>
+                </div>
+                <p class="text-xs text-muted" data-i18n="corridor_fc_sub">Goodluck Chowk to Agriculture College (2.9 km · 5 ATSC Nodes)</p>
+                <div class="corridor-metrics">
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_avg_speed">AVG SPEED</span>
+                    <span>19 km/h</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_pcu_density">PCU DENSITY</span>
+                    <span>31.2 / 40</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_queue_time">QUEUE TIME</span>
+                    <span>68 sec</span>
+                  </div>
+                </div>
+                <div class="flex gap-6 mt-4">
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_extend_green" onclick="alert('Signal cycle extended +25s on FC Road')">Extend Green +25s</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_vms_diversion" onclick="alert('VMS Diversion broadcasted to Senapati Bapat Rd')">VMS Diversion</button>
+                </div>
+              </div>
+
+              <!-- Corridor 3 -->
+              <div class="corridor-card">
+                <div class="corridor-header">
+                  <span class="corridor-name" data-i18n="corridor_swargate_title">Swargate Multi-Modal Interchange</span>
+                  <span class="badge badge-red" data-i18n="badge_heavy_congestion">HEAVY CONGESTION</span>
+                </div>
+                <p class="text-xs text-muted" data-i18n="corridor_swargate_sub">Shivaji Road &times; Satara Road Transit Hub (4.2 km · 8 ATSC Nodes)</p>
+                <div class="corridor-metrics">
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_avg_speed">AVG SPEED</span>
+                    <span>12 km/h</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_pcu_density">PCU DENSITY</span>
+                    <span>38.6 / 40</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_queue_time">QUEUE TIME</span>
+                    <span>115 sec</span>
+                  </div>
+                </div>
+                <div class="flex gap-6 mt-4">
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_auto_clearance" onclick="alert('Split cycle extension applied to Swargate')">Auto Clearance</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_dispatch_tow" onclick="alert('Patrol Tow Unit TOW-03 dispatched to Swargate flyover')">Dispatch Tow Unit</button>
+                </div>
+              </div>
+
+              <!-- Corridor 4 -->
+              <div class="corridor-card">
+                <div class="corridor-header">
+                  <span class="corridor-name" data-i18n="corridor_airport_title">Airport Transit Expressway</span>
+                  <span class="badge badge-green" data-i18n="badge_free_flow">FREE FLOW</span>
+                </div>
+                <p class="text-xs text-muted" data-i18n="corridor_airport_sub">Airport 509 Chowk to Viman Nagar (7.1 km · 4 ATSC Nodes)</p>
+                <div class="corridor-metrics">
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_avg_speed">AVG SPEED</span>
+                    <span>64 km/h</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_pcu_density">PCU DENSITY</span>
+                    <span>12.8 / 40</span>
+                  </div>
+                  <div class="corridor-metric-item">
+                    <span data-i18n="metric_queue_time">QUEUE TIME</span>
+                    <span>14 sec</span>
+                  </div>
+                </div>
+                <div class="flex gap-6 mt-4">
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_check_radar" onclick="alert('Radar speed warning mode verified on Airport Rd')">Check Speed Radar</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_progression_banding" onclick="alert('Green wave progression active')">Progression Banding</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 4. ASSET DATABASE ──── -->
+      <section class="view" id="view-asset-database" role="region" aria-label="Asset Database">
+        <div class="page-hdr">
+          <h1 data-i18n="asset_database_title">ICCC Smart Infrastructure & Asset Ledger</h1>
+          <p data-i18n="asset_database_sub">Lifecycle, telemetry health, and diagnostics of IoT sensors, CCTV nodes, and ATSC controllers</p>
+        </div>
+
+        <div class="kpi-row-grid">
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_total_iot">TOTAL IOT ASSETS</span>
+            <span class="kpi-value">248</span>
+            <span class="kpi-sub" data-i18n="kpi_field_nodes">Field Connected Nodes</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_atsc_controllers">JCT ATSC CONTROLLERS</span>
+            <span class="kpi-value" style="color:#10b981;">24 / 24</span>
+            <span class="kpi-sub" data-i18n="kpi_online_heartbeat">100% Online Heartbeat</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_anpr_nodes">ANPR 4K OPTICAL NODES</span>
+            <span class="kpi-value" style="color:#38bdf8;">112</span>
+            <span class="kpi-sub" data-i18n="kpi_nvdec_edge">NVDEC Edge GPU AI Active</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_speed_traps">RADAR SPEED TRAPS</span>
+            <span class="kpi-value" style="color:#f59e0b;">48</span>
+            <span class="kpi-sub" data-i18n="kpi_laser_calibrated">Laser Calibrated</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_vms_signs">VARIABLE MESSAGE SIGNS</span>
+            <span class="kpi-value">32</span>
+            <span class="kpi-sub" data-i18n="kpi_led_matrix">LED Matrix Operational</span>
+          </div>
+        </div>
+
+        <div class="card mb-14">
+          <div class="card-hdr">
+            <div class="filter-group">
+              <input type="text" class="search-input-tactical" id="assetSearchInput" placeholder="Filter Asset Tag, IP, or Model..." data-i18n-placeholder="placeholder_filter_asset">
+              <select class="filter-input" id="assetTypeFilter">
+                <option value="ALL" data-i18n="opt_all_hw_cats">All Hardware Categories</option>
+                <option value="ATSC" data-i18n="opt_hw_atsc">Junction ATSC Controllers</option>
+                <option value="ANPR" data-i18n="opt_hw_anpr">Edge ANPR Cameras</option>
+                <option value="RADAR" data-i18n="opt_hw_radar">Laser Speed Sensors</option>
+                <option value="VMS" data-i18n="opt_hw_vms">LED Variable Message Signs</option>
+                <option value="ECB" data-i18n="opt_hw_ecb">Emergency Call Boxes</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-sm" data-i18n="btn_refresh_diagnostics" onclick="alert('Asset telemetry health diagnostics refreshed across all 248 nodes.')">
+              Refresh Diagnostics
+            </button>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Asset Table">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_asset_tag">Asset Tag</th>
+                  <th scope="col" data-i18n="th_equipment">Equipment Specification</th>
+                  <th scope="col" data-i18n="th_location">Junction Location</th>
+                  <th scope="col" data-i18n="th_ip_mac">IP / MAC Address</th>
+                  <th scope="col" data-i18n="th_firmware">Firmware</th>
+                  <th scope="col" data-i18n="th_uptime">Uptime Health</th>
+                  <th scope="col" data-i18n="th_status">Status</th>
+                  <th scope="col" data-i18n="th_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="assetTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Embedded National Transport Registry Lookup -->
+        <div class="card">
+          <div class="card-hdr">
+            <span data-i18n="card_registry_search">National Transport Registry Query (VAHAN Integrated)</span>
+            <span class="text-xs text-muted" id="rateQuotaLabel" data-i18n="quota_label">Quota: 10 / 10 remaining</span>
+          </div>
+          <div class="card-body">
+            <form id="vehicleLookupForm" novalidate>
+              <div class="lookup-bar">
+                <div class="form-group" style="flex:1;">
+                  <label class="form-label" for="lookupPlateInput" data-i18n="label_vehicle_reg">Vehicle Registration Number</label>
+                  <input class="form-input font-mono" type="text" id="lookupPlateInput" placeholder="e.g. MH 12 DE 1433 or 22BH1234A" data-i18n-placeholder="placeholder_vehicle_reg" maxlength="14" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary" id="lookupSubmitBtn" data-i18n="btn_query_registry">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Query VAHAN Registry
+                </button>
+              </div>
+              <div id="lookupValidationError" class="form-error hidden" role="alert" aria-live="polite"></div>
+            </form>
+            <div class="flex gap-10 mt-12 items-center flex-wrap">
+              <span class="text-xs text-muted" data-i18n="sample_label">Pune Context Samples:</span>
+              <button type="button" class="btn btn-outline btn-xs test-plate-btn" data-plate="MH12DE1433">MH 12 DE 1433</button>
+              <button type="button" class="btn btn-outline btn-xs test-plate-btn" data-plate="DL04CAF5571">DL 04 C AF 5571</button>
+              <button type="button" class="btn btn-outline btn-xs test-plate-btn" data-plate="MH14EU4092">MH 14 EU 4092</button>
+              <button type="button" class="btn btn-outline btn-xs test-plate-btn" data-plate="22BH1234A">22 BH 1234 A</button>
+            </div>
+            <div id="lookupResultContainer" class="hidden mt-12"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 5. STAFF ──── -->
+      <section class="view" id="view-staff" role="region" aria-label="Staff Roster">
+        <div class="page-hdr">
+          <h1 data-i18n="staff_title">Command Personnel & Field Traffic Roster</h1>
+          <p data-i18n="staff_sub">Officer duty status, tactical radio channels, patrol sectors, and shift assignments</p>
+        </div>
+
+        <div class="kpi-row-grid">
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_watch_commander">ACTIVE WATCH COMMANDER</span>
+            <span class="kpi-value" style="font-size:16px;">Insp. R. Sharma</span>
+            <span class="kpi-sub" data-i18n="kpi_watch_commander_sub">Badge #MH-PN-4402 (Console 03)</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_officers_shift">OFFICERS ON SHIFT</span>
+            <span class="kpi-value" style="color:#10b981;">48 Officers</span>
+            <span class="kpi-sub" data-i18n="kpi_shift_hours">Day Shift (08:00 - 16:00 IST)</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_sector_units">FIELD SECTOR UNITS</span>
+            <span class="kpi-value" style="color:#38bdf8;">34 Mobile Units</span>
+            <span class="kpi-sub" data-i18n="kpi_sector_units_sub">PCR + Motorcycle Interceptors</span>
+          </div>
+          <div class="kpi-stat-chip">
+            <span class="kpi-label" data-i18n="kpi_tactical_radio">TACTICAL RADIO NET</span>
+            <span class="kpi-value" style="color:#a78bfa;">TETRA Net 02</span>
+            <span class="kpi-sub" data-i18n="kpi_tactical_radio_sub">All 4 Channels Encrypted & Synced</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <div class="filter-group">
+              <input type="text" class="search-input-tactical" id="staffSearchInput" placeholder="Filter officer name, badge, or radio channel..." data-i18n-placeholder="placeholder_filter_staff">
+              <select class="filter-input" id="staffStatusFilter">
+                <option value="ALL" data-i18n="opt_all_duty_statuses">All Duty Statuses</option>
+                <option value="ON DUTY" data-i18n="opt_status_on_duty">On Duty</option>
+                <option value="ON PATROL" data-i18n="opt_status_on_patrol">Field Patrol</option>
+                <option value="DISPATCHED" data-i18n="opt_status_dispatched">Dispatched</option>
+                <option value="STANDBY" data-i18n="opt_status_standby">Standby</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-sm" data-i18n="btn_broadcast_tactical" onclick="alert('Direct tactical broadcast alert sent to all 48 on-duty officers.')">
+              Broadcast Tactical Alert
+            </button>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Staff Table">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_badge">Badge No.</th>
+                  <th scope="col" data-i18n="th_officer">Officer Name & Rank</th>
+                  <th scope="col" data-i18n="th_assignment">Assignment Duty</th>
+                  <th scope="col" data-i18n="th_sector_zone">Assigned Sector</th>
+                  <th scope="col" data-i18n="th_radio_ch">Radio Channel</th>
+                  <th scope="col" data-i18n="th_status">Status</th>
+                  <th scope="col" data-i18n="th_contact">Contact</th>
+                  <th scope="col" data-i18n="th_action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 6. SYSTEM LOGS ──── -->
+      <section class="view" id="view-system-logs" role="region" aria-label="System Logs">
+        <div class="page-hdr">
+          <h1 data-i18n="system_logs_title">System Telemetry & Security Audit Ledger</h1>
+          <p data-i18n="system_logs_sub">Immutable operational audit trail, kernel events, ATSC cycle telemetry, and SMS OTP gateway logs</p>
+        </div>
+
+        <div class="terminal-console-card">
+          <div class="terminal-header">
+            <div class="flex gap-10 items-center">
+              <div class="terminal-window-btns">
+                <div class="terminal-dot-btn red"></div>
+                <div class="terminal-dot-btn amber"></div>
+                <div class="terminal-dot-btn green"></div>
+              </div>
+              <span style="font-family:var(--font-mono, monospace); font-size:11px; font-weight:700; color:#8e9bb0;" data-i18n="logs_daemon_stream">vims-iccc-daemon.service &mdash; live journalctl stream</span>
+            </div>
+            <div class="flex gap-8 items-center">
+              <select class="filter-input" id="logSubsysFilter" style="font-size:10.5px; padding:3px 8px;">
+                <option value="ALL">All Subsystems</option>
+                <option value="TRAFFIC_ENGINE">TRAFFIC_ENGINE</option>
+                <option value="ANPR_OCR">ANPR_OCR</option>
+                <option value="SMS_SERVICE">SMS_SERVICE</option>
+                <option value="AUTH_GATEWAY">AUTH_GATEWAY</option>
+                <option value="POLICE_RADIO">POLICE_RADIO</option>
+              </select>
+              <select class="filter-input" id="logLevelFilter" style="font-size:10.5px; padding:3px 8px;">
+                <option value="ALL">All Levels</option>
+                <option value="INFO">INFO</option>
+                <option value="WARN">WARN</option>
+                <option value="ERROR">CRITICAL / ERROR</option>
+                <option value="SEC">SECURITY</option>
+              </select>
+              <button class="btn btn-outline btn-xs" id="btnToggleLogPause" data-i18n="btn_pause_feed">Pause Feed</button>
+              <button class="btn btn-outline btn-xs" id="btnClearLogs" data-i18n="btn_clear_logs">Clear</button>
+              <button class="btn btn-primary btn-xs" id="btnExportAudit" data-i18n="btn_export_audit">Export Audit Trail</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="systemLogTerminal">
+            <!-- Populated dynamically with live events -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ──── 7. VIDEO INGEST (Utility) ──── -->
+      <section class="view" id="view-video-ingest" role="region" aria-label="Video Ingest">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_video_ingest">Video Ingest & CCTV Stream</h1>
+          <p data-i18n="video_ingest_desc">Dissect traffic junction recording (.mp4) or bind edge camera RTSP stream</p>
+        </div>
+        <div class="card mb-12">
+          <div class="card-hdr">
+            <span data-i18n="card_rtsp_binding">Pune Traffic CCTV Stream Binding (NVDEC Hardware Decode)</span>
+            <span class="badge badge-blue" data-i18n="badge_rtsp">RTSP Pipeline</span>
+          </div>
+          <div class="card-body">
+            <form id="rtspConfigForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="rtspJunctionSelect" data-i18n="label_junction_node">Junction Camera Node</label>
+                  <select class="form-input" id="rtspJunctionSelect">
+                    <option value="CAM-01">CAM-01: Swargate Bus Depot Junction</option>
+                    <option value="CAM-02">CAM-02: FC Road — Goodluck Chowk</option>
+                    <option value="CAM-03" selected>CAM-03: JM Road — Balgandharva Chowk</option>
+                    <option value="CAM-05">CAM-05: Hinjewadi Phase-1 Circle</option>
+                    <option value="CAM-08">CAM-08: Airport Road 509 Junction</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="rtspUrlInput" data-i18n="label_rtsp_uri">RTSP Stream URI</label>
+                  <input class="form-input font-mono" type="text" id="rtspUrlInput" value="rtsp://192.168.1.120:554/live/traffic_feed" placeholder="rtsp://camera-ip:554/stream">
+                </div>
+              </div>
+              <div class="flex gap-10 items-center">
+                <button type="submit" class="btn btn-outline btn-sm" id="btnBindRtsp" data-i18n="btn_bind_stream">Bind Camera Stream to Edge Daemon</button>
+                <span id="rtspBindStatus" class="text-xs text-muted" data-i18n="status_ready">Ready</span>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <span data-i18n="card_footage_dissection">Recorded CCTV Incident Footage Dissection (.mp4)</span>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" id="videoUploadZone" role="button" tabindex="0" aria-label="Upload incident recording">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <h3 id="uploadZoneTitle" data-i18n="upload_title">Select or Drag Traffic CCTV Recording (.mp4)</h3>
+              <p id="uploadZoneSub" data-i18n="upload_sub">Hardware accelerated NVDEC decode | 8 FPS sampling</p>
+            </div>
+            <input type="file" id="videoFileInput" accept="video/mp4,video/x-m4v,video/*" class="hidden" aria-hidden="true">
+            <div class="mt-12 text-center" id="runPipelineAction" style="display:none;">
+              <button class="btn btn-primary" id="btnRunPipeline" data-i18n="btn_execute_pipeline">Execute 5-Stage Detection Pipeline</button>
+            </div>
+          </div>
+        </div>
+        <div class="card hidden" id="pipelineSection">
+          <div class="card-hdr">
+            <span data-i18n="card_detection_lifecycle">Detection Lifecycle</span>
+            <span id="pipelineStatusText" class="text-xs text-muted" data-i18n="status_ready">Ready</span>
+          </div>
+          <div class="card-body">
+            <div class="pipeline" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+              <div class="pipeline-step" id="step-0"><div class="step-num">1</div><div class="step-name" data-i18n="step_frame">Frame Ingestion<br>(8 FPS)</div></div>
+              <div class="pipeline-step" id="step-1"><div class="step-num">2</div><div class="step-name" data-i18n="step_vehicle">Vehicle<br>Localization</div></div>
+              <div class="pipeline-step" id="step-2"><div class="step-num">3</div><div class="step-name" data-i18n="step_anpr">ANPR Plate<br>OCR</div></div>
+              <div class="pipeline-step" id="step-3"><div class="step-num">4</div><div class="step-name" data-i18n="step_vahan">VAHAN<br>Cross-Reference</div></div>
+              <div class="pipeline-step" id="step-4"><div class="step-num">5</div><div class="step-name" data-i18n="step_verdict">Discrepancy<br>Verdict</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="pipelineOutputContainer" class="hidden"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="toast-wrap" id="toastContainer" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script src="js/sanitize.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/telemetry_socket.js"></script>
+  <script src="js/command.js"></script>
+  <script src="js/dashboard.js"></script>
+
+  <footer class="gov-footer">
+    <div class="gov-footer-left">
+      <span data-i18n="footer_copyright">&copy; Government of Maharashtra. Content owned by Pune City Police Commissionerate.</span>
+    </div>
+    <div class="gov-footer-links">
+      <span data-i18n="footer_browser">Best viewed in latest Chrome / Firefox / Edge, 1280x800 resolution</span>
+      <span class="gov-footer-ref" id="footerRefId">SYS-REF: VIMS-ICCC-2026</span>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob: data:;">
+  <meta name="description" content="Vehicle Intelligence & Movement Tracking System (VIMS) — Citizen Services Portal. Public vehicle verification and incident grievance submission.">
+  <title>VIMS — Citizen Services Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="tricolor-strip" role="presentation"></div>
+  <header class="sys-header" role="banner">
+        <div class="sys-brand">
+      <div class="sys-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="#FF9933" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="12" r="1.4" fill="#FFFFFF"/>
+          <g stroke="#FFFFFF" stroke-width="0.6">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.3" y1="5.3" x2="18.7" y2="18.7"/>
+            <line x1="18.7" y1="5.3" x2="5.3" y2="18.7"/>
+            <line x1="7.6" y1="3.9" x2="16.4" y2="20.1"/>
+            <line x1="16.4" y1="3.9" x2="7.6" y2="20.1"/>
+            <line x1="3.9" y1="7.6" x2="20.1" y2="16.4"/>
+            <line x1="3.9" y1="16.4" x2="20.1" y2="7.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sys-brand-textblock">
+        <span class="sys-brand-tagline">Government of Maharashtra</span>
+        <span class="sys-brand-name" data-i18n="sys_title">VIMS — ICCC</span>
+        <span class="sys-brand-sub" data-i18n="sys_subtitle">Vehicle Intelligence & Movement Tracking System</span>
+      </div>
+    </div>
+    <div class="sys-meta">
+      <div class="sys-clock" id="istClock" aria-live="off">--:--:-- IST</div>
+      <div class="sys-status">
+        <span class="dot" role="presentation"></span>
+        <span id="nodeStatusLabel" data-i18n="sys_status_cit">CITIZEN PORTAL: ACTIVE</span>
+      </div>
+      <span class="sys-classification">Restricted &middot; Official Use Only</span>
+      <button class="sys-lang-toggle" id="langToggle" aria-label="Toggle language">EN | हि</button>
+      <div class="user-profile" id="userProfileComponent">
+        <span class="user-rank-dropdown" style="display:inline-block; border-color:transparent; background:rgba(255,255,255,0.05);" id="headerUserName">Citizen Services Portal</span>
+      </div>
+    </div>
+  </header>
+  <div class="dashboard-wrap">
+    <aside class="sidebar" id="citizenSidebar" role="navigation" aria-label="Citizen Services">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Public Services</div>
+        <a class="sidebar-link active" data-view="citizen-home" id="nav-cit-home" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span data-i18n="nav_citizen_home">Portal Home</span>
+        </a>
+        <a class="sidebar-link" data-view="citizen-lookup" id="nav-cit-lookup" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="nav_citizen_lookup">Check Vehicle Status</span>
+        </a>
+        <a class="sidebar-link" data-view="citizen-report" id="nav-cit-report" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span data-i18n="nav_citizen_report">Report Incident</span>
+        </a>
+        <a class="sidebar-link" data-view="citizen-grievance" id="nav-cit-grievance" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span data-i18n="nav_citizen_grievance">Track Grievance</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-link" id="sidebarSignOut" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span data-i18n="sign_out">Sign Out</span>
+        </a>
+      </div>
+    </aside>
+    <main class="main" role="main">
+      <section class="view active" id="view-citizen-home" role="region" aria-label="Portal Home">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_citizen_home">Citizen Services Portal</h1>
+          <p>Public vehicle verification, theft notification & incident grievance submission</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Welcome to VIMS Public Services</span>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:12px; line-height:1.6;">
+              The <strong>Vehicle Intelligence & Movement Tracking System (VIMS)</strong> provides transparent public services to verify registered vehicle status, register stolen vehicle alerts, and report cloned plate e-challan discrepancies directly to law enforcement command.
+            </p>
+            <div class="flex gap-10">
+              <button class="btn btn-primary" data-action="goto-cit-lookup">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span data-i18n="nav_citizen_lookup">Verify Vehicle Status</span>
+              </button>
+              <button class="btn btn-outline" data-action="goto-cit-report">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span data-i18n="nav_citizen_report">Report Incident / Theft</span>
+              </button>
+              <button class="btn btn-outline" data-action="goto-cit-grievance">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span data-i18n="nav_citizen_grievance">Track Grievance</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Citizen Advisory Guidelines</span>
+          </div>
+          <div class="card-body">
+            <ul style="padding-left: 20px; line-height: 1.8; font-size: var(--font-sm); color: var(--text-secondary);">
+              <li>If you receive an automated traffic e-challan for a location where your vehicle was not present, immediately file a <strong>Cloned Plate Report</strong>.</li>
+              <li>Vehicles reported stolen are synchronized with automated junction cameras across the municipal boundary.</li>
+              <li>Official VIMS status indicators are derived directly from the national transport registry.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-citizen-lookup" role="region" aria-label="Vehicle Status Verification">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_citizen_lookup">Vehicle Registration & Status Check</h1>
+          <p>Query registration validity, insurance timeline, and surveillance flag records</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Public Status Verification</span>
+          </div>
+          <div class="card-body">
+            <form id="citLookupForm" novalidate>
+              <div class="lookup-bar">
+                <div class="form-group">
+                  <label class="form-label" for="citizenPlateQuery">Enter Vehicle Registration Number</label>
+                  <input class="form-input font-mono" type="text" id="citizenPlateQuery" placeholder="e.g. MH12DE1433" maxlength="12" pattern="^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$|^[0-9]{2}BH[0-9]{4}[A-Z]{1,2}$" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnCitQuery">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Check Status
+                </button>
+              </div>
+              <div id="citLookupError" class="form-error hidden" role="alert" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+
+        <div id="citLookupResult" class="hidden"></div>
+      </section>
+      <section class="view" id="view-citizen-report" role="region" aria-label="Report Incident">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_citizen_report">Report Incident / Vehicle Grievance</h1>
+          <p>Submit formal reports for vehicle theft, duplicate plates, or incorrect e-challans</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Incident Submission Form</span>
+          </div>
+          <div class="card-body">
+            <form id="citReportForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="repPlate">Vehicle Number Plate</label>
+                  <input class="form-input font-mono" type="text" id="repPlate" placeholder="e.g. MH12DE1433" required maxlength="12" pattern="^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$|^[0-9]{2}BH[0-9]{4}[A-Z]{1,2}$">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="repType">Incident Nature</label>
+                  <select class="form-input" id="repType" required>
+                    <option value="">Select category...</option>
+                    <option value="THEFT">Vehicle Theft / Stolen Vehicle</option>
+                    <option value="CLONED_PLATE">Suspected Duplicate / Cloned Plate</option>
+                    <option value="WRONG_CHALLAN">Incorrect E-Challan Discrepancy</option>
+                    <option value="HIT_AND_RUN">Hit & Run Witness Report</option>
+                    <option value="ABANDONED">Suspicious / Abandoned Vehicle</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="repLocation">Incident Location / Junction</label>
+                  <input class="form-input" type="text" id="repLocation" placeholder="e.g. Near Swargate Metro Station" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="repDateTime">Date & Time of Occurrence</label>
+                  <input class="form-input" type="datetime-local" id="repDateTime" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="repDesc">Detailed Narrative</label>
+                <textarea class="form-input" id="repDesc" placeholder="Provide vehicle color, distinct markings, circumstances, FIR number (if registered)..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="repContact">Contact Mobile Number</label>
+                <input class="form-input" type="tel" id="repContact" placeholder="10-digit mobile number" required maxlength="10" pattern="^[6-9]\d{9}$">
+              </div>
+
+              <button type="submit" class="btn btn-primary mt-12" id="btnSubmitGrievance" data-i18n="btn_submit_report">
+                Submit Formal Grievance to Police Command
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-citizen-grievance" role="region" aria-label="Track Grievance">
+        <div class="page-hdr">
+          <h1 data-i18n="nav_citizen_grievance">Track Grievance / Submissions</h1>
+          <p>Check status of filed complaints and police investigation updates</p>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>Query Grievance by Reference Number</span>
+          </div>
+          <div class="card-body">
+            <form id="grievanceQueryForm">
+              <div class="lookup-bar">
+                <div class="form-group">
+                  <label class="form-label" for="grievanceQueryInput">Grievance Reference Number</label>
+                  <input class="form-input font-mono" type="text" id="grievanceQueryInput" placeholder="e.g. GRV-2026-8841" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSearchGrievance" data-i18n="btn_search_record">
+                  Search Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span>My Submitted Grievances</span>
+          </div>
+          <div class="card-body flush">
+            <table class="data-table" aria-label="Grievance Submissions Table">
+              <caption class="hidden">History of filed vehicle grievances and current investigation status</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Ref Number</th>
+                  <th scope="col">Date Filed</th>
+                  <th scope="col">Target Plate</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Assigned Authority</th>
+                  <th scope="col">Investigation Status</th>
+                </tr>
+              </thead>
+              <tbody id="grievanceTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <div class="toast-wrap" id="toastContainer" aria-live="polite"></div>
+  <script src="js/sanitize.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/citizen.js"></script>
+
+  <footer class="gov-footer">
+    <div class="gov-footer-left">
+      <span>&copy; Government of Maharashtra. Content owned by Pune City Police Commissionerate.</span>
+    </div>
+    <div class="gov-footer-links">
+      <span>Best viewed in latest Chrome / Firefox / Edge, 1280x800 resolution</span>
+      <span class="gov-footer-ref" id="footerRefId">SYS-REF: VIMS-ICCC-2026</span>
+    </div>
+  </footer>
+</body>
+</html>

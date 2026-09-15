@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob: data:;">
+  <meta name="description"
+    content="Maharashtra Police — Vehicle Intelligence & Movement Tracking System (VIMS). Integrated Command & Control Centre.">
+  <title>Maharashtra Police — VIMS ICCC Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <div class="tricolor-strip" role="presentation"></div>
+
+  <header class="sys-header" role="banner">
+    <div class="sys-brand">
+      <div class="sys-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="#FF9933" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="12" r="1.4" fill="#FFFFFF"/>
+          <g stroke="#FFFFFF" stroke-width="0.6">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.3" y1="5.3" x2="18.7" y2="18.7"/>
+            <line x1="18.7" y1="5.3" x2="5.3" y2="18.7"/>
+            <line x1="7.6" y1="3.9" x2="16.4" y2="20.1"/>
+            <line x1="16.4" y1="3.9" x2="7.6" y2="20.1"/>
+            <line x1="3.9" y1="7.6" x2="20.1" y2="16.4"/>
+            <line x1="3.9" y1="16.4" x2="20.1" y2="7.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sys-brand-textblock">
+        <span class="sys-brand-tagline" data-i18n="sys_tagline">Vehicle Intelligence & Movement Tracking System</span>
+        <span class="sys-brand-name" data-i18n="sys_title">VIMS ICCC</span>
+        <span class="sys-brand-sub" data-i18n="sys_subtitle">INTEGRATED COMMAND & CONTROL CENTER</span>
+      </div>
+    </div>
+    <div class="sys-meta">
+      <div class="sys-clock" id="istClock" aria-live="off">--:--:-- IST</div>
+      <div class="sys-status">
+        <span class="dot" role="presentation"></span>
+        <span data-i18n="sys_status_active">VIMS Node: Active</span>
+      </div>
+      <span class="sys-classification" data-i18n="sys_status_secure">Secure</span>
+      <button class="sys-lang-toggle" id="langToggle" aria-label="Toggle language between English and Hindi">EN | हि</button>
+    </div>
+  </header>
+
+  <main class="auth-page" role="main">
+    <div class="auth-container">
+      <div class="auth-card" role="region" aria-label="Authentication Panel">
+
+        <div class="auth-card-header">
+          <h2 data-i18n="auth_gateway_title">Maharashtra Police Command Gateway</h2>
+          <p data-i18n="auth_gateway_desc">Integrated Traffic & Surveillance Management System</p>
+        </div>
+
+        <div class="role-tabs" role="tablist" aria-label="Portal Mode">
+          <button class="role-tab active" id="tabLaw" role="tab" aria-selected="true" aria-controls="lawTabPanel" data-i18n="auth_police_tab">Police Personnel</button>
+          <button class="role-tab citizen-tab" id="tabCitizen" role="tab" aria-selected="false" aria-controls="citTabPanel" data-i18n="auth_citizen_tab">Citizen Services</button>
+        </div>
+
+        <div class="auth-subtabs" role="tablist" aria-label="Authentication Action">
+          <button class="auth-subtab active" id="subtabSignIn" role="tab" aria-selected="true" data-i18n="sign_in">Sign In</button>
+          <button class="auth-subtab" id="subtabSignUp" role="tab" aria-selected="false" data-i18n="register_node">Register Officer</button>
+        </div>
+
+        <div class="auth-body">
+
+          <!-- ═══ LAW SIGN IN ═══ -->
+          <form class="auth-form active" id="lawSignInForm" novalidate>
+            <div id="lawSignInError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="lawRank" data-i18n="label_police_rank">Police Rank</label>
+                <select class="form-input" id="lawRank" required>
+                  <option value="DGP">DGP (Director General of Police)</option>
+                  <option value="CP">CP (Commissioner of Police)</option>
+                  <option value="Joint CP">Joint CP (Joint Commissioner of Police)</option>
+                  <option value="Addl. CP">Addl. CP (Additional Commissioner of Police)</option>
+                  <option value="DCP">DCP (Deputy Commissioner of Police)</option>
+                  <option value="ACP">ACP (Assistant Commissioner of Police)</option>
+                  <option value="PI" selected>PI (Police Inspector)</option>
+                  <option value="API">API (Assistant Police Inspector)</option>
+                  <option value="PSI">PSI (Police Sub-Inspector)</option>
+                  <option value="ASI">ASI (Assistant Sub-Inspector)</option>
+                  <option value="HC">HC (Head Constable)</option>
+                  <option value="PC">PC (Police Constable)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lawUnit" data-i18n="label_branch_unit">Branch / Unit</label>
+                <select class="form-input" id="lawUnit" required>
+                  <option value="TRAFFIC" selected>Traffic Branch (Pune City)</option>
+                  <option value="CRIME">Crime Branch / CID</option>
+                  <option value="CYBER">Cyber Crime Police Station</option>
+                  <option value="SPECIAL">Special Branch</option>
+                  <option value="STATION">Police Station (Law & Order)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="lawEmail" data-i18n="label_email">Official Email Address</label>
+              <input class="form-input" type="email" id="lawEmail" value="arjun.deshmukh@mahapolice.gov.in"
+                placeholder="officer.name@mahapolice.gov.in" data-i18n-placeholder="placeholder_email" required autocomplete="username">
+              <div class="form-hint" data-i18n="auth_email_hint">Accepted: @mahapolice.gov.in, @police.gov.in, @gov.in, @nic.in</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="lawBadge" data-i18n="label_badge_id">Service / Badge ID</label>
+              <input class="form-input font-mono" type="text" id="lawBadge" value="MH-PI-4501"
+                placeholder="e.g. MH-PI-4501 or MH-PSI-2104" data-i18n-placeholder="placeholder_badge" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="lawPassword" data-i18n="label_passcode">Passcode</label>
+              <input class="form-input" type="password" id="lawPassword" value="admin123"
+                placeholder="Enter secure passcode" required autocomplete="current-password">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="lawOtp" data-i18n="label_mfa_token">MFA Security Token (6-Digit)</label>
+              <input class="form-input otp-input" type="text" id="lawOtp" value="123456" maxlength="6"
+                pattern="^[0-9]{6}$" placeholder="000000" data-i18n-placeholder="placeholder_otp" required autocomplete="one-time-code">
+              <div class="form-hint text-center" data-i18n="auth_otp_hint">Enter 6-digit authenticator or departmental OTP</div>
+            </div>
+
+            <!-- ═══ SMS OTP SECTION ═══ -->
+            <div class="sms-otp-section" id="smsOtpSection">
+              <label class="form-label" data-i18n="auth_sms_otp_label">Or verify via SMS OTP</label>
+              <div class="flex gap-8 items-center mt-6">
+                <button type="button" class="btn btn-outline btn-sm" id="btnLawSmsOtp" data-i18n="auth_sms_send">
+                  Send SMS Code
+                </button>
+                <span id="smsOtpStatus" class="text-xs text-muted"></span>
+                <span id="smsOtpCountdown" class="otp-timer hidden"></span>
+              </div>
+              <div id="smsOtpSuccess" class="otp-success hidden mt-6" data-i18n="auth_sms_sent">SMS OTP sent! Check your registered mobile.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-16" id="btnLawSignIn"
+              data-i18n="btn_authenticate">
+              Authenticate & Access Command Node
+            </button>
+          </form>
+
+          <!-- ═══ LAW SIGN UP ═══ -->
+          <form class="auth-form" id="lawSignUpForm" novalidate>
+            <div id="lawSignUpError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regLawRank" data-i18n="label_police_rank">Police Rank</label>
+                <select class="form-input" id="regLawRank" required>
+                  <option value="DGP">DGP (Director General of Police)</option>
+                  <option value="CP">CP (Commissioner of Police)</option>
+                  <option value="Joint CP">Joint CP (Joint Commissioner of Police)</option>
+                  <option value="Addl. CP">Addl. CP (Additional Commissioner of Police)</option>
+                  <option value="DCP">DCP (Deputy Commissioner of Police)</option>
+                  <option value="ACP">ACP (Assistant Commissioner of Police)</option>
+                  <option value="PI" selected>PI (Police Inspector)</option>
+                  <option value="API">API (Assistant Police Inspector)</option>
+                  <option value="PSI">PSI (Police Sub-Inspector)</option>
+                  <option value="ASI">ASI (Assistant Sub-Inspector)</option>
+                  <option value="HC">HC (Head Constable)</option>
+                  <option value="PC">PC (Police Constable)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regLawUnit" data-i18n="label_branch_unit">Branch / Unit</label>
+                <select class="form-input" id="regLawUnit" required>
+                  <option value="TRAFFIC" selected>Traffic Branch (Pune City)</option>
+                  <option value="CRIME">Crime Branch / CID</option>
+                  <option value="CYBER">Cyber Crime Police Station</option>
+                  <option value="SPECIAL">Special Branch</option>
+                  <option value="STATION">Police Station (Law & Order)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regLawName" data-i18n="label_officer_name">Officer Legal Full Name</label>
+              <input class="form-input" type="text" id="regLawName" placeholder="e.g. Ramesh S. Bhosale" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regLawEmail" data-i18n="label_email">Official Email</label>
+                <input class="form-input" type="email" id="regLawEmail" placeholder="officer@mahapolice.gov.in" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regLawBadge" data-i18n="label_badge_id">Badge ID</label>
+                <input class="form-input font-mono" type="text" id="regLawBadge" placeholder="e.g. MH-PI-4501" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regLawPass" data-i18n="label_passcode">Passcode (Min 8)</label>
+                <input class="form-input" type="password" id="regLawPass" placeholder="••••••••" required autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regLawPassConfirm" data-i18n="label_confirm_pass">Confirm Passcode</label>
+                <input class="form-input" type="password" id="regLawPassConfirm" placeholder="••••••••" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-16" id="btnLawSignUp" data-i18n="auth_provision">
+              Provision Police Personnel Account
+            </button>
+          </form>
+
+          <!-- ═══ CITIZEN SIGN IN ═══ -->
+          <form class="auth-form" id="citSignInForm" novalidate>
+            <div id="citSignInError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="label_auth_method">Authentication Method</label>
+              <div class="flex gap-10 mb-8">
+                <label style="display:flex; align-items:center; gap:6px; font-size:var(--font-sm); cursor:pointer; color:var(--text-secondary);">
+                  <input type="radio" name="citAuthMethod" id="radioCitMobile" value="mobile" checked>
+                  <span data-i18n="auth_mobile_otp">Registered Mobile + OTP</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:6px; font-size:var(--font-sm); cursor:pointer; color:var(--text-secondary);">
+                  <input type="radio" name="citAuthMethod" id="radioCitEmail" value="email">
+                  <span data-i18n="auth_email_pass">Email + Password</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="citMobileSection">
+              <div class="form-group">
+                <label class="form-label" for="citMobile" data-i18n="label_mobile">10-Digit Mobile Number</label>
+                <div class="flex gap-6">
+                  <span class="plate-display" style="font-size:var(--font-sm); padding:6px 10px; border-radius:var(--radius);">+91</span>
+                  <input class="form-input" type="tel" id="citMobile" maxlength="10" pattern="^[6-9]\d{9}$"
+                    value="9876543210" placeholder="9876543210" data-i18n-placeholder="placeholder_mobile" autocomplete="tel">
+                  <button type="button" class="btn btn-outline btn-sm" id="btnGetCitizenOtp" data-i18n="btn_get_otp">Get OTP</button>
+                </div>
+                <div id="otpSentNotice" class="form-hint" style="color:var(--alert-green);" data-i18n="auth_otp_sent">OTP dispatched to registered mobile. Valid for 10 minutes.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="citOtp">Enter OTP (6-Digit)</label>
+                <input class="form-input otp-input" type="text" id="citOtp" value="123456" maxlength="6"
+                  pattern="^[0-9]{6}$" placeholder="000000" data-i18n-placeholder="placeholder_otp">
+              </div>
+            </div>
+
+            <div id="citEmailSection" class="hidden">
+              <div class="form-group">
+                <label class="form-label" for="citEmail" data-i18n="label_citizen_email">Registered Email</label>
+                <input class="form-input" type="email" id="citEmail" placeholder="citizen@domain.com" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="citPass" data-i18n="label_passcode">Password</label>
+                <input class="form-input" type="password" id="citPass" placeholder="Enter password" autocomplete="current-password">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-16" id="btnCitSignIn" data-i18n="auth_citizen_verify">
+              Verify & Enter Citizen Portal
+            </button>
+          </form>
+
+          <!-- ═══ CITIZEN SIGN UP ═══ -->
+          <form class="auth-form" id="citSignUpForm" novalidate>
+            <div id="citSignUpError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="regCitName" data-i18n="label_citizen_name">Full Legal Name</label>
+              <input class="form-input" type="text" id="regCitName" placeholder="e.g. Ananya Deshmukh" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regCitMobile" data-i18n="label_citizen_mobile">Mobile Number</label>
+              <div class="flex gap-6">
+                <span class="plate-display" style="font-size:var(--font-sm); padding:6px 10px; border-radius:var(--radius);">+91</span>
+                <input class="form-input" type="tel" id="regCitMobile" maxlength="10" pattern="^[6-9]\d{9}$"
+                  placeholder="9876543210" data-i18n-placeholder="placeholder_mobile" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regCitEmail" data-i18n="label_citizen_email">Email Address</label>
+              <input class="form-input" type="email" id="regCitEmail" placeholder="citizen@domain.com" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regCitPass" data-i18n="label_citizen_pass">Password (Min 6)</label>
+                <input class="form-input" type="password" id="regCitPass" placeholder="••••••••" required autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regCitPassConfirm" data-i18n="label_confirm_password">Confirm Password</label>
+                <input class="form-input" type="password" id="regCitPassConfirm" placeholder="••••••••" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-16" id="btnCitSignUp" data-i18n="auth_citizen_create">
+              Create Citizen Portal Account
+            </button>
+          </form>
+
+        </div>
+        <footer style="padding:10px 16px; background:var(--bg-deep); border-top:1px solid var(--border); font-size:var(--font-xs); color:var(--text-muted); text-align:center;">
+          <span data-i18n="auth_footer">Official Maharashtra Police Command & Public Service Gateway. Access monitored under IT Act Sec 66.</span>
+        </footer>
+
+      </div>
+    </div>
+  </main>
+  <script src="js/sanitize.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let currentRole = 'law';
+    let currentSubtab = 'signin';
+    let citAuthMode = 'mobile';
+    let smsOtpCooldown = 0;
+    let smsOtpTimer = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      I18N.init();
+      initClock();
+      attachEventDelegates();
+
+      const session = AUTH.getSession();
+      if (session) {
+        if (session.user.role === 'law') {
+          window.location.replace('dashboard.html');
+        } else {
+          window.location.replace('citizen.html');
+        }
+      }
+    });
+
+    function initClock() {
+      const clockEl = document.getElementById('istClock');
+      function update() {
+        const now = new Date();
+        const options = {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: true
+        };
+        const timeStr = new Intl.DateTimeFormat('en-US', options).format(now);
+        const dateOptions = {
+          timeZone: 'Asia/Kolkata',
+          day: '2-digit', month: 'short', year: 'numeric'
+        };
+        const dateStr = new Intl.DateTimeFormat('en-GB', dateOptions).format(now).toUpperCase();
+        if (clockEl) clockEl.textContent = `${timeStr} | ${dateStr}`;
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    function attachEventDelegates() {
+      const langBtn = document.getElementById('langToggle');
+      if (langBtn) {
+        langBtn.addEventListener('click', () => I18N.toggleLanguage());
+      }
+
+      document.getElementById('tabLaw').addEventListener('click', () => switchRole('law'));
+      document.getElementById('tabCitizen').addEventListener('click', () => switchRole('citizen'));
+
+      document.getElementById('subtabSignIn').addEventListener('click', () => switchSubtab('signin'));
+      document.getElementById('subtabSignUp').addEventListener('click', () => switchSubtab('signup'));
+
+      document.getElementById('radioCitMobile').addEventListener('change', () => toggleCitAuthMode('mobile'));
+      document.getElementById('radioCitEmail').addEventListener('change', () => toggleCitAuthMode('email'));
+      document.getElementById('btnGetCitizenOtp').addEventListener('click', sendCitizenOtp);
+
+      document.getElementById('lawSignInForm').addEventListener('submit', handleLawSignIn);
+      document.getElementById('lawSignUpForm').addEventListener('submit', handleLawSignUp);
+      document.getElementById('citSignInForm').addEventListener('submit', handleCitizenSignIn);
+      document.getElementById('citSignUpForm').addEventListener('submit', handleCitizenSignUp);
+
+      // SMS OTP button for law enforcement
+      const smsBtn = document.getElementById('btnLawSmsOtp');
+      if (smsBtn) {
+        smsBtn.addEventListener('click', sendLawSmsOtp);
+      }
+    }
+
+    function switchRole(role) {
+      currentRole = role;
+      document.getElementById('tabLaw').classList.toggle('active', role === 'law');
+      document.getElementById('tabCitizen').classList.toggle('active', role === 'citizen');
+      document.getElementById('tabLaw').setAttribute('aria-selected', role === 'law');
+      document.getElementById('tabCitizen').setAttribute('aria-selected', role === 'citizen');
+
+      document.getElementById('subtabSignUp').textContent = role === 'law' ? I18N.t('register_node') : I18N.t('create_account');
+      renderActiveForm();
+    }
+
+    function switchSubtab(subtab) {
+      currentSubtab = subtab;
+      document.getElementById('subtabSignIn').classList.toggle('active', subtab === 'signin');
+      document.getElementById('subtabSignUp').classList.toggle('active', subtab === 'signup');
+      document.getElementById('subtabSignIn').setAttribute('aria-selected', subtab === 'signin');
+      document.getElementById('subtabSignUp').setAttribute('aria-selected', subtab === 'signup');
+      renderActiveForm();
+    }
+
+    function toggleCitAuthMode(mode) {
+      citAuthMode = mode;
+      document.getElementById('citMobileSection').classList.toggle('hidden', mode !== 'mobile');
+      document.getElementById('citEmailSection').classList.toggle('hidden', mode !== 'email');
+    }
+
+    // ─── SMS OTP for Law Enforcement ───
+    async function sendLawSmsOtp() {
+      const btn = document.getElementById('btnLawSmsOtp');
+      const statusEl = document.getElementById('smsOtpStatus');
+      const successEl = document.getElementById('smsOtpSuccess');
+      const countdownEl = document.getElementById('smsOtpCountdown');
+      const badgeId = document.getElementById('lawBadge').value.trim();
+
+      if (!badgeId) {
+        statusEl.textContent = 'Enter Badge ID first';
+        statusEl.style.color = 'var(--alert-red)';
+        return;
+      }
+
+      if (smsOtpCooldown > 0) return;
+
+      btn.disabled = true;
+      btn.textContent = I18N.t('auth_sms_sending', 'Sending...');
+      statusEl.textContent = '';
+      successEl.classList.add('hidden');
+
+      try {
+        const resp = await fetch('http://localhost:8000/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: badgeId, channel: 'sms' })
+        });
+
+        if (resp.ok) {
+          successEl.classList.remove('hidden');
+          startOtpCooldown(60, btn, countdownEl);
+        } else {
+          statusEl.textContent = 'Failed to send OTP. Try again.';
+          statusEl.style.color = 'var(--alert-red)';
+          btn.disabled = false;
+          btn.textContent = I18N.t('auth_sms_send', 'Send SMS Code');
+        }
+      } catch {
+        // Backend offline — simulate OTP sent for demo
+        successEl.classList.remove('hidden');
+        startOtpCooldown(60, btn, countdownEl);
+      }
+    }
+
+    function startOtpCooldown(seconds, btn, countdownEl) {
+      smsOtpCooldown = seconds;
+      countdownEl.classList.remove('hidden');
+      btn.disabled = true;
+
+      if (smsOtpTimer) clearInterval(smsOtpTimer);
+
+      function tick() {
+        if (smsOtpCooldown <= 0) {
+          clearInterval(smsOtpTimer);
+          smsOtpTimer = null;
+          countdownEl.classList.add('hidden');
+          btn.disabled = false;
+          btn.textContent = I18N.t('auth_sms_resend', 'Resend SMS OTP');
+          return;
+        }
+        countdownEl.textContent = `${I18N.t('auth_sms_countdown', 'Resend in')} ${smsOtpCooldown}s`;
+        smsOtpCooldown--;
+      }
+
+      tick();
+      smsOtpTimer = setInterval(tick, 1000);
+    }
+
+    // ─── Citizen OTP ───
+    async function sendCitizenOtp() {
+      const mob = document.getElementById('citMobile').value.trim();
+      const errBox = document.getElementById('citSignInError');
+      if (!/^[6-9][0-9]{9}$/.test(mob)) {
+        showError(errBox, 'Please enter a valid 10-digit mobile number before requesting OTP.');
+        return;
+      }
+      clearError(errBox);
+      try {
+        await fetch('http://localhost:8000/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: mob, channel: 'sms' })
+        });
+      } catch {}
+      const notice = document.getElementById('otpSentNotice');
+      if (notice) notice.classList.remove('hidden');
+      document.getElementById('citOtp').focus();
+    }
+
+    function renderActiveForm() {
+      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+      clearAllErrors();
+
+      if (currentRole === 'law') {
+        if (currentSubtab === 'signin') {
+          document.getElementById('lawSignInForm').classList.add('active');
+        } else {
+          document.getElementById('lawSignUpForm').classList.add('active');
+        }
+      } else {
+        if (currentSubtab === 'signin') {
+          document.getElementById('citSignInForm').classList.add('active');
+        } else {
+          document.getElementById('citSignUpForm').classList.add('active');
+        }
+      }
+    }
+
+    function showError(el, msg) {
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function clearError(el) {
+      if (!el) return;
+      el.textContent = '';
+      el.classList.add('hidden');
+    }
+
+    function clearAllErrors() {
+      ['lawSignInError', 'lawSignUpError', 'citSignInError', 'citSignUpError'].forEach(id => {
+        clearError(document.getElementById(id));
+      });
+    }
+
+    async function handleLawSignIn(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('lawSignInError');
+      clearError(errBox);
+
+      const email = document.getElementById('lawEmail').value.trim();
+      const badgeId = document.getElementById('lawBadge').value.trim();
+      const rankCode = document.getElementById('lawRank').value;
+      const unitId = document.getElementById('lawUnit').value;
+      const password = document.getElementById('lawPassword').value;
+      const otp = document.getElementById('lawOtp').value.trim();
+
+      const result = await AUTH.loginLaw({ email, badgeId, rankCode, unitId, password, otp });
+      if (result.success) {
+        window.location.href = 'dashboard.html';
+      } else {
+        showError(errBox, result.error);
+      }
+    }
+
+    async function handleLawSignUp(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('lawSignUpError');
+      clearError(errBox);
+
+      const name = document.getElementById('regLawName').value.trim();
+      const email = document.getElementById('regLawEmail').value.trim();
+      const badgeId = document.getElementById('regLawBadge').value.trim();
+      const rankCode = document.getElementById('regLawRank').value;
+      const unitId = document.getElementById('regLawUnit').value;
+      const password = document.getElementById('regLawPass').value;
+      const confirmPassword = document.getElementById('regLawPassConfirm').value;
+
+      const result = await AUTH.signupLaw({ name, email, badgeId, rankCode, unitId, password, confirmPassword });
+      if (result.success) {
+        window.location.href = 'dashboard.html';
+      } else {
+        showError(errBox, result.error);
+      }
+    }
+
+    async function handleCitizenSignIn(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('citSignInError');
+      clearError(errBox);
+
+      const mobile = document.getElementById('citMobile').value.trim();
+      const otp = document.getElementById('citOtp').value.trim();
+      const email = document.getElementById('citEmail').value.trim();
+      const password = document.getElementById('citPass').value;
+
+      const result = await AUTH.loginCitizen({ mode: citAuthMode, mobile, otp, email, password });
+      if (result.success) {
+        window.location.href = 'citizen.html';
+      } else {
+        showError(errBox, result.error);
+      }
+    }
+
+    function handleCitizenSignUp(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('citSignUpError');
+      clearError(errBox);
+
+      const name = document.getElementById('regCitName').value.trim();
+      const mobile = document.getElementById('regCitMobile').value.trim();
+      const email = document.getElementById('regCitEmail').value.trim();
+      const password = document.getElementById('regCitPass').value;
+      const confirmPassword = document.getElementById('regCitPassConfirm').value;
+
+      const result = AUTH.signupCitizen({ name, mobile, email, password, confirmPassword });
+      if (result.success) {
+        window.location.href = 'citizen.html';
+      } else {
+        showError(errBox, result.error);
+      }
+    }
+  </script>
+
+  <footer class="gov-footer">
+    <div class="gov-footer-left">
+      <span data-i18n="footer_copyright">&copy; Government of Maharashtra. Content owned by Pune City Police Commissionerate.</span>
+    </div>
+    <div class="gov-footer-links">
+      <span data-i18n="footer_browser">Best viewed in latest Chrome / Firefox / Edge, 1280x800 resolution</span>
+      <span class="gov-footer-ref" id="footerRefId">SYS-REF: VIMS-ICCC-2026</span>
+    </div>
+  </footer>
+</body>
+
+</html>
