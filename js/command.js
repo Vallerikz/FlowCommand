@@ -573,7 +573,7 @@ const COMMAND = {
     this.atscLightState = lightState;
     const PCU_CAPACITY = 80;
 
-    // ── Phase readouts ──────────────────────────────────────────
+ // ── Phase readouts
     const phaseEl = document.getElementById('atscPhaseStatus');
     const elapsedEl = document.getElementById('atscElapsedTime');
     const minGreenEl = document.getElementById('atscMinGreenRemain');
@@ -609,7 +609,7 @@ const COMMAND = {
       cycleEl.textContent = d.cycle_count;
     }
 
-    // ── Signal lamps ────────────────────────────────────────────
+ // ── Signal lamps
     // Active corridor gets the live light_state; opposing corridor is RED.
     // ALL_RED → both corridors show RED lamp.
     const nsLamp = lightState === 'ALL_RED' ? 'RED' : (activeCorridor === 'NS' ? lightState : 'RED');
@@ -617,7 +617,7 @@ const COMMAND = {
     this._atscSetSignal('atscSignalNS', nsLamp);
     this._atscSetSignal('atscSignalEW', ewLamp);
 
-    // ── PCU Gauges ──────────────────────────────────────────────
+ // ── PCU Gauges
     // Backend nests PCU under d.pcu = { NS: float, EW: float }
     const nsPcu = Math.max(0, Math.min((d.pcu && d.pcu.NS) || 0, PCU_CAPACITY));
     const ewPcu = Math.max(0, Math.min((d.pcu && d.pcu.EW) || 0, PCU_CAPACITY));
@@ -1109,7 +1109,7 @@ const COMMAND = {
     const W = canvas.width;
     const H = canvas.height;
 
-    // ── 1. Draw Intersection Geometry ───────────────────────────
+ // ── 1. Draw Intersection Geometry
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(0, 0, W, H);
 
@@ -1179,7 +1179,7 @@ const COMMAND = {
       ctx.beginPath(); ctx.moveTo(400, 115 + i * 10); ctx.lineTo(415, 120 + i * 10); ctx.stroke();
     }
 
-    // ── 2. Render Corner Traffic Signals ────────────────────────
+ // ── 2. Render Corner Traffic Signals
     const isNsGreen = this.atscLightState !== 'ALL_RED' && this.atscActiveCorridor === 'NS';
     const isEwGreen = this.atscLightState !== 'ALL_RED' && this.atscActiveCorridor === 'EW';
 
@@ -1208,7 +1208,7 @@ const COMMAND = {
     drawSignalHead(240, 260, ewColor, false);
     drawSignalHead(400, 100, ewColor, false);
 
-    // ── 3. Vehicle Physics & YOLO Bounding Box Overlay ───────────
+ // ── 3. Vehicle Physics & YOLO Bounding Box Overlay
     let nsPcu = 0;
     let ewPcu = 0;
     const weights = { moto: 0.5, auto: 0.8, car: 1.0, bus: 3.0, ambulance: 1.5 };

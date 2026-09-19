@@ -125,7 +125,7 @@
   extendI18nDictionary();
   hookAtscTelemetryLocalization();
 
-  // ─── Wait for DOM ───
+ // Wait for DOM
   document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
   });
@@ -165,7 +165,7 @@
     initDiffAnalysis();
   }
 
-  // ─── IST Clock ───
+ // IST Clock
   function initClock() {
     const clockEl = document.getElementById('istClock');
     function update() {
@@ -192,14 +192,14 @@
     window.addEventListener('vims-lang-changed', update);
   }
 
-  // ─── Language Toggle ───
+ // Language Toggle
   function initLangToggle() {
     if (typeof I18N !== 'undefined' && typeof I18N.bindToggleButton === 'function') {
       I18N.bindToggleButton();
     }
   }
 
-  // ─── Theme Toggle ───
+ // Theme Toggle
   function initThemeToggle() {
     const themeBtn = document.getElementById('themeToggle');
     if (!themeBtn) return;
@@ -235,7 +235,7 @@
     });
   }
 
-  // ─── Navigation (Top Nav + Sidebar) ───
+ // Navigation (Top Nav + Sidebar)
   function initNavigation() {
     // Top nav links
     document.querySelectorAll('.topnav-link[data-view]').forEach(btn => {
@@ -302,7 +302,7 @@
     }
   }
 
-  // ─── Single Junction Minimap Controller (2 Perpendicular Lanes) ───
+ // Single Junction Minimap Controller (2 Perpendicular Lanes)
   function initJunctionMinimap() {
     const canvas = document.getElementById('junctionVehicleCanvas');
     if (!canvas) return;
@@ -318,6 +318,8 @@
 
     // Internal Junction State
     const state = {
+      currentCameraId: 'CAM-01',
+      currentLayout: null,
       activeCorridor: 'NS', // 'NS' (Lane 1) or 'EW' (Lane 2)
       lightState: 'RED',    // Red circular lens during leading protected turn arrow phase
       arrowL: 'GREEN',      // Leading Left Turn Arrow FIRST!
@@ -389,6 +391,554 @@
       btnDensityUp: document.getElementById('btnJuncDensityUp'),
       btnDensityDown: document.getElementById('btnJuncDensityDown'),
       btnCenter: document.getElementById('btnJuncCenter')
+    };
+
+    // ── CORRIDOR CAMERA JUNCTION CUT SCHEMATICS (CAM-01 to CAM-06) ──
+    const COMMON_SVG_DEFS = `
+      <defs>
+        <linearGradient id="roadAsphaltV" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0a0a0c"/>
+          <stop offset="50%" stop-color="#141418"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </linearGradient>
+        <linearGradient id="roadAsphaltH" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a0a0c"/>
+          <stop offset="50%" stop-color="#141418"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </linearGradient>
+        <linearGradient id="roadAsphaltDiag" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0a0a0c"/>
+          <stop offset="50%" stop-color="#141418"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </linearGradient>
+        <linearGradient id="riverWaterFlow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#042f2e"/>
+          <stop offset="50%" stop-color="#0e7490"/>
+          <stop offset="100%" stop-color="#042f2e"/>
+        </linearGradient>
+        <pattern id="junctionBoxHatch" width="16" height="16" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1.5" />
+        </pattern>
+      </defs>
+    `;
+
+    function getSignalHeadsSvg(posN, posS, posW, posE) {
+      return `
+        <!-- North Signal (governs Lane 1 Southbound) -->
+        <g id="sigHeadN" transform="translate(${posN.x}, ${posN.y})">
+          <rect x="0" y="0" width="22" height="54" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
+          <circle id="sigLensN_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
+          <circle id="sigLensN_A" cx="11" cy="24" r="5" class="signal-lens amber"/>
+          <circle id="sigLensN_G" cx="11" cy="37" r="5" class="signal-lens green"/>
+          <path id="sigLensN_ArrowL" class="turn-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensN_ArrowR" class="turn-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <!-- South Signal (governs Lane 1 Northbound) -->
+        <g id="sigHeadS" transform="translate(${posS.x}, ${posS.y})">
+          <rect x="0" y="0" width="22" height="54" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
+          <circle id="sigLensS_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
+          <circle id="sigLensS_A" cx="11" cy="24" r="5" class="signal-lens amber"/>
+          <circle id="sigLensS_G" cx="11" cy="37" r="5" class="signal-lens green"/>
+          <path id="sigLensS_ArrowL" class="turn-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensS_ArrowR" class="turn-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <!-- West Signal (governs Lane 2 Eastbound) -->
+        <g id="sigHeadW" transform="translate(${posW.x}, ${posW.y})">
+          <rect x="0" y="0" width="54" height="22" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
+          <circle id="sigLensW_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
+          <circle id="sigLensW_A" cx="24" cy="11" r="5" class="signal-lens amber"/>
+          <circle id="sigLensW_G" cx="37" cy="11" r="5" class="signal-lens green"/>
+          <path id="sigLensW_ArrowL" class="turn-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensW_ArrowR" class="turn-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <!-- East Signal (governs Lane 2 Westbound) -->
+        <g id="sigHeadE" transform="translate(${posE.x}, ${posE.y})">
+          <rect x="0" y="0" width="54" height="22" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
+          <circle id="sigLensE_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
+          <circle id="sigLensE_A" cx="24" cy="11" r="5" class="signal-lens amber"/>
+          <circle id="sigLensE_G" cx="37" cy="11" r="5" class="signal-lens green"/>
+          <path id="sigLensE_ArrowL" class="turn-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensE_ArrowR" class="turn-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      `;
+    }
+
+    const JUNCTION_LAYOUTS = {
+      'CAM-01': {
+        id: 'CAM-01',
+        title: 'Swargate Chowk Minimap (NH-60 x Tilak Rd)',
+        badge: 'CAM-01 • 65° SKEWED DIAGONAL CUT',
+        lane1: 'Shivaji Road / NH-60 (North-South)',
+        lane2: 'Tilak Road / Shankarsheth (East-West Skewed 65°)',
+        type: 'skewed_65',
+        stopLines: { N: 120, S: 218, W: 346, E: 452 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 114, yMax: 226 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <polygon points="0,0 352,0 352,130 0,190" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,0 800,0 800,54 448,114" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="0,286 352,226 352,340 0,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,210 800,150 800,340 448,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Lane 1 (NS Vertical Corridor) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <line x1="352" y1="0" x2="352" y2="130" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="352" y1="226" x2="352" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="0" x2="448" y2="114" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="210" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="400" y1="0" x2="400" y2="118" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="222" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="120" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="116" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="224" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="220" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2: 65° Skewed Diagonal Road -->
+              <polygon points="0,190 800,54 800,150 0,286" fill="url(#roadAsphaltDiag)"/>
+              <line x1="0" y1="190" x2="352" y2="130" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="114" x2="800" y2="54" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="286" x2="352" y2="226" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="210" x2="800" y2="150" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="0" y1="238" x2="335" y2="181" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="159" x2="800" y2="102" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="214" x2="335" y2="157" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="135" x2="800" y2="78" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="262" x2="335" y2="205" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="183" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Center Intersection Parallelogram Box -->
+              <polygon points="352,130 448,114 448,210 352,226" fill="#0d0d10"/>
+              <polygon points="352,130 448,114 448,210 352,226" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Angled Zebra Crosswalks -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="116" x2="444" y2="101" stroke-dasharray="6 6"/>
+                <line x1="356" y1="122" x2="444" y2="107" stroke-dasharray="6 6"/>
+                <line x1="356" y1="234" x2="444" y2="219" stroke-dasharray="6 6"/>
+                <line x1="356" y1="240" x2="444" y2="225" stroke-dasharray="6 6"/>
+                <line x1="338" y1="135" x2="338" y2="231" stroke-dasharray="6 6"/>
+                <line x1="344" y1="134" x2="344" y2="230" stroke-dasharray="6 6"/>
+                <line x1="456" y1="110" x2="456" y2="206" stroke-dasharray="6 6"/>
+                <line x1="462" y1="109" x2="462" y2="205" stroke-dasharray="6 6"/>
+              </g>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="124" x2="400" y2="116" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="222" x2="448" y2="214" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="346" y1="180" x2="346" y2="228" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="452" y1="112" x2="452" y2="160" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 326, y: 64 }, { x: 454, y: 232 }, { x: 292, y: 248 }, { x: 468, y: 80 })}
+            </svg>
+          `;
+        }
+      },
+
+      'CAM-02': {
+        id: 'CAM-02',
+        title: 'Alka Talkies Chowk Minimap (Sambhaji Bridge Splay)',
+        badge: 'CAM-02 • Y-FORK SPLAY & CHEVRON ISLAND',
+        lane1: 'Tilak Rd / Sambhaji Bridge Connector (NS)',
+        lane2: 'Kumthekar & Kelkar Roads (EW Fork)',
+        type: 'y_fork',
+        stopLines: { N: 120, S: 220, W: 348, E: 450 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <polygon points="0,0 352,0 352,122 0,122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,0 800,0 800,122 448,122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="0,300 352,218 352,340 0,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,218 800,218 800,340 448,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Median separator between Kumthekar and Kelkar at far west -->
+              <polygon points="0,170 60,170 60,220 0,230" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Lane 1 (NS Road) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <line x1="352" y1="0" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="352" y1="218" x2="352" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 East (Horizontal Road) -->
+              <rect x="448" y="122" width="352" height="96" fill="url(#roadAsphaltH)"/>
+              <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 West: Kumthekar Road (Upper Branch, Westbound Exit) -->
+              <rect x="0" y="122" width="352" height="48" fill="url(#roadAsphaltH)"/>
+              <line x1="0" y1="122" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="170" x2="352" y2="170" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 West: Kelkar Road (Lower Splay Branch, Eastbound Entrance) -->
+              <polygon points="0,230 348,170 352,170 352,218 0,300" fill="url(#roadAsphaltDiag)"/>
+              <line x1="0" y1="230" x2="348" y2="170" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="300" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="265" x2="335" y2="194" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="248" x2="335" y2="182" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="282" x2="335" y2="206" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Chevron Gore Island (Gore Area Dividing Kumthekar & Kelkar Roads) -->
+              <polygon points="60,170 348,170 60,220" fill="#18181b" stroke="#eab308" stroke-width="2"/>
+              <line x1="100" y1="172" x2="85" y2="214" stroke="#f59e0b" stroke-width="2.2"/>
+              <line x1="145" y1="172" x2="130" y2="206" stroke="#f59e0b" stroke-width="2.2"/>
+              <line x1="190" y1="172" x2="175" y2="199" stroke="#f59e0b" stroke-width="2.2"/>
+              <line x1="235" y1="172" x2="220" y2="191" stroke="#f59e0b" stroke-width="2.2"/>
+              <line x1="280" y1="172" x2="265" y2="183" stroke="#f59e0b" stroke-width="2.2"/>
+              <line x1="325" y1="172" x2="310" y2="176" stroke="#f59e0b" stroke-width="2.2"/>
+              <circle cx="344" cy="171" r="3" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+              <circle cx="310" cy="174" r="3" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+              <circle cx="265" cy="181" r="3.5" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+              <circle cx="215" cy="190" r="3.5" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+              <circle cx="160" cy="200" r="3.5" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+              <circle cx="100" cy="210" r="3.5" fill="#facc15" stroke="#78350f" stroke-width="1"/>
+
+              <!-- Center Intersection Box -->
+              <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
+              <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Crosswalks -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
+                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
+                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
+                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
+                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
+                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
+                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+              </g>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="348" y1="170" x2="348" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 326, y: 68 }, { x: 454, y: 230 }, { x: 310, y: 236 }, { x: 466, y: 96 })}
+            </svg>
+          `;
+        }
+      },
+
+      'CAM-03': {
+        id: 'CAM-03',
+        title: 'Balgandharva Chowk Minimap (JM Road Arterial)',
+        badge: 'CAM-03 • 90° ORTHOGONAL SQUARE CUT',
+        lane1: 'Jangali Maharaj Path (North-South)',
+        lane2: 'J.M. Road 6-Lane Arterial (East-West)',
+        type: 'square_90',
+        stopLines: { N: 120, S: 220, W: 350, E: 450 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <rect x="0" y="0" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <rect x="448" y="0" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <rect x="0" y="218" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <rect x="448" y="218" width="352" height="122" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Lane 1 (NS Road) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <line x1="352" y1="0" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="352" y1="218" x2="352" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 (EW Road) -->
+              <rect x="0" y="122" width="800" height="96" fill="url(#roadAsphaltH)"/>
+              <line x1="0" y1="122" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="0" y1="170" x2="335" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="194" x2="335" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Center Junction Box -->
+              <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
+              <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Crosswalks -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
+                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
+                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
+                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
+                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
+                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
+                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+              </g>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="350" y1="170" x2="350" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 328, y: 68 }, { x: 454, y: 230 }, { x: 296, y: 226 }, { x: 466, y: 96 })}
+            </svg>
+          `;
+        }
+      },
+
+      'CAM-04': {
+        id: 'CAM-04',
+        title: 'Goodluck Cafe Chowk Minimap (FC Road Dogleg)',
+        badge: 'CAM-04 • OFFSET STAGGERED DOGLEG CUT',
+        lane1: 'Fergusson College Road (North-South)',
+        lane2: 'Deccan Gymkhana Approach (Staggered EW)',
+        type: 'offset_staggered',
+        stopLines: { N: 84, S: 256, W: 346, E: 454 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 78, yMax: 262 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <polygon points="0,0 352,0 352,88 0,88" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,0 800,0 800,156 448,156" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="0,184 352,184 352,340 0,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,252 800,252 800,340 448,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Lane 1 (FC Road NS) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <line x1="352" y1="0" x2="352" y2="88" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="352" y1="184" x2="352" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="0" x2="448" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="252" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="400" y1="0" x2="400" y2="78" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="262" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="78" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="78" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="262" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="262" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- West Approach (Higher: y=88..184) -->
+              <rect x="0" y="88" width="352" height="96" fill="url(#roadAsphaltH)"/>
+              <line x1="0" y1="88" x2="352" y2="88" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="184" x2="352" y2="184" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="136" x2="335" y2="136" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="112" x2="335" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="160" x2="335" y2="160" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- East Approach (Lower: y=156..252) -->
+              <rect x="448" y="156" width="352" height="96" fill="url(#roadAsphaltH)"/>
+              <line x1="448" y1="156" x2="800" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="252" x2="800" y2="252" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="465" y1="204" x2="800" y2="204" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="180" x2="800" y2="180" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="228" x2="800" y2="228" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Center Junction Staggered Dogleg Box -->
+              <polygon points="352,88 448,156 448,252 352,184" fill="#0d0d10"/>
+              <polygon points="352,88 448,156 448,252 352,184" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Crosswalks -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="74" x2="444" y2="74" stroke-dasharray="6 6"/>
+                <line x1="356" y1="80" x2="444" y2="80" stroke-dasharray="6 6"/>
+                <line x1="356" y1="260" x2="444" y2="260" stroke-dasharray="6 6"/>
+                <line x1="356" y1="266" x2="444" y2="266" stroke-dasharray="6 6"/>
+                <line x1="338" y1="92" x2="338" y2="180" stroke-dasharray="6 6"/>
+                <line x1="344" y1="92" x2="344" y2="180" stroke-dasharray="6 6"/>
+                <line x1="456" y1="160" x2="456" y2="248" stroke-dasharray="6 6"/>
+                <line x1="462" y1="160" x2="462" y2="248" stroke-dasharray="6 6"/>
+              </g>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="84" x2="400" y2="84" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="256" x2="448" y2="256" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="346" y1="136" x2="346" y2="184" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="454" y1="156" x2="454" y2="204" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 326, y: 34 }, { x: 454, y: 262 }, { x: 292, y: 192 }, { x: 468, y: 130 })}
+            </svg>
+          `;
+        }
+      },
+
+      'CAM-05': {
+        id: 'CAM-05',
+        title: 'Deccan Gymkhana Chowk Minimap (Karve Rd Hub)',
+        badge: 'CAM-05 • 75° OBLIQUE ARTERIAL & ROUNDED CURBS',
+        lane1: 'Prabhat Road Corridor (North-South)',
+        lane2: 'Karve Road Commercial Arterial (Oblique EW)',
+        type: 'oblique_75',
+        stopLines: { N: 114, S: 226, W: 346, E: 454 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 110, yMax: 232 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <polygon points="0,0 352,0 352,117 0,145" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,0 800,0 800,102 448,109" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="0,270 352,269 352,340 0,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+              <polygon points="448,231 800,198 800,340 448,340" fill="#000000" stroke="#18181b" stroke-width="1"/>
+
+              <!-- Lane 1 (NS Road) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <line x1="400" y1="0" x2="400" y2="110" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="230" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="110" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="110" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="230" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="230" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 (75° Oblique Arterial Road) -->
+              <polygon points="0,174 800,102 800,198 0,270" fill="url(#roadAsphaltDiag)"/>
+              <line x1="0" y1="222" x2="335" y2="192" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="180" x2="800" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="198" x2="335" y2="168" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="156" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="246" x2="335" y2="216" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="204" x2="800" y2="174" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Large Rounded Corner Fillet Curbs (r=28) -->
+              <path d="M 0 174 L 324 145 A 28 28 0 0 1 352 117 L 352 0" stroke="#3f3f46" stroke-width="2" fill="none"/>
+              <path d="M 448 0 L 448 109 A 28 28 0 0 0 476 137 L 800 102" stroke="#3f3f46" stroke-width="2" fill="none"/>
+              <path d="M 0 270 L 324 241 A 28 28 0 0 0 352 269 L 352 340" stroke="#3f3f46" stroke-width="2" fill="none"/>
+              <path d="M 448 340 L 448 231 A 28 28 0 0 1 476 203 L 800 198" stroke="#3f3f46" stroke-width="2" fill="none"/>
+
+              <!-- Oblique Center Box -->
+              <polygon points="352,126 448,118 448,214 352,222" fill="#0d0d10"/>
+              <polygon points="352,126 448,118 448,214 352,222" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="116" x2="400" y2="112" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="228" x2="448" y2="224" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="346" y1="192" x2="346" y2="240" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="454" y1="126" x2="454" y2="174" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 324, y: 64 }, { x: 456, y: 236 }, { x: 292, y: 238 }, { x: 468, y: 88 })}
+            </svg>
+          `;
+        }
+      },
+
+      'CAM-06': {
+        id: 'CAM-06',
+        title: 'Sambhaji Bridge Minimap (Lakdi Pul Over Mutha)',
+        badge: 'CAM-06 • MUTHA RIVER BRIDGE CROSSING CUT',
+        lane1: 'Sambhaji Bridge Deck (North-South)',
+        lane2: 'Kelkar Riverside Road (East-West Riverbank)',
+        type: 'river_bridge',
+        stopLines: { N: 120, S: 220, W: 350, E: 450 },
+        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        getSvg: function () {
+          return `
+            <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${COMMON_SVG_DEFS}
+              <!-- Mutha River Water (North & South Quadrants) -->
+              <rect x="0" y="0" width="348" height="118" fill="url(#riverWaterFlow)"/>
+              <rect x="452" y="0" width="348" height="118" fill="url(#riverWaterFlow)"/>
+              <rect x="0" y="222" width="348" height="118" fill="url(#riverWaterFlow)"/>
+              <rect x="452" y="222" width="348" height="118" fill="url(#riverWaterFlow)"/>
+
+              <!-- Flowing River Water Wavelines -->
+              <path d="M 20 35 Q 60 25, 100 35 T 180 35 T 260 35 T 340 35" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.8" fill="none"/>
+              <path d="M 40 75 Q 80 65, 120 75 T 200 75 T 280 75" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.8" fill="none"/>
+              <path d="M 460 35 Q 500 25, 540 35 T 620 35 T 700 35 T 780 35" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.8" fill="none"/>
+              <path d="M 480 75 Q 520 65, 560 75 T 640 75 T 720 75" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.8" fill="none"/>
+              <path d="M 20 260 Q 60 250, 100 260 T 180 260 T 260 260 T 340 260" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.8" fill="none"/>
+              <path d="M 460 260 Q 500 250, 540 260 T 620 260 T 700 260 T 780 260" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.8" fill="none"/>
+
+              <!-- River Embankment Stone Walls -->
+              <rect x="0" y="118" width="348" height="4" fill="#64748b" stroke="#334155"/>
+              <rect x="452" y="118" width="348" height="4" fill="#64748b" stroke="#334155"/>
+              <rect x="0" y="218" width="348" height="4" fill="#64748b" stroke="#334155"/>
+              <rect x="452" y="218" width="348" height="4" fill="#64748b" stroke="#334155"/>
+
+              <!-- Stone Bridge Deck (Lane 1 NS) -->
+              <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
+              <rect x="346" y="0" width="6" height="118" fill="#475569" stroke="#1e293b"/>
+              <rect x="448" y="0" width="6" height="118" fill="#475569" stroke="#1e293b"/>
+              <rect x="344" y="0" width="8" height="6" fill="#94a3b8"/><rect x="344" y="30" width="8" height="6" fill="#94a3b8"/><rect x="344" y="60" width="8" height="6" fill="#94a3b8"/><rect x="344" y="90" width="8" height="6" fill="#94a3b8"/>
+              <rect x="448" y="0" width="8" height="6" fill="#94a3b8"/><rect x="448" y="30" width="8" height="6" fill="#94a3b8"/><rect x="448" y="60" width="8" height="6" fill="#94a3b8"/><rect x="448" y="90" width="8" height="6" fill="#94a3b8"/>
+
+              <rect x="346" y="222" width="6" height="118" fill="#475569" stroke="#1e293b"/>
+              <rect x="448" y="222" width="6" height="118" fill="#475569" stroke="#1e293b"/>
+              <rect x="344" y="222" width="8" height="6" fill="#94a3b8"/><rect x="344" y="252" width="8" height="6" fill="#94a3b8"/><rect x="344" y="282" width="8" height="6" fill="#94a3b8"/><rect x="344" y="312" width="8" height="6" fill="#94a3b8"/>
+              <rect x="448" y="222" width="8" height="6" fill="#94a3b8"/><rect x="448" y="252" width="8" height="6" fill="#94a3b8"/><rect x="448" y="282" width="8" height="6" fill="#94a3b8"/><rect x="448" y="312" width="8" height="6" fill="#94a3b8"/>
+
+              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Lane 2 (Kelkar Riverside Road) -->
+              <rect x="0" y="122" width="800" height="96" fill="url(#roadAsphaltH)"/>
+              <line x1="0" y1="122" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+              <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
+
+              <line x1="0" y1="170" x2="335" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="194" x2="335" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+              <!-- Bridge Pier Abutments Center Junction Box -->
+              <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
+              <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+
+              <!-- Crosswalks -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
+                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
+                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
+                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
+                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
+                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
+                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+              </g>
+
+              <!-- Stop Lines -->
+              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="350" y1="170" x2="350" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 326, y: 68 }, { x: 454, y: 230 }, { x: 296, y: 226 }, { x: 466, y: 96 })}
+            </svg>
+          `;
+        }
+      }
     };
 
     // ── Update Signal Heads & HUD Display ──
@@ -536,6 +1086,90 @@
         }
       }
     }
+
+    // ── Signal Heads & Camera Junction Swapping ──
+    function rebindSignalLenses() {
+      el.lensNR = document.getElementById('sigLensN_R');
+      el.lensNA = document.getElementById('sigLensN_A');
+      el.lensNG = document.getElementById('sigLensN_G');
+      el.lensNArrowL = document.getElementById('sigLensN_ArrowL');
+      el.lensNArrowR = document.getElementById('sigLensN_ArrowR');
+
+      el.lensSR = document.getElementById('sigLensS_R');
+      el.lensSA = document.getElementById('sigLensS_A');
+      el.lensSG = document.getElementById('sigLensS_G');
+      el.lensSArrowL = document.getElementById('sigLensS_ArrowL');
+      el.lensSArrowR = document.getElementById('sigLensS_ArrowR');
+
+      el.lensWR = document.getElementById('sigLensW_R');
+      el.lensWA = document.getElementById('sigLensW_A');
+      el.lensWG = document.getElementById('sigLensW_G');
+      el.lensWArrowL = document.getElementById('sigLensW_ArrowL');
+      el.lensWArrowR = document.getElementById('sigLensW_ArrowR');
+
+      el.lensER = document.getElementById('sigLensE_R');
+      el.lensEA = document.getElementById('sigLensE_A');
+      el.lensEG = document.getElementById('sigLensE_G');
+      el.lensEArrowL = document.getElementById('sigLensE_ArrowL');
+      el.lensEArrowR = document.getElementById('sigLensE_ArrowR');
+    }
+
+    function switchJunctionCamera(camId, options = {}) {
+      if (!JUNCTION_LAYOUTS[camId]) camId = 'CAM-01';
+      state.currentCameraId = camId;
+      const layout = JUNCTION_LAYOUTS[camId];
+      state.currentLayout = layout;
+
+      // 1. Swap SVG road cut schematics
+      const svgLayer = document.getElementById('junctionRoadsSvgLayer');
+      if (svgLayer) {
+        svgLayer.innerHTML = layout.getSvg();
+      }
+
+      // 2. Rebind signal lens DOM pointers to new SVG
+      rebindSignalLenses();
+
+      // 3. Update Minimap Header & HUD corridor titles
+      const titleEl = document.getElementById('junctionMinimapTitle');
+      if (titleEl) titleEl.textContent = layout.title.toUpperCase();
+
+      const badgeEl = document.getElementById('junctionNodeBadge');
+      if (badgeEl) badgeEl.textContent = layout.badge;
+
+      const l1Title = document.getElementById('hudLane1Title');
+      if (l1Title) l1Title.textContent = layout.lane1.toUpperCase();
+
+      const l2Title = document.getElementById('hudLane2Title');
+      if (l2Title) l2Title.textContent = layout.lane2.toUpperCase();
+
+      // Update junction camera chips active class if present
+      document.querySelectorAll('.junc-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.getAttribute('data-cam') === camId);
+      });
+
+      // 4. Update PIP preview if present on GIS map
+      if (typeof window.updateGisMinimapPip === 'function') {
+        window.updateGisMinimapPip(camId, layout);
+      }
+
+      // 5. Synchronize with Leaflet GIS map below
+      if (!options.skipGis && typeof window._highlightGisCamera === 'function') {
+        window._highlightGisCamera(camId);
+      }
+
+      // 6. Adapt and reseed fleet vehicles onto this specific junction
+      seedInitialVehicles();
+
+      // 7. Refresh lights & telemetry display
+      updateVisualDisplay();
+
+      // 8. Dispatch event for other subscribers
+      window.dispatchEvent(new CustomEvent('junctionCameraSwitched', { detail: { camId, layout } }));
+    }
+
+    // Expose globally for GIS map and external callers
+    window.switchJunctionCamera = switchJunctionCamera;
+    window.JUNCTION_LAYOUTS = JUNCTION_LAYOUTS;
 
     // ── Apply Incoming Backend Telemetry ──
     function applyTelemetry(data) {
@@ -718,11 +1352,17 @@
           notify('Junction traffic simulation reset.', 'info');
         });
       }
+
+      // Junction Camera Switcher Chips
+      document.querySelectorAll('.junc-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const cid = chip.getAttribute('data-cam');
+          if (cid) switchJunctionCamera(cid);
+        });
+      });
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Local ATSC Density Regulation Ticker (Independent Turn Arrow Phasing)
-    // ─────────────────────────────────────────────────────────────
     function runLocalTicker() {
       setInterval(() => {
         const now = Date.now();
@@ -842,9 +1482,7 @@
       }, 100);
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Vehicle Simulation & Anti-Collision Physics Engine (Indian Road Dynamics)
-    // ─────────────────────────────────────────────────────────────
     const vehicles = [];
     let nextVehId = 1;
     let hoveredVehicle = null;
@@ -934,6 +1572,102 @@
       const series = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26));
       const num = String(Math.floor(1000 + Math.random() * 9000));
       return `${rto} ${series} ${num}`;
+    }
+
+    // ── Road Geometry & Stop Line Helpers for Adaptive Junction Cuts ──
+    function getStopLine(laneKey) {
+      const sl = (state.currentLayout && state.currentLayout.stopLines) ? state.currentLayout.stopLines : { N: 114, S: 226, W: 344, E: 456 };
+      if (laneKey === 'NS_SB') return sl.N;
+      if (laneKey === 'NS_NB') return sl.S;
+      if (laneKey === 'EW_EB') return sl.W;
+      if (laneKey === 'EW_WB') return sl.E;
+      return 0;
+    }
+
+    function getRoadY(laneKey, lateral, x, layoutType) {
+      if (laneKey.startsWith('NS')) return null;
+      const type = layoutType || (state.currentLayout ? state.currentLayout.type : 'skewed_65');
+
+      if (type === 'skewed_65') {
+        // Centerline (0, 238) to (800, 102) -> dy/dx = -136 / 800 = -0.17
+        return lateral - 0.17 * (x - 400);
+      }
+      if (type === 'oblique_75') {
+        // Centerline (0, 222) to (800, 150) -> dy/dx = -72 / 800 = -0.09
+        return lateral - 0.09 * (x - 400);
+      }
+      if (type === 'y_fork') {
+        // West fork entrance merges from y=265 at x=0 into y=194 at x=352 (slope = -0.2017)
+        if (laneKey === 'EW_EB' && x <= 352) {
+          return lateral - 0.2017 * (x - 352);
+        }
+        return lateral;
+      }
+      if (type === 'offset_staggered') {
+        // West approach: EW_EB at southern half (148, 172); EW_WB at northern half (100, 124)
+        // East approach: EW_EB at southern half (216, 240); EW_WB at northern half (168, 192)
+        // Smooth Hermite transition through junction box (x=352..448), constant delta = 68px
+        if (laneKey === 'EW_EB') {
+          if (x <= 352) return lateral;
+          if (x >= 448) return lateral + 68;
+          const t = (x - 352) / 96;
+          const st = t * t * (3 - 2 * t);
+          return lateral + 68 * st;
+        } else if (laneKey === 'EW_WB') {
+          if (x >= 448) return lateral;
+          if (x <= 352) return lateral - 68;
+          const t = (448 - x) / 96;
+          const st = t * t * (3 - 2 * t);
+          return lateral - 68 * st;
+        }
+      }
+      return lateral;
+    }
+
+    function getRoadHeading(laneKey, x, layoutType) {
+      const type = layoutType || (state.currentLayout ? state.currentLayout.type : 'skewed_65');
+      if (laneKey === 'NS_SB') return Math.PI / 2;
+      if (laneKey === 'NS_NB') return -Math.PI / 2;
+
+      if (type === 'skewed_65') {
+        // Eastbound points up-right (-9.65°); Westbound points down-left (170.35°)
+        return laneKey === 'EW_EB' ? Math.atan2(-0.17, 1) : Math.atan2(0.17, -1);
+      }
+      if (type === 'oblique_75') {
+        return laneKey === 'EW_EB' ? Math.atan2(-0.09, 1) : Math.atan2(0.09, -1);
+      }
+      if (type === 'y_fork') {
+        if (laneKey === 'EW_EB') {
+          if (x <= 335) {
+            return Math.atan2(-0.2017, 1);
+          } else if (x < 370) {
+            // Smooth natural turn from -11.4° into straight 0° through the box
+            const t = (x - 335) / 35;
+            const slope = -0.2017 * (1 - t * t * (3 - 2 * t));
+            return Math.atan2(slope, 1);
+          }
+          return 0;
+        }
+        return laneKey === 'EW_EB' ? 0 : Math.PI;
+      }
+      if (type === 'offset_staggered') {
+        if (laneKey === 'EW_EB') {
+          if (x > 352 && x < 448) {
+            const t = (x - 352) / 96;
+            const slope = (68 / 96) * 6 * t * (1 - t);
+            return Math.atan2(slope, 1);
+          }
+          return 0;
+        } else if (laneKey === 'EW_WB') {
+          if (x > 352 && x < 448) {
+            const t = (448 - x) / 96;
+            const slope = (-68 / 96) * 6 * t * (1 - t);
+            return Math.atan2(-slope, -1);
+          }
+          return Math.PI;
+        }
+      }
+      return laneKey === 'EW_EB' ? 0 : Math.PI;
     }
 
     // ── DEFINITIVE PARAMETRIC CUBIC BÉZIER TURN PATHS ──
@@ -1102,20 +1836,43 @@
       return { x, y, dx, dy, heading };
     }
 
+    // ── Dynamic Junction Zone Bounds ──
+    function getJunctionZone() {
+      if (state.currentLayout && state.currentLayout.junctionZone) return state.currentLayout.junctionZone;
+      return { xMin: 340, xMax: 460, yMin: 108, yMax: 230 };
+    }
+
     // Two parallel sub-lanes per directional approach (Allows 2 vehicles side-by-side)
+    // Adapts Y positions for offset_staggered where west approach (y=88-184) and east (y=156-252) differ
     function getSubLaneCoord(laneKey, subLane) {
       if (laneKey === 'NS_SB') return subLane === 0 ? 366 : 388; // Road X: 352-400 (48px wide)
       if (laneKey === 'NS_NB') return subLane === 0 ? 412 : 436; // Road X: 400-448 (48px wide)
+
+      const type = state.currentLayout ? state.currentLayout.type : 'square_90';
+      if (type === 'offset_staggered') {
+        // West approach: road y=88..184, center=136 → EB (southern half 136..184) at 148, 172
+        // East approach: road y=156..252, center=204 → WB (northern half 156..204) at 168, 192
+        if (laneKey === 'EW_EB') return subLane === 0 ? 148 : 172;
+        if (laneKey === 'EW_WB') return subLane === 0 ? 168 : 192;
+      }
+
+      if (type === 'oblique_75') {
+        // Road centerline at x=400 is 186. WB (138..186) sub-lanes at 150, 174. EB (186..234) sub-lanes at 198, 222.
+        if (laneKey === 'EW_EB') return subLane === 0 ? 198 : 222;
+        if (laneKey === 'EW_WB') return subLane === 0 ? 150 : 174;
+      }
+
       if (laneKey === 'EW_EB') return subLane === 0 ? 182 : 206; // Road Y: 170-218 (48px wide)
       if (laneKey === 'EW_WB') return subLane === 0 ? 134 : 158; // Road Y: 122-170 (48px wide)
       return 0;
     }
 
     function isBeforeExit(v) {
-      if (v.lane === 'NS_SB') return v.y < 218;
-      if (v.lane === 'NS_NB') return v.y > 122;
-      if (v.lane === 'EW_EB') return v.x < 448;
-      if (v.lane === 'EW_WB') return v.x > 352;
+      const jz = getJunctionZone();
+      if (v.lane === 'NS_SB') return v.y < jz.yMax;
+      if (v.lane === 'NS_NB') return v.y > jz.yMin;
+      if (v.lane === 'EW_EB') return v.x < jz.xMax;
+      if (v.lane === 'EW_WB') return v.x > jz.xMin;
       return false;
     }
 
@@ -1142,23 +1899,20 @@
       const fuels = ['Diesel', 'Petrol', 'CNG', 'EV'];
       const fuel = def.type === 'auto' ? (Math.random() < 0.8 ? 'CNG' : 'EV') : fuels[Math.floor(Math.random() * fuels.length)];
 
-      let x = 0, y = 0, stopLine = 0;
+      let x = 0, y = 0;
+      const stopLine = getStopLine(laneKey);
       if (laneKey === 'NS_SB') {
         x = latCoord;
         y = customPos !== undefined ? customPos : (-def.length - 20);
-        stopLine = 114;
       } else if (laneKey === 'NS_NB') {
         x = latCoord;
         y = customPos !== undefined ? customPos : (340 + def.length + 20);
-        stopLine = 226;
       } else if (laneKey === 'EW_EB') {
         x = customPos !== undefined ? customPos : (-def.length - 20);
-        y = latCoord;
-        stopLine = 344;
+        y = getRoadY(laneKey, latCoord, x);
       } else if (laneKey === 'EW_WB') {
         x = customPos !== undefined ? customPos : (800 + def.length + 20);
-        y = latCoord;
-        stopLine = 456;
+        y = getRoadY(laneKey, latCoord, x);
       }
 
       // Turn & U-Turn Decision:
@@ -1170,6 +1924,12 @@
       let turnPathKey = null;
 
       if (def.type !== 'truck_bus' && customPos === undefined) {
+        // Turn maneuvers only work on orthogonal junctions where the Bézier turn paths match the road
+        const layoutType = state.currentLayout ? state.currentLayout.type : 'square_90';
+        const isOrthogonalJunction = (layoutType === 'square_90' || layoutType === 'river_bridge');
+        if (!isOrthogonalJunction) {
+          // Non-orthogonal junctions: all vehicles go straight (turn paths would go off-road)
+        } else {
         const isMedianSub = (laneKey === 'NS_SB' && chosenSub === 1) ||
                             (laneKey === 'NS_NB' && chosenSub === 0) ||
                             (laneKey === 'EW_EB' && chosenSub === 0) ||
@@ -1210,13 +1970,10 @@
               : 'TURN_RIGHT_EW_WB';
           }
         }
+        } // end else isOrthogonalJunction
       }
 
-      let initHeading = 0;
-      if (laneKey === 'NS_SB') initHeading = Math.PI / 2;
-      else if (laneKey === 'NS_NB') initHeading = -Math.PI / 2;
-      else if (laneKey === 'EW_EB') initHeading = 0;
-      else if (laneKey === 'EW_WB') initHeading = Math.PI;
+      const initHeading = getRoadHeading(laneKey, x);
 
       vehicles.push({
         id: nextVehId++,
@@ -1256,36 +2013,41 @@
       });
     }
 
-    // Seed initial vehicles: Guarantees 2 vehicles side-by-side on EVERY lane approach
+    // Seed initial vehicles: Guarantees 2 vehicles side-by-side on EVERY lane approach adapted to active junction
     function seedInitialVehicles() {
       vehicles.length = 0;
+      const stopN = getStopLine('NS_SB');
+      const stopS = getStopLine('NS_NB');
+      const stopW = getStopLine('EW_EB');
+      const stopE = getStopLine('EW_WB');
+
       // Lane 1: Southbound — 2 vehicles side-by-side at stop line + 1 trailing
-      spawnVehicle('NS_SB', 0, 95);  // Inner sub-lane (x=366, y=95)
-      spawnVehicle('NS_SB', 1, 95);  // Outer sub-lane (x=388, y=95) — ABREAST SIDE BY SIDE!
-      spawnVehicle('NS_SB', 0, 15);  // Trailing
+      spawnVehicle('NS_SB', 0, stopN - 19);
+      spawnVehicle('NS_SB', 1, stopN - 19);
+      spawnVehicle('NS_SB', 0, stopN - 95);
 
       // Lane 1: Northbound — 2 vehicles side-by-side at stop line + 1 trailing
-      spawnVehicle('NS_NB', 0, 245); // Inner sub-lane (x=412, y=245)
-      spawnVehicle('NS_NB', 1, 245); // Outer sub-lane (x=436, y=245) — ABREAST SIDE BY SIDE!
-      spawnVehicle('NS_NB', 1, 325); // Trailing
+      spawnVehicle('NS_NB', 0, stopS + 19);
+      spawnVehicle('NS_NB', 1, stopS + 19);
+      spawnVehicle('NS_NB', 1, stopS + 95);
 
       // Lane 2: Eastbound — 2 vehicles side-by-side at stop line + 1 trailing
-      spawnVehicle('EW_EB', 0, 325); // Inner sub-lane (y=182, x=325)
-      spawnVehicle('EW_EB', 1, 325); // Outer sub-lane (y=206, x=325) — ABREAST SIDE BY SIDE!
-      spawnVehicle('EW_EB', 0, 210); // Trailing
+      spawnVehicle('EW_EB', 0, stopW - 19);
+      spawnVehicle('EW_EB', 1, stopW - 19);
+      spawnVehicle('EW_EB', 0, stopW - 95);
 
       // Lane 2: Westbound — 2 vehicles side-by-side at stop line + 1 trailing
-      spawnVehicle('EW_WB', 0, 475); // Inner sub-lane (y=134, x=475)
-      spawnVehicle('EW_WB', 1, 475); // Outer sub-lane (y=158, x=475) — ABREAST SIDE BY SIDE!
-      spawnVehicle('EW_WB', 1, 590); // Trailing
+      spawnVehicle('EW_WB', 0, stopE + 19);
+      spawnVehicle('EW_WB', 1, stopE + 19);
+      spawnVehicle('EW_WB', 1, stopE + 95);
 
-      // Demonstration turners: immediately showcases left turn and right turn blinker synchronization
-      if (vehicles.length >= 2) {
+      // Demonstration turners only on orthogonal / square junctions to avoid awkward cuts
+      const isOrthogonal = !state.currentLayout || state.currentLayout.type === 'square_90' || state.currentLayout.type === 'river_bridge';
+      if (isOrthogonal && vehicles.length >= 4) {
         vehicles[0].turnIntent = 'turn_left';
         vehicles[0].turnBlinker = 'left';
         vehicles[0].turnPathKey = 'TURN_LEFT_NS_SB';
-      }
-      if (vehicles.length >= 4) {
+
         vehicles[3].turnIntent = 'turn_right';
         vehicles[3].turnBlinker = 'right';
         vehicles[3].turnPathKey = 'TURN_RIGHT_NS_NB';
@@ -1610,6 +2372,7 @@
 
       const MIN_GAP = 28;  // Hard bumper-to-bumper gap (px) for organized, clean spacing
       const SLOW_GAP = 85; // Deceleration onset gap (px)
+      const jz = getJunctionZone(); // Per-layout junction zone bounds
 
       for (let i = 0; i < vehicles.length; i++) {
         const v = vehicles[i];
@@ -1619,15 +2382,16 @@
         const arrowR_Sig = isNSLane ? arrowR_NS : arrowR_EW;
 
         // 1. Distance to Stop Line
+        const stopLinePos = getStopLine(v.lane);
         let distToStop = 999;
-        if (v.lane === 'NS_SB') distToStop = 114 - (v.y + v.length / 2);
-        else if (v.lane === 'NS_NB') distToStop = (v.y - v.length / 2) - 226;
-        else if (v.lane === 'EW_EB') distToStop = 344 - (v.x + v.length / 2);
-        else if (v.lane === 'EW_WB') distToStop = (v.x - v.length / 2) - 456;
+        if (v.lane === 'NS_SB') distToStop = stopLinePos - (v.y + v.length / 2);
+        else if (v.lane === 'NS_NB') distToStop = (v.y - v.length / 2) - stopLinePos;
+        else if (v.lane === 'EW_EB') distToStop = stopLinePos - (v.x + v.length / 2);
+        else if (v.lane === 'EW_WB') distToStop = (v.x - v.length / 2) - stopLinePos;
 
         // In-Junction Geometry Awareness: once past the stopline, vehicle MUST clear out
         const isPastStopLine = distToStop <= 0;
-        const inJunctionZone = (v.x >= 335 && v.x <= 465 && v.y >= 108 && v.y <= 232);
+        const inJunctionZone = (v.x >= jz.xMin && v.x <= jz.xMax && v.y >= jz.yMin && v.y <= jz.yMax);
 
         // 2. Find closest vehicle directly ahead in same lane & check lateral conflicts
         let leadGap = 999;
@@ -1637,7 +2401,7 @@
           if (i === j) continue;
           const other = vehicles[j];
           if (other.lane !== v.lane) continue;
-          
+
           const latDiff = Math.abs(other.lateral - v.lateral);
           const latConflict = latDiff < ((v.width + other.width) / 2 + 5);
           if (other.subLane !== v.subLane && !latConflict) continue;
@@ -1691,7 +2455,11 @@
         if (v.canFilter && throughSig === 'RED' && distToStop > 16 && leadVeh && leadVeh.currentSpeed < 0.2 && v.turnState !== 'turning' && !inJunctionZone) {
           if (leadGap < 30 && !v.isFiltering) {
             const targetSub = 1 - v.subLane;
-            const isEdgeClear = !vehicles.some(o => o.lane === v.lane && o.subLane === targetSub && Math.abs(o.y - v.y) < 26);
+            const isEdgeClear = !vehicles.some(o => {
+              if (o.lane !== v.lane || o.subLane !== targetSub) return false;
+              const dist = v.lane.startsWith('NS') ? Math.abs(o.y - v.y) : Math.abs(o.x - v.x);
+              return dist < 26;
+            });
             if (isEdgeClear) {
               v.isFiltering = true;
               v.subLane = targetSub;
@@ -1727,8 +2495,8 @@
 
         // 6. Signal Stop Line Constraint (Clean Hard Stops ONLY BEFORE crossing the stopline)
         // STRICT USER REQUIREMENT: When the left/right light is on, ONLY vehicles with their blinkers on will turn!
-        // - Vehicles with turnBlinker === 'left' are governed ONLY by arrowL === 'GREEN'
-        // - Vehicles with turnBlinker === 'right' are governed ONLY by arrowR === 'GREEN'
+ // - Vehicles with turnBlinker 'left' are governed ONLY by arrowL 'GREEN'
+ // - Vehicles with turnBlinker 'right' are governed ONLY by arrowR 'GREEN'
         // - Vehicles without blinker (Straight) are governed ONLY by through circular signal (never enter on turn arrows!)
         if (!isPastStopLine && !inJunctionZone && v.turnState !== 'turning') {
           let activeSig = 'RED';
@@ -1747,10 +2515,10 @@
                 targetSpeed = 0;
                 v.currentSpeed = 0;
                 v.isBraking = true;
-                if (v.lane === 'NS_SB') v.y = 114 - v.length / 2 - 2;
-                else if (v.lane === 'NS_NB') v.y = 226 + v.length / 2 + 2;
-                else if (v.lane === 'EW_EB') v.x = 344 - v.length / 2 - 2;
-                else if (v.lane === 'EW_WB') v.x = 456 + v.length / 2 + 2;
+                if (v.lane === 'NS_SB') v.y = stopLinePos - v.length / 2 - 2;
+                else if (v.lane === 'NS_NB') v.y = stopLinePos + v.length / 2 + 2;
+                else if (v.lane === 'EW_EB') v.x = stopLinePos - v.length / 2 - 2;
+                else if (v.lane === 'EW_WB') v.x = stopLinePos + v.length / 2 + 2;
               } else {
                 const factor = distToStop / 70;
                 targetSpeed = Math.min(targetSpeed, v.baseSpeed * (factor * factor));
@@ -1877,24 +2645,24 @@
           if (v.lane === 'NS_SB' || v.lane === 'NS_NB') {
             v.x = v.lateral + v.wobble;
           } else {
-            v.y = v.lateral + v.wobble;
+            v.y = getRoadY(v.lane, v.lateral, v.x) + v.wobble;
           }
 
-          if (v.currentSpeed > 0.01) {
+          if (v.currentSpeed > 0.001) {
             if (v.lane === 'NS_SB') {
               v.y += v.currentSpeed;
-              v.heading = Math.PI / 2;
             } else if (v.lane === 'NS_NB') {
               v.y -= v.currentSpeed;
-              v.heading = -Math.PI / 2;
             } else if (v.lane === 'EW_EB') {
               v.x += v.currentSpeed;
-              v.heading = 0;
             } else if (v.lane === 'EW_WB') {
               v.x -= v.currentSpeed;
-              v.heading = Math.PI;
             }
           }
+
+          // STRICT STRAIGHT ALIGNMENT: Unconditionally match vehicle heading to road geometry
+          // Fixes tilted/crooked vehicles whether cruising, decelerating, or stopped at signals!
+          v.heading = getRoadHeading(v.lane, v.x);
         }
 
         // Clear overtaking state once safely ahead
@@ -1939,8 +2707,8 @@
             const dist = Math.sqrt(distSq) || 0.001;
             const overlap = minReqDist - dist;
 
-            const inJunction = (vi.x >= 335 && vi.x <= 465 && vi.y >= 108 && vi.y <= 232) ||
-                               (vj.x >= 335 && vj.x <= 465 && vj.y >= 108 && vj.y <= 232);
+            const inJunction = (vi.x >= jz.xMin && vi.x <= jz.xMax && vi.y >= jz.yMin && vi.y <= jz.yMax) ||
+                               (vj.x >= jz.xMin && vj.x <= jz.xMax && vj.y >= jz.yMin && vj.y <= jz.yMax);
 
             const nx = dx / dist;
             const ny = dy / dist;
@@ -2330,13 +3098,16 @@
     updateVisualDisplay();
     requestAnimationFrame(renderLoop);
 
+    // Initialize with default CAM-01 active layout and straight vehicle trajectories
+    switchJunctionCamera('CAM-01');
+
     // Listen to language change to re-render visual display immediately
     window.addEventListener('vims-lang-changed', () => {
       updateVisualDisplay();
     });
   }
 
-  // ─── Live Updates for Other Dashboard Cards ───
+ // Live Updates for Other Dashboard Cards
   function startLiveUpdates() {
     let lastFleetVal = 14892;
     let lastPctVal = 94.8;
@@ -2399,7 +3170,7 @@
     });
   }
 
-  // ─── Toast Notification Helper ───
+ // Toast Notification Helper
   function notify(msg, type = 'info') {
     if (typeof COMMAND !== 'undefined' && typeof COMMAND.showToast === 'function') {
       COMMAND.showToast(msg, type);
@@ -2421,10 +3192,9 @@
       setTimeout(() => toast.remove(), 300);
     }, 4000);
   }
+  window.notify = notify;
 
-  // ─────────────────────────────────────────────────────────────
   // 1. FLEET OVERVIEW CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   const FLEET_DATA = [
     { id: 'PCR-01', plate: 'MH 12 DE 1042', classType: 'PCR', model: 'Mahindra Scorpio-N 4x4 Interceptor', sector: 'JM Road', commander: 'ASI P. Deshmukh (PN-5120)', speed: 42, fuel: 78, status: 'ON PATROL', statusClass: 'badge-green' },
     { id: 'PCR-04', plate: 'MH 12 Q 4091', classType: 'PCR', model: 'Tata Safari Tactical Interceptor', sector: 'Swargate', commander: 'HC V. Kadam (PN-6304)', speed: 0, fuel: 91, status: 'ON DUTY', statusClass: 'badge-green' },
@@ -2549,9 +3319,7 @@
     render();
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 2. INCIDENT LOGS CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   const INCIDENT_DATA = [
     { id: 'INC-8891', time: '10:48:12', severity: 'CRITICAL', plate: 'MH 12 AB 9981', location: 'Swargate Bus Depot Jn', violation: 'Red Light Violation (Signal Jump at 4.2s red phase)', unit: 'PCR-04', status: 'PENDING CHALLAN', fineAmount: 1000, act: 'Sec 184 MVA' },
     { id: 'INC-8890', time: '10:45:30', severity: 'CRITICAL', plate: 'DL 04 C AF 5571', location: 'Airport Road 509 Jn', violation: 'Extreme Speeding (94 km/h in 50 km/h urban corridor)', unit: 'Radar-08 Auto', status: 'CHALLAN ISSUED', fineAmount: 2000, act: 'Sec 183 MVA' },
@@ -2667,9 +3435,7 @@
     render();
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 3. ROUTE MANAGEMENT & AUTONOMOUS GREEN CORRIDOR CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   function initRouteMgmt() {
     const form = document.getElementById('greenWaveDispatchForm');
     const banner = document.getElementById('greenWaveBanner');
@@ -2741,9 +3507,7 @@
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 4. ASSET DATABASE CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   const ASSET_DATA = [
     { tag: 'AST-ATSC-01', name: 'ATSC-ITMS Type 3 Adaptive Controller', spec: 'Intel Atom x6413E · CAN-Bus · SCATS/SCOOT', loc: 'JM-FC Central Junction (Node 01)', ip: '192.168.10.101', mac: '00:1B:44:11:3A:B1', fw: 'v4.2.1-pune', uptime: '99.98% (42d)', status: 'ONLINE', statusClass: 'badge-green', type: 'ATSC' },
     { tag: 'AST-ANPR-03', name: 'Hikvision 4K Ultra-HD LPR Optical Node', spec: 'Dual 8MP Starlight CMOS · 950nm IR Illuminator', loc: 'Swargate South Gate Flyover (Node 07)', ip: '192.168.10.145', mac: '70:4D:7B:88:22:90', fw: 'v2.18.0-anpr', uptime: '99.85% (19d)', status: 'ONLINE', statusClass: 'badge-green', type: 'ANPR' },
@@ -2824,9 +3588,7 @@
     render();
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 5. STAFF ROSTER CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   const STAFF_DATA = [
     { badge: 'PN-4402', name: 'Insp. Rajesh Sharma', rank: 'PI (Police Inspector)', assignment: 'Watch Commander', sector: 'ICCC Central Console 03', channel: 'VHF-NET-01 (Tactical)', status: 'ON DUTY', contact: '+91 98220 14402', statusClass: 'badge-green' },
     { badge: 'PN-5120', name: 'Sub-Insp. Sunita Patil', rank: 'PSI (Police Sub-Inspector)', assignment: 'Sector Field Lead', sector: 'Sector 2: JM-FC Arterial', channel: 'VHF-NET-02 (Patrol)', status: 'ON PATROL', contact: '+91 98220 15120', statusClass: 'badge-green' },
@@ -2912,9 +3674,7 @@
     render();
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 6. SYSTEM LOGS & TELEMETRY AUDIT TERMINAL CONTROLLER
-  // ─────────────────────────────────────────────────────────────
   function initSystemLogs() {
     const terminal = document.getElementById('systemLogTerminal');
     const subsysFilter = document.getElementById('logSubsysFilter');
@@ -3042,9 +3802,7 @@
     renderTerminal();
   }
 
-  // ─────────────────────────────────────────────────────────────
   // 7. DIFF ANALYSIS CONTROLLER (CORRIDOR FLOW & ANPR DISCREPANCY)
-  // ─────────────────────────────────────────────────────────────
   function initDiffAnalysis() {
     const diffView = document.getElementById('view-diff-analysis');
     if (!diffView) return;

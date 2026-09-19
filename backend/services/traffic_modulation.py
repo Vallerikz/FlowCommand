@@ -21,7 +21,6 @@ CELLS_PER_LANE = 8
 # MAX_GREEN_SECONDS / baseline detector counts).
 VEHICLES_PER_CELL = 2.5
 
-
 def _lane_fill(vehicle_total: int) -> int:
     """
     Deterministic, real-data-driven fill count for one lane's cells.
@@ -30,7 +29,6 @@ def _lane_fill(vehicle_total: int) -> int:
     """
     filled = round(vehicle_total / VEHICLES_PER_CELL)
     return max(0, min(CELLS_PER_LANE, filled))
-
 
 def _arm_light_colors(active_corridor: Corridor, light_state: LightState) -> Dict[str, str]:
     """
@@ -49,7 +47,6 @@ def _arm_light_colors(active_corridor: Corridor, light_state: LightState) -> Dic
         active_color = light_state.value
         return {"N": "RED", "S": "RED", "E": active_color, "W": active_color}
 
-
 def build_modulation_view(snapshot: JunctionSnapshot) -> Dict:
     """
     Builds the full simplified 2D modulation payload from a real
@@ -64,7 +61,7 @@ def build_modulation_view(snapshot: JunctionSnapshot) -> Dict:
     # lanes (we only have a combined per-corridor count, not a
     # per-direction breakdown, so this is an even split of real data,
     # not an invented asymmetry).
-    ns_lane_fill = _lane_fill(ns_total // 2) 
+    ns_lane_fill = _lane_fill(ns_total // 2)
     ew_lane_fill = _lane_fill(ew_total // 2)
 
     arm_colors = _arm_light_colors(snapshot.active_corridor, snapshot.light_state)

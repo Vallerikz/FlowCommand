@@ -72,7 +72,7 @@
 
         <div class="auth-body">
 
-          <!-- ═══ LAW SIGN IN ═══ -->
+ <!-- LAW SIGN IN -->
           <form class="auth-form active" id="lawSignInForm" novalidate>
             <div id="lawSignInError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
 
@@ -132,7 +132,7 @@
               <div class="form-hint text-center" data-i18n="auth_otp_hint">Enter 6-digit authenticator or departmental OTP</div>
             </div>
 
-            <!-- ═══ SMS OTP SECTION ═══ -->
+ <!-- SMS OTP SECTION -->
             <div class="sms-otp-section" id="smsOtpSection">
               <label class="form-label" data-i18n="auth_sms_otp_label">Or verify via SMS OTP</label>
               <div class="flex gap-8 items-center mt-6">
@@ -151,7 +151,7 @@
             </button>
           </form>
 
-          <!-- ═══ LAW SIGN UP ═══ -->
+ <!-- LAW SIGN UP -->
           <form class="auth-form" id="lawSignUpForm" novalidate>
             <div id="lawSignUpError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
 
@@ -217,7 +217,7 @@
             </button>
           </form>
 
-          <!-- ═══ CITIZEN SIGN IN ═══ -->
+ <!-- CITIZEN SIGN IN -->
           <form class="auth-form" id="citSignInForm" novalidate>
             <div id="citSignInError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
 
@@ -270,7 +270,7 @@
             </button>
           </form>
 
-          <!-- ═══ CITIZEN SIGN UP ═══ -->
+ <!-- CITIZEN SIGN UP -->
           <form class="auth-form" id="citSignUpForm" novalidate>
             <div id="citSignUpError" class="alert-bar alert-red hidden" role="alert" aria-live="polite"></div>
 
@@ -417,7 +417,7 @@
       document.getElementById('citEmailSection').classList.toggle('hidden', mode !== 'email');
     }
 
-    // ─── SMS OTP for Law Enforcement ───
+ // SMS OTP for Law Enforcement
     async function sendLawSmsOtp() {
       const btn = document.getElementById('btnLawSmsOtp');
       const statusEl = document.getElementById('smsOtpStatus');
@@ -485,7 +485,7 @@
       smsOtpTimer = setInterval(tick, 1000);
     }
 
-    // ─── Citizen OTP ───
+ // Citizen OTP
     async function sendCitizenOtp() {
       const mob = document.getElementById('citMobile').value.trim();
       const errBox = document.getElementById('citSignInError');

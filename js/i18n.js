@@ -8,7 +8,7 @@ const I18N = {
 
   DICTIONARY: {
     en: {
-      // ─── System Header ───
+ // System Header
       'sys_tagline': 'Vehicle Intelligence & Movement Tracking System',
       'sys_title': 'VIMS ICCC',
       'sys_subtitle': 'INTEGRATED COMMAND & CONTROL CENTER',
@@ -17,7 +17,7 @@ const I18N = {
       'sys_status_cit': 'CITIZEN PORTAL: ACTIVE',
       'lang_toggle': 'EN | हि',
 
-      // ─── Top Navigation ───
+ // Top Navigation
       'topnav_dashboard': 'DASHBOARD',
       'topnav_fleet_map': 'FLEET MAP',
       'topnav_vehicles': 'VEHICLES',
@@ -27,7 +27,7 @@ const I18N = {
       'topnav_security': 'SECURITY',
       'topnav_help': 'HELP',
 
-      // ─── Sidebar Navigation ───
+ // Sidebar Navigation
       'nav_live_tracking': 'Live Tracking',
       'nav_fleet_overview': 'Fleet Overview',
       'nav_incident_logs': 'Incident Logs',
@@ -46,7 +46,7 @@ const I18N = {
       'nav_citizen_report': 'Report Incident',
       'nav_citizen_grievance': 'Track Grievance',
 
-      // ─── New Relatable Tab Titles & Labels (en) ───
+ // New Relatable Tab Titles & Labels (en)
       'fleet_overview_title': 'Active Fleet Inventory & Deployment',
       'fleet_overview_sub': 'Real-time telemetry, patrol sectors, and readiness status across Pune Metropolitan Region',
       'th_unit_id': 'Unit ID',
@@ -93,18 +93,18 @@ const I18N = {
       'btn_resume_feed': 'Resume Feed',
       'btn_export_audit': 'Export Audit Trail',
 
-      // ─── Legend ───
+ // Legend
       'legend_active': 'Active',
       'legend_alert': 'Alert',
       'legend_warning': 'Warning',
 
-      // ─── Sign Out ───
+ // Sign Out
       'sign_out': 'Sign Out',
       'sign_in': 'Sign In',
       'create_account': 'Create Account',
       'register_node': 'Register Officer',
 
-      // ─── Map Section ───
+ // Map Section
       'map_title': 'SINGLE JUNCTION MINIMAP (2 PERPENDICULAR LANES)',
       'junction_node': 'JUNC-01 CENTRAL',
       'lane_1_label': 'LANE 1: NORTH-SOUTH',
@@ -116,7 +116,7 @@ const I18N = {
       'pcu_load': 'PCU Load',
       'queue_len': 'Queue',
 
-      // ─── Filters ───
+ // Filters
       'filter_search_vehicle': 'Search Vehicle ID',
       'filter_vehicle_type': 'Vehicle Type',
       'filter_heavy': 'Heavy',
@@ -141,7 +141,7 @@ const I18N = {
       'filter_stolen': 'Stolen Vehicle Alert',
       'filter_challan': 'Pending Challan',
 
-      // ─── Stats Cards ───
+ // Stats Cards
       'stat_active_fleet': 'ACTIVE FLEET',
       'stat_vehicles_on_road': 'Vehicles On Road',
       'stat_operational': 'Operational',
@@ -150,12 +150,12 @@ const I18N = {
       'stat_warnings': 'Warnings',
       'stat_vehicle_utilization': 'VEHICLE UTILIZATION',
 
-      // ─── Utilization Legend ───
+ // Utilization Legend
       'util_heavy': 'Heavy',
       'util_commercial': 'Commercial',
       'util_private': 'Private',
 
-      // ─── Table Headers ───
+ // Table Headers
       'th_time': 'Time',
       'th_time_ist': 'Time (IST)',
       'th_alert_level': 'Alert Level',
@@ -186,7 +186,7 @@ const I18N = {
       'th_operational_status': 'Operational Status',
       'th_action': 'Action',
 
-      // ─── Alert Types ───
+ // Alert Types
       'alert_critical': 'CRITICAL',
       'alert_warning': 'WARNING',
       'type_speeding': 'Speeding',
@@ -194,7 +194,7 @@ const I18N = {
       'type_unauthorized_stop': 'Unauthorized Stop',
       'type_geofence_breach': 'Geofence Breach',
 
-      // ─── Locations ───
+ // Locations
       'loc_ring_road': 'Ring Road',
       'loc_nh8': 'NH8',
       'loc_swargate': 'Swargate Junction',
@@ -203,12 +203,12 @@ const I18N = {
       'loc_wakad': 'Wakad Bridge',
       'loc_airport_rd': 'Airport Road',
 
-      // ─── Status Badges ───
+ // Status Badges
       'status_dispatched': 'Dispatched',
       'status_resolved': 'Resolved',
       'status_investigating': 'Investigating',
 
-      // ─── Card Titles ───
+ // Card Titles
       'card_active_alerts_feed': 'ACTIVE ALERTS FEED',
       'card_recent_incidents': 'RECENT INCIDENTS',
       'card_registry_search': 'National Transport Registry Search',
@@ -219,7 +219,7 @@ const I18N = {
       'card_camera_telemetry': 'Camera Nodes Telemetry',
       'card_hotlist': 'Police Hotlist Bulletins (Pune Police Commissionerate)',
 
-      // ─── Buttons ───
+ // Buttons
       'btn_view_details': 'View Details',
       'btn_query_registry': 'Query VAHAN Registry',
       'btn_execute_pipeline': 'Execute 5-Stage Detection Pipeline',
@@ -230,7 +230,7 @@ const I18N = {
       'btn_send_sms_otp': 'Send SMS OTP',
       'btn_bind_stream': 'Bind Camera Stream to Edge Daemon',
 
-      // ─── Badges ───
+ // Badges
       'badge_rtsp': 'RTSP Pipeline',
       'badge_priority': 'Active Priority',
       'badge_watchlist': 'ACTIVE WATCHLIST',
@@ -241,7 +241,7 @@ const I18N = {
       'badge_active': 'ACTIVE',
       'badge_expired': 'EXPIRED',
 
-      // ─── Labels ───
+ // Labels
       'label_vehicle_reg': 'Vehicle Registration Number',
       'label_junction_node': 'Junction Camera Node',
       'label_rtsp_uri': 'RTSP Stream URI',
@@ -262,14 +262,14 @@ const I18N = {
       'label_confirm_password': 'Confirm Password',
       'label_sms_otp': 'SMS OTP Verification',
 
-      // ─── Placeholders ───
+ // Placeholders
       'placeholder_vehicle_reg': 'e.g. MH 12 DE 1433 or 22BH1234A',
       'placeholder_email': 'officer.name@mahapolice.gov.in',
       'placeholder_badge': 'e.g. MH-PI-4501 or MH-PSI-2104',
       'placeholder_otp': '000000',
       'placeholder_mobile': '9876543210',
 
-      // ─── Descriptions ───
+ // Descriptions
       'vehicle_lookup_desc': 'Query centralized VAHAN database across Maharashtra and national transport portals',
       'video_ingest_desc': 'Dissect traffic junction recording (.mp4) or bind edge camera RTSP stream',
       'detection_log_desc': 'Optical ANPR readings across Pune City CCTV camera network',
@@ -279,11 +279,11 @@ const I18N = {
       'quota_label': 'Quota: 10 / 10 remaining',
       'sample_label': 'Pune Context Samples:',
 
-      // ─── Upload Zone ───
+ // Upload Zone
       'upload_title': 'Select or Drag Traffic CCTV Recording (.mp4)',
       'upload_sub': 'Hardware accelerated NVDEC decode | 8 FPS sampling',
 
-      // ─── Pipeline Steps ───
+ // Pipeline Steps
       'step_frame': 'Frame Ingestion\n(8 FPS)',
       'step_vehicle': 'Vehicle\nLocalization',
       'step_anpr': 'ANPR Plate\nOCR',
@@ -291,16 +291,16 @@ const I18N = {
       'step_verdict': 'Discrepancy\nVerdict',
       'status_ready': 'Ready',
 
-      // ─── Misc ───
+ // Misc
       'no_records': 'No active records found.',
       'live_feed': 'Live Feed',
 
-      // ─── Operational Verdicts ───
+ // Operational Verdicts
       'verdict_pass_title': 'VERDICT: REGISTRY VERIFIED — NORMAL PASS',
       'verdict_alert_title': 'VERDICT: REGISTRY MISMATCH / CLONED PLATE SUSPECT',
       'verdict_alert_desc': 'Physical vehicle attributes detected by optical ANPR sensor contradict official VAHAN specifications. Active Watchlist bulletin issued for junction intercept.',
 
-      // ─── Auth Page ───
+ // Auth Page
       'auth_gateway_title': 'Maharashtra Police Command Gateway',
       'auth_gateway_desc': 'Integrated Traffic & Surveillance Management System',
       'auth_police_tab': 'Police Personnel',
@@ -321,18 +321,18 @@ const I18N = {
       'auth_sms_countdown': 'Resend in',
       'auth_sms_resend': 'Resend SMS OTP',
 
-      // ─── Footer ───
+ // Footer
       'footer_copyright': '© Government of Maharashtra. Content owned by Pune City Police Commissionerate.',
       'footer_browser': 'Best viewed in latest Chrome / Firefox / Edge, 1280x800 resolution',
 
-      // ─── Police Branches ───
+ // Police Branches
       'branch_traffic': 'Traffic Branch — Pune Police',
       'branch_crime': 'Crime Branch / CID',
       'branch_cyber': 'Cyber Crime Police Station',
       'branch_special': 'Special Branch',
       'branch_station': 'Police Station Law & Order',
 
-      // ─── Minimap Controls (en) ───
+ // Minimap Controls (en)
       'map_title': 'SINGLE JUNCTION MINIMAP (2 PERPENDICULAR LANES)',
       'junction_node': 'JUNC-01 CENTRAL',
       'btn_auto': 'AUTO ATSC',
@@ -344,7 +344,7 @@ const I18N = {
       'pcu_load': 'PCU Load',
       'queue_len': 'Queue',
 
-      // ─── Diff & Discrepancy Engine (en) ───
+ // Diff & Discrepancy Engine (en)
       'nav_diff_analysis': 'Corridor & ANPR Diff',
       'diff_title': 'Corridor Flow Differential & ANPR Discrepancy Engine',
       'diff_sub': 'Real-time multi-lane variance analysis, green-phase delta, and optical detection vs VAHAN registry diffs',
@@ -387,7 +387,7 @@ const I18N = {
       'diff_field_status': 'Insurance / Blacklist',
       'btn_export_audit': 'Export Audit Cert',
 
-      // ─── Minimap Hover & Telemetry (en) ───
+ // Minimap Hover & Telemetry (en)
       'tip_speed': 'Speed',
       'tip_model': 'Model',
       'tip_corridor': 'Corridor',
@@ -406,7 +406,7 @@ const I18N = {
       'tip_turn_intent': 'Turn Intent',
       'tip_turn_blinker': 'Turn Blinker',
 
-      // ─── Sub-headers, KPIs, and Corridor Descriptions (en) ───
+ // Sub-headers, KPIs, and Corridor Descriptions (en)
       'stat_vehicles': 'Vehicles',
       'btn_stop_lane_1': 'STOP LANE 1 (RED)',
       'btn_release_lane_1': 'RELEASE LANE 1 (FLOW)',
@@ -563,7 +563,7 @@ const I18N = {
     },
 
     hi: {
-      // ─── System Header ───
+ // System Header
       'sys_tagline': 'वाहन आसूचना एवं गतिशीलता ट्रैकिंग प्रणाली',
       'sys_title': 'विम्स आईसीसीसी',
       'sys_subtitle': 'एकीकृत कमांड एवं नियंत्रण केंद्र',
@@ -572,7 +572,7 @@ const I18N = {
       'sys_status_cit': 'नागरिक सेवा पोर्टल: सक्रिय',
       'lang_toggle': 'हि | EN',
 
-      // ─── Top Navigation ───
+ // Top Navigation
       'topnav_dashboard': 'डैशबोर्ड',
       'topnav_fleet_map': 'बेड़ा मानचित्र',
       'topnav_vehicles': 'वाहन',
@@ -582,7 +582,7 @@ const I18N = {
       'topnav_security': 'सुरक्षा',
       'topnav_help': 'सहायता',
 
-      // ─── Sidebar Navigation ───
+ // Sidebar Navigation
       'nav_live_tracking': 'लाइव ट्रैकिंग',
       'nav_fleet_overview': 'बेड़ा अवलोकन',
       'nav_incident_logs': 'घटना लॉग',
@@ -601,7 +601,7 @@ const I18N = {
       'nav_citizen_report': 'घटना दर्ज करें',
       'nav_citizen_grievance': 'शिकायत स्थिति ट्रैक करें',
 
-      // ─── New Relatable Tab Titles & Labels (hi) ───
+ // New Relatable Tab Titles & Labels (hi)
       'fleet_overview_title': 'सक्रिय बेड़ा सूची एवं तैनाती',
       'fleet_overview_sub': 'पुणे महानगरीय क्षेत्र में वास्तविक समय टेलीमेट्री, गश्ती क्षेत्र और तत्परता स्थिति',
       'th_unit_id': 'यूनिट आईडी',
@@ -648,18 +648,18 @@ const I18N = {
       'btn_resume_feed': 'फीड जारी रखें',
       'btn_export_audit': 'ऑडिट ट्रेल निर्यात',
 
-      // ─── Legend ───
+ // Legend
       'legend_active': 'सक्रिय',
       'legend_alert': 'चेतावनी',
       'legend_warning': 'सावधानी',
 
-      // ─── Sign Out ───
+ // Sign Out
       'sign_out': 'लॉग आउट',
       'sign_in': 'लॉग इन',
       'create_account': 'खाता बनाएं',
       'register_node': 'अधिकारी पंजीकृत करें',
 
-      // ─── Map Section ───
+ // Map Section
       'map_title': 'एकल जंक्शन मिनिमैप (2 लंबवत लेन)',
       'junction_node': 'जंक्शन-01 सेंट्रल',
       'lane_1_label': 'लेन 1: उत्तर-दक्षिण',
@@ -671,7 +671,7 @@ const I18N = {
       'pcu_load': 'PCU भार',
       'queue_len': 'कतार',
 
-      // ─── Filters ───
+ // Filters
       'filter_search_vehicle': 'वाहन आईडी खोजें',
       'filter_vehicle_type': 'वाहन प्रकार',
       'filter_heavy': 'भारी',
@@ -696,7 +696,7 @@ const I18N = {
       'filter_stolen': 'चोरी वाहन चेतावनी',
       'filter_challan': 'लंबित चालान',
 
-      // ─── Stats Cards ───
+ // Stats Cards
       'stat_active_fleet': 'सक्रिय बेड़ा',
       'stat_vehicles_on_road': 'सड़क पर वाहन',
       'stat_operational': 'चालू',
@@ -705,12 +705,12 @@ const I18N = {
       'stat_warnings': 'चेतावनियां',
       'stat_vehicle_utilization': 'वाहन उपयोग',
 
-      // ─── Utilization Legend ───
+ // Utilization Legend
       'util_heavy': 'भारी',
       'util_commercial': 'व्यावसायिक',
       'util_private': 'निजी',
 
-      // ─── Table Headers ───
+ // Table Headers
       'th_time': 'समय',
       'th_time_ist': 'समय (IST)',
       'th_alert_level': 'चेतावनी स्तर',
@@ -741,7 +741,7 @@ const I18N = {
       'th_operational_status': 'संचालन स्थिति',
       'th_action': 'कार्रवाई',
 
-      // ─── Alert Types ───
+ // Alert Types
       'alert_critical': 'गंभीर',
       'alert_warning': 'चेतावनी',
       'type_speeding': 'अति-गति',
@@ -749,7 +749,7 @@ const I18N = {
       'type_unauthorized_stop': 'अनधिकृत रुकावट',
       'type_geofence_breach': 'भौगोलिक सीमा उल्लंघन',
 
-      // ─── Locations ───
+ // Locations
       'loc_ring_road': 'रिंग रोड',
       'loc_nh8': 'एनएच8',
       'loc_swargate': 'स्वारगेट जंक्शन',
@@ -758,12 +758,12 @@ const I18N = {
       'loc_wakad': 'वाकड पुल',
       'loc_airport_rd': 'एयरपोर्ट रोड',
 
-      // ─── Status Badges ───
+ // Status Badges
       'status_dispatched': 'प्रेषित',
       'status_resolved': 'समाधान',
       'status_investigating': 'जांच चालू',
 
-      // ─── Card Titles ───
+ // Card Titles
       'card_active_alerts_feed': 'सक्रिय अलर्ट फीड',
       'card_recent_incidents': 'हाल की घटनाएं',
       'card_registry_search': 'राष्ट्रीय परिवहन रजिस्ट्री खोज',
@@ -774,7 +774,7 @@ const I18N = {
       'card_camera_telemetry': 'कैमरा नोड टेलीमेट्री',
       'card_hotlist': 'पुलिस हॉटलिस्ट बुलेटिन (पुणे पुलिस आयुक्तालय)',
 
-      // ─── Buttons ───
+ // Buttons
       'btn_view_details': 'विवरण देखें',
       'btn_query_registry': 'वाहन रजिस्ट्री खोजें',
       'btn_execute_pipeline': '5-चरणीय पहचान पाइपलाइन चलाएं',
@@ -785,7 +785,7 @@ const I18N = {
       'btn_send_sms_otp': 'एसएमएस ओटीपी भेजें',
       'btn_bind_stream': 'कैमरा स्ट्रीम को एज डेमन से जोड़ें',
 
-      // ─── Badges ───
+ // Badges
       'badge_rtsp': 'आरटीएसपी पाइपलाइन',
       'badge_priority': 'सक्रिय प्राथमिकता',
       'badge_watchlist': 'सक्रिय निगरानी सूची',
@@ -796,7 +796,7 @@ const I18N = {
       'badge_active': 'सक्रिय',
       'badge_expired': 'समाप्त',
 
-      // ─── Labels ───
+ // Labels
       'label_vehicle_reg': 'वाहन पंजीकरण संख्या',
       'label_junction_node': 'जंक्शन कैमरा नोड',
       'label_rtsp_uri': 'आरटीएसपी स्ट्रीम URI',
@@ -817,14 +817,14 @@ const I18N = {
       'label_confirm_password': 'पासवर्ड की पुष्टि करें',
       'label_sms_otp': 'एसएमएस ओटीपी सत्यापन',
 
-      // ─── Placeholders ───
+ // Placeholders
       'placeholder_vehicle_reg': 'उदा. MH 12 DE 1433 या 22BH1234A',
       'placeholder_email': 'officer.name@mahapolice.gov.in',
       'placeholder_badge': 'उदा. MH-PI-4501 या MH-PSI-2104',
       'placeholder_otp': '000000',
       'placeholder_mobile': '9876543210',
 
-      // ─── Descriptions ───
+ // Descriptions
       'vehicle_lookup_desc': 'महाराष्ट्र एवं राष्ट्रीय परिवहन पोर्टल पर केंद्रीकृत वाहन डेटाबेस की खोज करें',
       'video_ingest_desc': 'ट्रैफिक जंक्शन रिकॉर्डिंग (.mp4) का विश्लेषण या एज कैमरा RTSP स्ट्रीम बाइंड करें',
       'detection_log_desc': 'पुणे शहर सीसीटीवी कैमरा नेटवर्क पर ऑप्टिकल ANPR रीडिंग',
@@ -834,11 +834,11 @@ const I18N = {
       'quota_label': 'कोटा: 10 / 10 शेष',
       'sample_label': 'पुणे संदर्भ नमूने:',
 
-      // ─── Upload Zone ───
+ // Upload Zone
       'upload_title': 'ट्रैफिक सीसीटीवी रिकॉर्डिंग (.mp4) चुनें या खींचें',
       'upload_sub': 'हार्डवेयर त्वरित NVDEC डिकोड | 8 FPS सैंपलिंग',
 
-      // ─── Pipeline Steps ───
+ // Pipeline Steps
       'step_frame': 'फ्रेम इनजेस्ट\n(8 FPS)',
       'step_vehicle': 'वाहन\nलोकलाइज़ेशन',
       'step_anpr': 'ANPR प्लेट\nOCR',
@@ -846,16 +846,16 @@ const I18N = {
       'step_verdict': 'विसंगति\nनिर्णय',
       'status_ready': 'तैयार',
 
-      // ─── Misc ───
+ // Misc
       'no_records': 'कोई सक्रिय रिकॉर्ड नहीं मिला।',
       'live_feed': 'लाइव फीड',
 
-      // ─── Operational Verdicts ───
+ // Operational Verdicts
       'verdict_pass_title': 'निर्णय: रजिस्ट्री सत्यापित — सामान्य निकास',
       'verdict_alert_title': 'निर्णय: पंजीकरण विसंगति / क्लोन प्लेट संदिग्ध',
       'verdict_alert_desc': 'कैमरे द्वारा दर्ज वाहन के भौतिक लक्षण आधिकारिक वाहन रजिस्ट्री रिकॉर्ड से मेल नहीं खाते हैं। जंक्शन पर रोकने हेतु सक्रिय निगरानी सूचना जारी।',
 
-      // ─── Auth Page ───
+ // Auth Page
       'auth_gateway_title': 'महाराष्ट्र पुलिस कमांड गेटवे',
       'auth_gateway_desc': 'एकीकृत यातायात एवं निगरानी प्रबंधन प्रणाली',
       'auth_police_tab': 'पुलिस कर्मचारी',
@@ -876,18 +876,18 @@ const I18N = {
       'auth_sms_countdown': 'पुनः भेजें',
       'auth_sms_resend': 'एसएमएस ओटीपी पुनः भेजें',
 
-      // ─── Footer ───
+ // Footer
       'footer_copyright': '© महाराष्ट्र सरकार। सामग्री पुणे शहर पुलिस आयुक्तालय द्वारा स्वामित्व।',
       'footer_browser': 'नवीनतम Chrome / Firefox / Edge, 1280x800 रिज़ॉल्यूशन में सर्वोत्तम देखा जा सकता है',
 
-      // ─── Police Branches ───
+ // Police Branches
       'branch_traffic': 'यातायात शाखा — पुणे पुलिस',
       'branch_crime': 'अपराध शाखा / सीआईडी',
       'branch_cyber': 'साइबर अपराध पुलिस थाना',
       'branch_special': 'विशेष शाखा',
       'branch_station': 'पुलिस थाना कानून एवं व्यवस्था',
 
-      // ─── Minimap Controls (hi) ───
+ // Minimap Controls (hi)
       'map_title': 'एकल जंक्शन मिनीमैप (2 लंबवत लेन)',
       'junction_node': 'जंक्शन-01 केंद्रीय',
       'btn_auto': 'ऑटो एटीएससी',
@@ -899,7 +899,7 @@ const I18N = {
       'pcu_load': 'पीसीयू भार',
       'queue_len': 'कतार',
 
-      // ─── Diff & Discrepancy Engine (hi) ───
+ // Diff & Discrepancy Engine (hi)
       'nav_diff_analysis': 'कॉरिडोर एवं एएनपीआर अंतर',
       'diff_title': 'कॉरिडोर प्रवाह अंतर एवं एएनपीआर विसंगति इंजन',
       'diff_sub': 'वास्तविक समय बहु-लेन भिन्नता विश्लेषण, सिग्नल डेल्टा और ऑप्टिकल पहचान बनाम वाहन रजिस्ट्री अंतर',
@@ -942,7 +942,7 @@ const I18N = {
       'diff_field_status': 'बीमा / ब्लैकलिस्ट स्थिति',
       'btn_export_audit': 'ऑडिट प्रमाणपत्र निर्यात करें',
 
-      // ─── Minimap Hover & Telemetry (hi) ───
+ // Minimap Hover & Telemetry (hi)
       'tip_speed': 'गति',
       'tip_model': 'मॉडल',
       'tip_corridor': 'कॉरिडोर',
@@ -961,7 +961,7 @@ const I18N = {
       'tip_turn_intent': 'मोड़ इरादा',
       'tip_turn_blinker': 'मोड़ ब्लिंकर',
 
-      // ─── Sub-headers, KPIs, and Corridor Descriptions (hi) ───
+ // Sub-headers, KPIs, and Corridor Descriptions (hi)
       'stat_vehicles': 'वाहन',
       'btn_stop_lane_1': 'लेन १ रोकें (लाल)',
       'btn_release_lane_1': 'लेन १ छोड़ें (प्रवाह)',

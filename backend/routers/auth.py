@@ -79,7 +79,7 @@ DEMO_OTP = os.getenv("VIMS_DEMO_OTP", "123456").strip()
 OTP_RESEND_COOLDOWN = int(os.getenv("VIMS_OTP_RESEND_COOLDOWN", "60"))
 OTP_LAST_SENT: Dict[str, float] = {}  # identifier -> last_sent_timestamp
 
-# ─── Brute-Force Protection ───
+# Brute-Force Protection
 MAX_LOGIN_ATTEMPTS = int(os.getenv("VIMS_MAX_LOGIN_ATTEMPTS", "5"))
 LOCKOUT_DURATION_SECONDS = int(os.getenv("VIMS_LOCKOUT_DURATION", "900"))  # 15 minutes
 

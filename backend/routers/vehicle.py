@@ -12,10 +12,8 @@ from backend.services.vehicle_registry import registry_service
 
 router = APIRouter(prefix="/api/vehicle", tags=["Vehicle Intelligence"])
 
-
 class VehicleLookupRequest(BaseModel):
     plate: str = Field(..., description="Indian vehicle registration number", min_length=3, max_length=15)
-
 
 class RTSPConfigRequest(BaseModel):
     junction_id: str = Field(..., description="Camera junction identifier, e.g. CAM-03")
@@ -23,7 +21,6 @@ class RTSPConfigRequest(BaseModel):
     sampling_fps: int = Field(default=10, ge=1, le=30, description="Sampling rate in frames per second")
     enable_nvdec: bool = Field(default=True, description="Hardware accelerated NVDEC decode")
     confidence_threshold: float = Field(default=0.75, ge=0.1, le=1.0)
-
 
 @router.post("/lookup")
 @limiter.limit("10/minute")
@@ -44,7 +41,6 @@ async def lookup_vehicle(request: Request, body: VehicleLookupRequest, authoriza
         )
 
     return record
-
 
 @router.post("/rtsp-config")
 async def configure_rtsp_edge_stream(config: RTSPConfigRequest):

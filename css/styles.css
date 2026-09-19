@@ -454,25 +454,28 @@ a:hover { text-decoration: underline; }
 
 .diff-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 200px 1fr;
-  gap: 14px;
+  grid-template-columns: 1fr 220px 1fr;
+  gap: 16px;
   align-items: stretch;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .diff-hero-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .diff-col-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .diff-col-card.lane-1 {
@@ -486,139 +489,364 @@ a:hover { text-decoration: underline; }
 .diff-col-card .card-title {
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .diff-center-delta {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.8) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.2);
   border-radius: var(--radius-lg);
-  padding: 14px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 8px;
+  gap: 6px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.diff-delta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.diff-delta-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  margin: 6px 0;
 }
 
 .delta-badge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: 9999px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  letter-spacing: 0.5px;
 }
 
 .delta-badge.favorable {
   background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
 }
 
 .delta-badge.warning {
   background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
 }
 
 .delta-badge.critical {
   background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
 }
 
 .diff-metric-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  transition: background 0.15s ease;
 }
 
-.diff-metric-row:last-child {
-  border-bottom: none;
+.diff-metric-row:hover {
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .diff-metric-label {
-  font-size: 11.5px;
-  color: var(--text-secondary);
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 .diff-metric-val {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--text-heading);
+  color: #f1f5f9;
+}
+
+/* Vehicle Selector in Card Header */
+.diff-vehicle-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-vehicle-select-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+#diffVehicleSelect {
+  background-color: rgba(15, 23, 42, 0.95);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  height: 30px;
+  padding: 4px 28px 4px 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+  transition: all 0.2s ease;
+  min-width: 220px;
+}
+
+#diffVehicleSelect:hover,
+#diffVehicleSelect:focus {
+  border-color: #38bdf8;
+  outline: none;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+}
+
+#diffVehicleSelect option {
+  background: #0f172a;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
 }
 
 .diff-inspector-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 860px) {
   .diff-inspector-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .diff-inspect-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-inspect-card.optical-anpr {
+  border-top: 3px solid #38bdf8;
+}
+
+.diff-inspect-card.vahan-registry {
+  border-top: 3px solid #10b981;
 }
 
 .diff-inspect-hdr {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .diff-field-row {
   display: grid;
-  grid-template-columns: 130px 1fr auto;
-  gap: 10px;
+  grid-template-columns: 165px 1fr auto;
+  gap: 12px;
   align-items: center;
-  padding: 7px 10px;
-  border-radius: 4px;
-  margin-bottom: 5px;
-  font-size: 11.5px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.15s ease;
 }
 
-.diff-field-row.match {
-  background: rgba(16, 185, 129, 0.05);
-  border-left: 3px solid #10b981;
+.diff-field-row:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-.diff-field-row.mismatch {
-  background: rgba(239, 68, 68, 0.08);
-  border-left: 3px solid #ef4444;
+.diff-field-row .diff-metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.diff-tag-match {
-  color: #10b981;
-  font-weight: 700;
+.diff-field-row .diff-metric-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Universal Tag / Badge styling inside diff inspector */
+.diff-tag-match,
+.diff-tag-mismatch,
+.diff-field-row .badge,
+.diff-field-row .badge-red,
+.diff-field-row .badge-amber,
+.diff-field-row .badge-green,
+.diff-field-row .badge-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
-.diff-tag-mismatch {
-  color: #ef4444;
+.diff-tag-match,
+.diff-field-row .badge-green {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
+}
+
+.diff-tag-mismatch,
+.diff-field-row .badge-red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.38);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
+}
+
+.diff-field-row .badge-amber {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.38);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.15);
+}
+
+.diff-field-row .badge-blue {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.38);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.15);
+}
+
+/* Verdict Box */
+.diff-verdict-banner {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.diff-verdict-banner.is-compliant {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.diff-verdict-banner.is-discrepancy {
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.diff-verdict-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.diff-verdict-title {
+  font-size: 12px;
   font-weight: 700;
-  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.diff-verdict-sub {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+.diff-export-btn {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.diff-export-btn:hover {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: #34d399;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -814,6 +1042,7 @@ a:hover { text-decoration: underline; }
   grid-template-columns: 1fr 280px;
   grid-template-rows: auto auto;
   gap: 12px;
+  max-width: 1440px;
 }
 
 .dash-grid .map-area {
@@ -1055,6 +1284,45 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+}
+
+.junction-cam-chip-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 6px;
+  padding-right: 6px;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  flex-wrap: wrap;
+}
+
+.junc-chip {
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a1a1aa;
+  padding: 3px 8px;
+  border-radius: var(--radius);
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.junc-chip:hover {
+  background: #18181b;
+  color: #ffffff;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.junc-chip.active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #38bdf8;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
 }
 
 .junction-act-btn {
@@ -1104,8 +1372,13 @@ a:hover { text-decoration: underline; }
 /* Map Canvas Container */
 .fleet-map-canvas.junction-canvas-container {
   position: relative;
+  width: 100%;
+  max-width: 800px;
   height: 340px;
+  margin: 0 auto;
   background: #000000;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
 }

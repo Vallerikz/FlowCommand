@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net; img-src 'self' data: blob:; media-src 'self' blob: data:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://storage.googleapis.com https://tfhub.dev https://cdn.jsdelivr.net https://server.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com; img-src 'self' data: blob: https://server.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://cdn.jsdelivr.net; media-src 'self' blob: data:;">
   <meta name="description" content="Maharashtra Police — Vehicle Intelligence & Movement Tracking System (VIMS). Integrated Command & Control Centre (Pune Command).">
   <title>Maharashtra Police — VIMS ICCC Command Centre</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <div class="tricolor-strip" role="presentation"></div>
 
-  <!-- ═══ SYSTEM HEADER ═══ -->
+ <!-- SYSTEM HEADER -->
   <header class="sys-header" role="banner">
     <div class="sys-brand">
       <div class="sys-emblem" aria-hidden="true">
@@ -64,7 +65,7 @@
   </header>
 
   <div class="dashboard-wrap">
-    <!-- ═══ LEFT SIDEBAR ═══ -->
+ <!-- LEFT SIDEBAR -->
     <aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Operations">
       <div class="sidebar-section">
         <a class="sidebar-link active" data-view="command-centre" id="nav-command-centre" tabindex="0">
@@ -116,10 +117,10 @@
       </div>
     </aside>
 
-    <!-- ═══ MAIN CONTENT ═══ -->
+ <!-- MAIN CONTENT -->
     <main class="main" role="main">
 
-      <!-- ──── COMMAND CENTRE (DASHBOARD VIEW) ──── -->
+ <!-- COMMAND CENTRE (DASHBOARD VIEW) -->
       <section class="view active" id="view-command-centre" role="region" aria-label="Command Centre Dashboard">
         <div class="dash-grid">
 
@@ -128,11 +129,19 @@
             <div class="fleet-map-card junction-minimap-card">
               <div class="fleet-map-hdr junction-map-hdr">
                 <div class="junction-title-group">
-                  <span class="fleet-map-title" data-i18n="map_title">SINGLE JUNCTION MINIMAP (2 PERPENDICULAR LANES)</span>
-                  <span class="junction-badge" id="junctionNodeBadge" data-i18n="junction_node">JUNC-01 CENTRAL</span>
+                  <span class="fleet-map-title" id="junctionMinimapTitle">SWARGATE CHOWK MINIMAP (NH-60 X TILAK RD)</span>
+                  <span class="junction-badge" id="junctionNodeBadge">CAM-01 • 65° SKEWED DIAGONAL CUT</span>
                   <span class="junction-mode-badge" id="junctionModeBadge">● AUTO ATSC</span>
                 </div>
                 <div class="junction-toolbar-actions">
+                  <div class="junction-cam-chip-group" role="group" aria-label="Select Junction Camera">
+                    <button type="button" class="junc-chip active" data-cam="CAM-01" title="Swargate Chowk (NH-60 x Tilak Rd)">CAM-01 Swargate</button>
+                    <button type="button" class="junc-chip" data-cam="CAM-02" title="Alka Talkies Chowk (Sambhaji Bridge Splay)">CAM-02 Alka Talkies</button>
+                    <button type="button" class="junc-chip" data-cam="CAM-03" title="Balgandharva Chowk (JM Road Arterial)">CAM-03 Balgandharva</button>
+                    <button type="button" class="junc-chip" data-cam="CAM-04" title="Goodluck Cafe Chowk (FC Road Dogleg)">CAM-04 Goodluck</button>
+                    <button type="button" class="junc-chip" data-cam="CAM-05" title="Deccan Gymkhana Chowk (Karve Rd Hub)">CAM-05 Deccan Gym</button>
+                    <button type="button" class="junc-chip" data-cam="CAM-06" title="Sambhaji Bridge (Lakdi Pul Over Mutha)">CAM-06 Lakdi Pul</button>
+                  </div>
                   <button class="junction-act-btn active" id="btnJunctionAuto" data-i18n="btn_auto" title="Resume adaptive ATSC density balancing">AUTO ATSC</button>
                   <button class="junction-act-btn" id="btnJunctionForceL1" data-i18n="btn_force_lane_1" title="Flow Lane 1 (NS) and Stop Lane 2 (EW)">FLOW L1 (STOP L2)</button>
                   <button class="junction-act-btn" id="btnJunctionForceL2" data-i18n="btn_force_lane_2" title="Flow Lane 2 (EW) and Stop Lane 1 (NS)">FLOW L2 (STOP L1)</button>
@@ -145,8 +154,8 @@
                 <div class="map-grid"></div>
 
                 <!-- SVG for 2 Perpendicular Lanes: Lane 1 (NS) & Lane 2 (EW) -->
-                <div class="map-roads junction-roads-layer">
-                  <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div class="map-roads junction-roads-layer" id="junctionRoadsSvgLayer">
+                  <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <linearGradient id="roadAsphaltV" x1="0" y1="0" x2="1" y2="0">
                         <stop offset="0%" stop-color="#0a0a0c"/>
@@ -339,7 +348,7 @@
                 <!-- Top-Left HUD: Lane 1 (North-South) -->
                 <div class="lane-hud-card hud-lane-1">
                   <div class="lane-hud-header">
-                    <span class="lane-hud-title" data-i18n="lane_1_label">LANE 1: NORTH-SOUTH</span>
+                    <span class="lane-hud-title" id="hudLane1Title">SHIVAJI ROAD / NH-60 (NORTH-SOUTH)</span>
                     <span class="signal-badge" id="hudLane1SignalBadge">● GREEN</span>
                   </div>
                   <div class="lane-hud-body">
@@ -365,7 +374,7 @@
                 <!-- Top-Right HUD: Lane 2 (East-West) -->
                 <div class="lane-hud-card hud-lane-2">
                   <div class="lane-hud-header">
-                    <span class="lane-hud-title" data-i18n="lane_2_label">LANE 2: EAST-WEST</span>
+                    <span class="lane-hud-title" id="hudLane2Title">TILAK ROAD / SHANKARSHETH (EAST-WEST SKEWED 65°)</span>
                     <span class="signal-badge" id="hudLane2SignalBadge">● RED</span>
                   </div>
                   <div class="lane-hud-body">
@@ -402,6 +411,1038 @@
                   <button class="map-ctrl-btn" id="btnJuncDensityUp" title="Increase Vehicle Density" aria-label="Increase Density">▲</button>
                   <button class="map-ctrl-btn" id="btnJuncDensityDown" title="Decrease Vehicle Density" aria-label="Decrease Density">▼</button>
                   <button class="map-ctrl-btn" id="btnJuncCenter" title="Center Junction" aria-label="Center Map">⊙</button>
+                </div>
+              </div>
+            </div>
+
+ <!-- REAL CITY GIS LIVE MINIMAP CARD (PUNE METROPOLITAN SURVEILLANCE) -->
+            <div class="fleet-map-card city-gis-minimap-card" id="cityGisMinimapCard">
+              <style>
+ /* City GIS Live Minimap Component Styles */
+                .city-gis-minimap-card {
+                  margin-top: 14px;
+                  background: var(--bg-card, #090d16);
+                  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+                  border-radius: var(--radius-lg, 10px);
+                  box-shadow: var(--shadow-card, 0 4px 20px rgba(0, 0, 0, 0.4));
+                  overflow: hidden;
+                  position: relative;
+                }
+                .city-gis-hdr {
+                  background: rgba(15, 23, 42, 0.85);
+                  padding: 10px 14px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+                  gap: 12px;
+                  flex-wrap: wrap;
+                }
+                .city-gis-map-container {
+                  position: relative;
+                  width: 100%;
+                  max-width: 800px;
+                  height: 380px;
+                  margin: 0 auto;
+                  border-left: 1px solid rgba(255, 255, 255, 0.08);
+                  border-right: 1px solid rgba(255, 255, 255, 0.08);
+                  background: #090d16;
+                }
+                #cityGisMap {
+                  width: 100%;
+                  height: 100%;
+                  outline: none;
+                }
+                /* Leaflet UI Overrides */
+                .city-gis-map-container .leaflet-control-attribution {
+                  display: none !important;
+                }
+                /* Zero out default Leaflet marker blue pin and icon outlines */
+                .city-gis-map-container .leaflet-marker-icon:not(.gis-cam-div-icon) {
+                  display: none !important;
+                }
+                .leaflet-div-icon.gis-cam-div-icon {
+                  background: transparent !important;
+                  border: none !important;
+                }
+                /* Overview Deck (Positioned Above the City Map) */
+                .gis-overview-top-deck {
+                  max-width: 800px;
+                  margin: 0 auto;
+                  display: flex;
+                  gap: 10px;
+                  padding: 8px 10px;
+                  background: rgba(10, 16, 30, 0.95);
+                  border-left: 1px solid rgba(255, 255, 255, 0.08);
+                  border-right: 1px solid rgba(255, 255, 255, 0.08);
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                  box-sizing: border-box;
+                }
+
+                /* Camera Status & Geospatial Layers HUD (Left Side of Deck) */
+                .gis-camera-status-hud {
+                  position: relative;
+                  flex: 1;
+                  min-width: 0;
+                  background: rgba(15, 23, 42, 0.7);
+                  border: 1px solid rgba(255, 255, 255, 0.12);
+                  border-radius: 6px;
+                  padding: 8px 10px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+                  pointer-events: auto;
+                }
+                .gis-status-hud-title {
+                  font-size: 10.5px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 0.6px;
+                  color: #f1f5f9;
+                  margin-bottom: 6px;
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                  padding-bottom: 4px;
+                }
+                .gis-status-hud-list {
+                  display: grid;
+                  grid-template-columns: repeat(2, 1fr);
+                  gap: 3px 8px;
+                  margin-bottom: 6px;
+                }
+                .gis-status-item {
+                  display: flex;
+                  align-items: center;
+                  gap: 5px;
+                  font-size: 10px;
+                  color: #cbd5e1;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .gis-status-indicator {
+                  font-size: 10px;
+                  line-height: 1;
+                  flex-shrink: 0;
+                }
+                .gis-status-label {
+                  flex: 1;
+                  font-size: 10px;
+                  font-weight: 500;
+                  color: #cbd5e1;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .gis-status-num {
+                  font-size: 10px;
+                  font-weight: 700;
+                  color: #94a3b8;
+                  font-family: 'JetBrains Mono', monospace;
+                  flex-shrink: 0;
+                }
+                .gis-btn-view-all {
+                  width: 100%;
+                  margin-top: 5px;
+                  padding: 4px 6px;
+                  background: rgba(255, 255, 255, 0.06);
+                  border: 1px solid rgba(255, 255, 255, 0.14);
+                  border-radius: 4px;
+                  color: #f1f5f9;
+                  font-size: 10px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  transition: all 0.2s ease;
+                  font-family: inherit;
+                }
+                .gis-btn-view-all:hover {
+                  background: rgba(56, 189, 248, 0.2);
+                  border-color: #38bdf8;
+                  color: #ffffff;
+                }
+                /* Controls (Bottom Right) */
+                .gis-map-controls {
+                  position: absolute;
+                  bottom: 12px;
+                  right: 12px;
+                  z-index: 500;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 5px;
+                  pointer-events: auto;
+                }
+                .gis-ctrl-btn {
+                  width: 30px;
+                  height: 30px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background: rgba(10, 15, 26, 0.92);
+                  border: 1px solid rgba(255, 255, 255, 0.16);
+                  border-radius: 6px;
+                  color: #f1f5f9;
+                  font-size: 14px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  backdrop-filter: blur(6px);
+                  transition: all 0.15s ease;
+                  padding: 0;
+                }
+                .gis-ctrl-btn:hover {
+                  background: #1e293b;
+                  border-color: rgba(255, 255, 255, 0.35);
+                  color: #ffffff;
+                  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+                }
+                /* Pill Badges (Matching Screenshot: No Blue Marks) */
+                .gis-cam-pill {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 5px;
+                  padding: 3px 8px;
+                  border-radius: 9999px;
+                  background: rgba(9, 13, 22, 0.94);
+                  backdrop-filter: blur(6px);
+                  font-family: 'JetBrains Mono', 'Segoe UI', monospace;
+                  font-size: 11px;
+                  font-weight: 700;
+                  letter-spacing: 0.4px;
+                  white-space: nowrap;
+                  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
+                  cursor: pointer;
+                  position: relative;
+                  transition: transform 0.15s ease, box-shadow 0.15s ease;
+                  user-select: none;
+                }
+                .gis-cam-pill:hover {
+                  transform: scale(1.1);
+                  z-index: 9999 !important;
+                }
+                .gis-cam-pill.status-normal {
+                  border: 1.5px solid #22c55e;
+                  color: #4ade80;
+                  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 10px rgba(34, 197, 94, 0.35);
+                }
+                .gis-cam-pill.status-warning {
+                  border: 1.5px solid #f59e0b;
+                  color: #fbbf24;
+                  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 10px rgba(245, 158, 11, 0.35);
+                }
+                .gis-cam-pill.status-violating {
+                  border: 1.5px solid #ef4444;
+                  color: #f87171;
+                  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 12px rgba(239, 68, 68, 0.5);
+                }
+                .gis-cam-pill .pill-pulse {
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  display: inline-block;
+                }
+                .pulse-normal { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+                .pulse-warning { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+                .pulse-violating { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+
+                /* Custom Dark Popup Styles */
+                .city-gis-map-container .leaflet-popup-content-wrapper {
+                  background: rgba(10, 15, 26, 0.97) !important;
+                  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                  border-radius: 8px !important;
+                  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(59, 130, 246, 0.15) !important;
+                  color: #f1f5f9 !important;
+                  backdrop-filter: blur(12px) !important;
+                  padding: 0 !important;
+                }
+                .city-gis-map-container .leaflet-popup-tip {
+                  background: #0a0f1a !important;
+                  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                }
+                .city-gis-map-container .leaflet-popup-content {
+                  margin: 12px 14px !important;
+                  line-height: 1.4 !important;
+                  min-width: 260px;
+                  max-width: 320px;
+                }
+                .city-gis-map-container a.leaflet-popup-close-button {
+                  color: #94a3b8 !important;
+                  padding: 6px !important;
+                  top: 8px !important;
+                  right: 8px !important;
+                }
+                .city-gis-map-container a.leaflet-popup-close-button:hover {
+                  color: #ffffff !important;
+                }
+                .gis-cam-popup {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                }
+                .gis-pop-top {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 8px;
+                }
+                .gis-pop-badge {
+                  font-size: 10px;
+                  font-weight: 700;
+                  padding: 2px 7px;
+                  border-radius: 4px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.4px;
+                }
+                .gis-pop-badge.normal {
+                  background: rgba(34, 197, 94, 0.15);
+                  color: #4ade80;
+                  border: 1px solid rgba(34, 197, 94, 0.35);
+                }
+                .gis-pop-badge.warning {
+                  background: rgba(245, 158, 11, 0.15);
+                  color: #fbbf24;
+                  border: 1px solid rgba(245, 158, 11, 0.35);
+                }
+                .gis-pop-badge.violating {
+                  background: rgba(239, 68, 68, 0.2);
+                  color: #f87171;
+                  border: 1px solid rgba(239, 68, 68, 0.4);
+                }
+                .gis-pop-id {
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 11px;
+                  font-weight: 700;
+                  color: #94a3b8;
+                }
+                .gis-pop-name {
+                  font-size: 13px;
+                  font-weight: 700;
+                  color: #ffffff;
+                }
+                .gis-pop-grid {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 4px;
+                  font-size: 11px;
+                  background: rgba(255, 255, 255, 0.03);
+                  border: 1px solid rgba(255, 255, 255, 0.06);
+                  border-radius: 6px;
+                  padding: 8px;
+                }
+                .gis-pop-row {
+                  display: flex;
+                  justify-content: space-between;
+                  gap: 8px;
+                }
+                .gis-pop-k {
+                  color: #94a3b8;
+                  font-weight: 500;
+                }
+                .gis-pop-v {
+                  color: #f1f5f9;
+                  font-family: 'JetBrains Mono', monospace;
+                  font-weight: 600;
+                  text-align: right;
+                }
+                .gis-pop-v.text-danger { color: #f87171; font-weight: 700; }
+                .gis-pop-v.text-warning { color: #fbbf24; font-weight: 700; }
+                .gis-pop-v.text-success { color: #4ade80; font-weight: 700; }
+                .gis-pop-footer {
+                  font-size: 10px;
+                  color: #64748b;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  border-top: 1px solid rgba(255, 255, 255, 0.08);
+                  padding-top: 6px;
+                }
+                .gis-water-tooltip {
+                  background: rgba(9, 13, 22, 0.95) !important;
+                  border: 1px solid #eab308 !important;
+                  color: #fef08a !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8) !important;
+                  padding: 4px 8px !important;
+                  border-radius: 4px !important;
+                }
+                /* Active Camera Highlighting */
+                .city-gis-map-container .gis-cam-pill.active-camera {
+                  border-color: #38bdf8 !important;
+                  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95), 0 0 32px rgba(56, 189, 248, 0.45) !important;
+                  transform: scale(1.08);
+                  background: rgba(14, 116, 144, 0.92) !important;
+                }
+                .city-gis-map-container .gis-cam-pill.active-camera .pill-pulse {
+                  animation: activeCamPulse 1.2s infinite !important;
+                  background: #38bdf8 !important;
+                  box-shadow: 0 0 10px #38bdf8 !important;
+                }
+                @keyframes activeCamPulse {
+                  0% { transform: scale(1); opacity: 1; }
+                  100% { transform: scale(2.8); opacity: 0; }
+                }
+                .junction-minimap-card.cam-switch-flash {
+                  animation: camFlash 0.7s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                }
+                @keyframes camFlash {
+                  0% { box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.9), 0 0 28px rgba(56, 189, 248, 0.5); }
+                  100% { box-shadow: none; }
+                }
+
+                /* Live Junction Minimap PIP (Right Side of Overview Deck) */
+                .gis-live-minimap-pip {
+                  position: relative;
+                  width: 250px;
+                  flex-shrink: 0;
+                  background: rgba(15, 23, 42, 0.7);
+                  border: 1px solid rgba(56, 189, 248, 0.35);
+                  border-radius: 6px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+                  overflow: hidden;
+                  display: flex;
+                  flex-direction: column;
+                  pointer-events: auto;
+                }
+                .gis-live-minimap-pip.minimized .gis-pip-body {
+                  display: none;
+                }
+                .gis-pip-header {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  padding: 5px 8px;
+                  background: rgba(15, 23, 42, 0.95);
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                }
+                .gis-pip-title-wrap {
+                  display: flex;
+                  align-items: center;
+                  gap: 5px;
+                  overflow: hidden;
+                }
+                .gis-pip-dot {
+                  color: #10b981;
+                  font-size: 9px;
+                  animation: pulse 1.5s infinite;
+                }
+                .gis-pip-title {
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 9.5px;
+                  font-weight: 700;
+                  color: #f1f5f9;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  max-width: 125px;
+                }
+                .gis-pip-actions {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                }
+                .gis-pip-btn {
+                  background: rgba(56, 189, 248, 0.12);
+                  border: 1px solid rgba(56, 189, 248, 0.3);
+                  color: #38bdf8;
+                  font-size: 9.5px;
+                  font-weight: 600;
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 3px;
+                  transition: all 0.15s ease;
+                }
+                .gis-pip-btn:hover {
+                  background: rgba(56, 189, 248, 0.25);
+                  color: #ffffff;
+                  border-color: #38bdf8;
+                }
+                .gis-pip-body {
+                  padding: 6px;
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                }
+                .gis-pip-svg-container {
+                  width: 100%;
+                  height: 95px;
+                  background: #09090b;
+                  border-radius: 4px;
+                  overflow: hidden;
+                  border: 1px solid rgba(255, 255, 255, 0.08);
+                }
+                .gis-pip-svg-container svg {
+                  width: 100%;
+                  height: 100%;
+                  display: block;
+                }
+                .gis-pip-info-row {
+                  margin-top: 5px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  font-size: 9px;
+                  color: #94a3b8;
+                  font-family: 'JetBrains Mono', monospace;
+                }
+                .gis-pip-lane {
+                  max-width: 105px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  color: #cbd5e1;
+                }
+                .gis-pip-divider {
+                  color: #f59e0b;
+                  font-size: 9px;
+                }
+                .gis-pop-inspect-btn {
+                  width: 100%;
+                  margin-top: 6px;
+                  padding: 6px 10px;
+                  background: linear-gradient(135deg, rgba(14, 116, 144, 0.6), rgba(3, 105, 161, 0.6));
+                  border: 1px solid #0284c7;
+                  border-radius: 5px;
+                  color: #ffffff;
+                  font-size: 11px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 6px;
+                  transition: all 0.2s ease;
+                }
+                .gis-pop-inspect-btn:hover {
+                  background: linear-gradient(135deg, #0284c7, #0369a1);
+                  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+                }
+                .minimap-highlight-pulse {
+                  animation: minimapPulseGlow 2s ease-out !important;
+                }
+                @keyframes minimapPulseGlow {
+                  0% { box-shadow: 0 0 0 4px #38bdf8, 0 0 35px rgba(56, 189, 248, 0.8); }
+                  50% { box-shadow: 0 0 0 2px #38bdf8, 0 0 20px rgba(56, 189, 248, 0.4); }
+                  100% { box-shadow: none; }
+                }
+                /* Tooltip Styling for Metro Lines */
+                .gis-metro-tooltip-purple {
+                  background: rgba(18, 9, 31, 0.96) !important;
+                  border: 1px solid #c084fc !important;
+                  color: #f3e8ff !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.5) !important;
+                  padding: 4px 9px !important;
+                  border-radius: 5px !important;
+                }
+                .gis-metro-tooltip-aqua {
+                  background: rgba(5, 23, 36, 0.96) !important;
+                  border: 1px solid #22d3ee !important;
+                  color: #cffafe !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 16px rgba(6, 182, 212, 0.5) !important;
+                  padding: 4px 9px !important;
+                  border-radius: 5px !important;
+                }
+                /* Tooltip Styling for Road Hierarchies */
+                .gis-road-tooltip-hwy {
+                  background: rgba(36, 17, 7, 0.96) !important;
+                  border: 1px solid #fb923c !important;
+                  color: #ffedd5 !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.45) !important;
+                  padding: 4px 9px !important;
+                  border-radius: 5px !important;
+                }
+                .gis-road-tooltip-main {
+                  background: rgba(8, 23, 44, 0.96) !important;
+                  border: 1px solid #38bdf8 !important;
+                  color: #e0f2fe !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.45) !important;
+                  padding: 4px 9px !important;
+                  border-radius: 5px !important;
+                }
+                .gis-road-tooltip-walk {
+                  background: rgba(6, 32, 22, 0.96) !important;
+                  border: 1px solid #34d399 !important;
+                  color: #d1fae5 !important;
+                  font-family: 'JetBrains Mono', monospace !important;
+                  font-size: 10px !important;
+                  font-weight: 700 !important;
+                  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45) !important;
+                  padding: 4px 9px !important;
+                  border-radius: 5px !important;
+                }
+                /* Station Marker Nodes & Interactive Badges */
+                .gis-metro-station-div {
+                  background: transparent !important;
+                  border: none !important;
+                }
+                .gis-metro-station-pill {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 5px;
+                  padding: 2px 7px;
+                  border-radius: 12px;
+                  background: rgba(8, 14, 26, 0.90);
+                  backdrop-filter: blur(8px);
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+                  cursor: pointer;
+                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                  transform-origin: center center;
+                  pointer-events: auto;
+                  white-space: nowrap;
+                }
+                .gis-metro-station-pill:hover {
+                  transform: scale(1.18);
+                  z-index: 1000 !important;
+                }
+                .gis-metro-station-pill.aqua {
+                  border: 1px solid #00f0ff;
+                  color: #e0f2fe;
+                  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+                }
+                .gis-metro-station-pill.purple {
+                  border: 1px solid #c084fc;
+                  color: #f3e8ff;
+                  box-shadow: 0 0 8px rgba(192, 132, 252, 0.4);
+                }
+                .gis-metro-station-pill.interchange {
+                  border: 1.5px solid #38bdf8;
+                  background: linear-gradient(135deg, rgba(14, 34, 61, 0.95), rgba(46, 16, 75, 0.95));
+                  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+                  color: #ffffff;
+                }
+                .gis-metro-station-bulb {
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 50%;
+                  flex-shrink: 0;
+                }
+                .gis-metro-station-pill.aqua .gis-metro-station-bulb {
+                  background: #00f0ff;
+                  box-shadow: 0 0 6px #00f0ff;
+                }
+                .gis-metro-station-pill.purple .gis-metro-station-bulb {
+                  background: #c084fc;
+                  box-shadow: 0 0 6px #c084fc;
+                }
+                .gis-metro-station-pill.interchange .gis-metro-station-bulb {
+                  background: #ffffff;
+                  box-shadow: 0 0 8px #38bdf8;
+                }
+                .gis-metro-station-icon {
+                  font-size: 10px;
+                  line-height: 1;
+                }
+                .gis-metro-station-name {
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 9px;
+                  font-weight: 700;
+                  letter-spacing: 0.3px;
+                }
+                .gis-metro-interchange-badge {
+                  font-size: 8px;
+                  font-weight: 800;
+                  background: rgba(56, 189, 248, 0.25);
+                  color: #38bdf8;
+                  border-radius: 3px;
+                  padding: 1px 4px;
+                  margin-left: 2px;
+                }
+                /* Metro Stations Ribbon above Map */
+                .gis-metro-stations-ribbon {
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                  max-width: 800px;
+                  margin: 0 auto;
+                  background: rgba(10, 16, 30, 0.92);
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                  border-left: 1px solid rgba(255, 255, 255, 0.08);
+                  border-right: 1px solid rgba(255, 255, 255, 0.08);
+                  padding: 6px 12px;
+                  overflow: hidden;
+                  position: relative;
+                  z-index: 20;
+                }
+                .gis-metro-ribbon-label {
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  white-space: nowrap;
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 10px;
+                  font-weight: 800;
+                  color: #38bdf8;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  padding-right: 10px;
+                  border-right: 1px solid rgba(255, 255, 255, 0.12);
+                  flex-shrink: 0;
+                }
+                .gis-metro-chips-scroll {
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  overflow-x: auto;
+                  scrollbar-width: thin;
+                  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+                  padding-bottom: 2px;
+                  flex: 1;
+                }
+                .gis-metro-chips-scroll::-webkit-scrollbar {
+                  height: 4px;
+                }
+                .gis-metro-chips-scroll::-webkit-scrollbar-thumb {
+                  background: rgba(56, 189, 248, 0.3);
+                  border-radius: 4px;
+                }
+                .gis-metro-ribbon-chip {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 5px;
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid rgba(255, 255, 255, 0.12);
+                  border-radius: 12px;
+                  padding: 3px 8px;
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 9.5px;
+                  font-weight: 600;
+                  color: #cbd5e1;
+                  white-space: nowrap;
+                  cursor: pointer;
+                  transition: all 0.2s ease;
+                }
+                .gis-metro-ribbon-chip:hover {
+                  background: rgba(56, 189, 248, 0.18);
+                  border-color: #38bdf8;
+                  color: #ffffff;
+                  transform: translateY(-1px);
+                }
+                .gis-metro-ribbon-chip.aqua {
+                  border-color: rgba(0, 240, 255, 0.35);
+                }
+                .gis-metro-ribbon-chip.aqua:hover {
+                  border-color: #00f0ff;
+                  background: rgba(0, 240, 255, 0.18);
+                  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+                }
+                .gis-metro-ribbon-chip.purple {
+                  border-color: rgba(192, 132, 252, 0.35);
+                }
+                .gis-metro-ribbon-chip.purple:hover {
+                  border-color: #c084fc;
+                  background: rgba(192, 132, 252, 0.18);
+                  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
+                }
+                .gis-metro-ribbon-chip.interchange {
+                  border-color: rgba(56, 189, 248, 0.6);
+                  background: linear-gradient(135deg, rgba(8, 145, 178, 0.25), rgba(147, 51, 234, 0.25));
+                  color: #38bdf8;
+                  font-weight: 800;
+                }
+                .gis-metro-ribbon-chip.interchange:hover {
+                  border-color: #38bdf8;
+                  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+                }
+                /* Metro Station Leaflet Popup */
+                .gis-metro-popup .leaflet-popup-content-wrapper {
+                  background: rgba(9, 15, 29, 0.96) !important;
+                  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+                  border-radius: 8px !important;
+                  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.25) !important;
+                  padding: 0 !important;
+                }
+                .gis-metro-pop-card {
+                  padding: 12px 14px;
+                  color: #f1f5f9;
+                  min-width: 250px;
+                }
+                .gis-metro-pop-header {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 8px;
+                  padding-bottom: 6px;
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                }
+                .gis-metro-pop-title {
+                  font-size: 12px;
+                  font-weight: 800;
+                  color: #ffffff;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                }
+                .gis-metro-pop-badge {
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 9px;
+                  font-weight: 700;
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  text-transform: uppercase;
+                }
+                .gis-metro-pop-badge.aqua {
+                  background: rgba(0, 240, 255, 0.15);
+                  border: 1px solid #00f0ff;
+                  color: #00f0ff;
+                }
+                .gis-metro-pop-badge.purple {
+                  background: rgba(192, 132, 252, 0.15);
+                  border: 1px solid #c084fc;
+                  color: #c084fc;
+                }
+                .gis-metro-pop-badge.interchange {
+                  background: rgba(56, 189, 248, 0.2);
+                  border: 1px solid #38bdf8;
+                  color: #38bdf8;
+                }
+                .gis-metro-pop-detail {
+                  font-size: 10.5px;
+                  color: #94a3b8;
+                  line-height: 1.5;
+                  margin-bottom: 8px;
+                }
+                .gis-metro-pop-stat-grid {
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 6px;
+                  margin-bottom: 8px;
+                }
+                .gis-metro-pop-stat-box {
+                  background: rgba(255, 255, 255, 0.04);
+                  border: 1px solid rgba(255, 255, 255, 0.08);
+                  border-radius: 4px;
+                  padding: 4px 6px;
+                }
+                .gis-metro-pop-stat-box .lbl {
+                  font-size: 8.5px;
+                  color: #64748b;
+                  text-transform: uppercase;
+                }
+                .gis-metro-pop-stat-box .val {
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 10px;
+                  font-weight: 700;
+                  color: #e2e8f0;
+                }
+                .gis-metro-pop-focus-btn {
+                  width: 100%;
+                  background: rgba(56, 189, 248, 0.15);
+                  border: 1px solid #38bdf8;
+                  color: #38bdf8;
+                  border-radius: 4px;
+                  padding: 5px;
+                  font-family: 'JetBrains Mono', monospace;
+                  font-size: 10px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  transition: all 0.18s ease;
+                }
+                .gis-metro-pop-focus-btn:hover {
+                  background: #38bdf8;
+                  color: #0b1120;
+                }
+                /* Minimap Camera Quick Switcher in Status HUD */
+                .gis-cam-sync-section {
+                  margin-top: 8px;
+                  margin-bottom: 8px;
+                  border-top: 1px solid rgba(255, 255, 255, 0.1);
+                  padding-top: 8px;
+                }
+                .gis-quick-title {
+                  font-size: 10px;
+                  font-weight: 700;
+                  color: #94a3b8;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  margin-bottom: 6px;
+                }
+                .gis-quick-cam-row {
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 5px;
+                }
+                .gis-quick-cam-chip {
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid rgba(255, 255, 255, 0.14);
+                  border-radius: 4px;
+                  padding: 5px 2px;
+                  font-size: 10px;
+                  font-family: 'JetBrains Mono', monospace;
+                  font-weight: 700;
+                  color: #cbd5e1;
+                  text-align: center;
+                  cursor: pointer;
+                  transition: all 0.18s ease;
+                }
+                .gis-quick-cam-chip:hover {
+                  background: rgba(56, 189, 248, 0.18);
+                  border-color: #38bdf8;
+                  color: #ffffff;
+                }
+                .gis-quick-cam-chip.active {
+                  background: rgba(56, 189, 248, 0.28);
+                  border-color: #38bdf8;
+                  color: #38bdf8;
+                  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+                }
+              </style>
+
+              <div class="fleet-map-hdr city-gis-hdr">
+                <div class="junction-title-group">
+                  <span class="fleet-map-title">PUNE METROPOLITAN GIS SURVEILLANCE &amp; CAMERA CORRIDOR</span>
+                  <span class="junction-badge" id="gisAreaBadge">DECCAN — SWARGATE GRID</span>
+                  <span class="junction-mode-badge" id="gisLiveBadge">● LIVE GEOSPATIAL</span>
+                </div>
+                <div class="junction-toolbar-actions">
+                  <button type="button" class="junction-act-btn active" id="btnGisToggleStreamAll" title="Toggle Camera Markers">CAMERAS (6)</button>
+                  <button type="button" class="junction-act-btn active" id="btnGisToggleMetro" title="Toggle Pune Metro Aqua &amp; Purple Lines">METRO (AQUA &amp; PURPLE)</button>
+                  <button type="button" class="junction-act-btn active" id="btnGisToggleRoads" title="Toggle Highways, Main Roads &amp; Walking Roads">ROADS (HWY / MAIN / WALK)</button>
+                  <button type="button" class="junction-act-btn active" id="btnGisToggleWaterRoute" title="Toggle Emergency Water Route">WATER ROUTE</button>
+                  <button type="button" class="junction-act-btn" id="btnGisFitCorridor" title="Reset View to Deccan Corridor">RESET VIEW</button>
+                </div>
+              </div>
+
+              <!-- Metro Station Quick Navigation Ribbon -->
+              <div class="gis-metro-stations-ribbon" id="gisMetroStationsRibbon">
+                <div class="gis-metro-ribbon-label">
+                  <span class="gis-metro-ribbon-icon">🚇</span>
+                  <span class="gis-metro-ribbon-text">METRO STATIONS:</span>
+                </div>
+                <div class="gis-metro-chips-scroll" id="gisMetroChipsContainer">
+                  <!-- Populated dynamically with interactive station chips -->
+                </div>
+              </div>
+
+              <!-- OVERVIEW LAYERS DECK (Positioned Above the Map) -->
+              <div class="gis-overview-top-deck" id="gisOverviewTopDeck">
+                <!-- Camera Status & GIS Legend (Left Side) -->
+                <div class="gis-camera-status-hud" id="gisCameraStatusHud">
+                  <div class="gis-status-hud-title">Pune Geospatial Layers</div>
+                  <div class="gis-status-hud-list">
+                    <div class="gis-status-item">
+                      <span class="gis-status-indicator normal">🟢</span>
+                      <span class="gis-status-label">Normal Feeds</span>
+                      <span class="gis-status-num" id="gisCountNormal">2</span>
+                    </div>
+                    <div class="gis-status-item">
+                      <span class="gis-status-indicator warning">🟠</span>
+                      <span class="gis-status-label">Warning Feeds</span>
+                      <span class="gis-status-num" id="gisCountWarning">2</span>
+                    </div>
+                    <div class="gis-status-item">
+                      <span class="gis-status-indicator violating">🔴</span>
+                      <span class="gis-status-label">Violating Feeds</span>
+                      <span class="gis-status-num" id="gisCountViolating">2</span>
+                    </div>
+                    <!-- Metro Lines Legend -->
+                    <div class="gis-status-item" title="Pune Metro Line 1 (PCMC — Swargate)">
+                      <span class="gis-status-indicator metro-purple">🟣</span>
+                      <span class="gis-status-label">Purple Metro</span>
+                      <span class="gis-status-num" style="color: #c084fc;">PCMC — Swargate</span>
+                    </div>
+                    <div class="gis-status-item" title="Pune Metro Line 2 (Vanaz — Ramwadi)">
+                      <span class="gis-status-indicator metro-aqua">🔵</span>
+                      <span class="gis-status-label">Aqua Metro</span>
+                      <span class="gis-status-num" style="color: #22d3ee;">Vanaz — Ramwadi</span>
+                    </div>
+                    <div class="gis-status-item" title="21 Active Pune Metro Stations (Aqua Line, Purple Line &amp; Civil Court Interchange)">
+                      <span class="gis-status-indicator metro-stations-indicator">🚇</span>
+                      <span class="gis-status-label">Metro Stations</span>
+                      <span class="gis-status-num" style="color: #38bdf8;">21 Active Stations</span>
+                    </div>
+                    <!-- Road Hierarchy Legend -->
+                    <div class="gis-status-item" title="State &amp; National Highways: NH-48, Satara Rd, Solapur Rd, Paud Rd">
+                      <span class="gis-status-indicator highway-indicator">🟠</span>
+                      <span class="gis-status-label">Highways</span>
+                      <span class="gis-status-num" style="color: #fb923c;">4 Expressways</span>
+                    </div>
+                    <div class="gis-status-item" title="Main Arterials: JM, FC, Shivaji, Tilak, Bajirao, Karve, Shastri, Laxmi, Kelkar">
+                      <span class="gis-status-indicator mainroad-indicator">🔷</span>
+                      <span class="gis-status-label">Main Roads</span>
+                      <span class="gis-status-num" style="color: #38bdf8;">9 Arterials</span>
+                    </div>
+                    <div class="gis-status-item" title="Walking Roads: FC Rd Promenade, Laxmi Rd Walk, Sambhaji Riverbank, Tulshibaug">
+                      <span class="gis-status-indicator walking-indicator">🟢</span>
+                      <span class="gis-status-label">Walking Roads</span>
+                      <span class="gis-status-num" style="color: #34d399;">5 Walkways</span>
+                    </div>
+                    <div class="gis-status-item">
+                      <span class="gis-status-indicator water">🟡</span>
+                      <span class="gis-status-label">Water Route</span>
+                      <span class="gis-status-num" style="color: #eab308;">Active</span>
+                    </div>
+                  </div>
+
+                  <!-- Sync Minimap Camera Selector -->
+                  <div class="gis-cam-sync-section">
+                    <div class="gis-quick-title">Click Cam to Sync Minimap:</div>
+                    <div class="gis-quick-cam-row" id="gisQuickCamRow">
+                      <button type="button" class="gis-quick-cam-chip active" data-cam="CAM-01" title="CAM-01: Swargate Chowk (65° Skewed Diagonal Cut)">CAM-01</button>
+                      <button type="button" class="gis-quick-cam-chip" data-cam="CAM-02" title="CAM-02: Alka Talkies Chowk (Y-Fork / 45° Splay Cut)">CAM-02</button>
+                      <button type="button" class="gis-quick-cam-chip" data-cam="CAM-03" title="CAM-03: JM Road / Balgandharva (90° Perpendicular Cut)">CAM-03</button>
+                      <button type="button" class="gis-quick-cam-chip" data-cam="CAM-04" title="CAM-04: FC Road / Goodluck (Offset Staggered Cut)">CAM-04</button>
+                      <button type="button" class="gis-quick-cam-chip" data-cam="CAM-05" title="CAM-05: Karve Road / Deccan (75° Oblique Arterial Cut)">CAM-05</button>
+                      <button type="button" class="gis-quick-cam-chip" data-cam="CAM-06" title="CAM-06: Sambhaji Bridge (River Bridge Crossing Cut)">CAM-06</button>
+                    </div>
+                  </div>
+
+                  <button type="button" class="gis-btn-view-all" id="btnGisViewAllCameras" title="Fit all cameras in view">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    View All Cameras
+                  </button>
+                </div>
+
+                <!-- Live Junction Minimap PIP (Right Side) -->
+                <div class="gis-live-minimap-pip" id="gisLiveMinimapPip">
+                  <div class="gis-pip-header">
+                    <div class="gis-pip-title-wrap">
+                      <span class="gis-pip-dot">●</span>
+                      <span class="gis-pip-title" id="gisPipTitle">CAM-01 • 65° SKEWED DIAGONAL</span>
+                    </div>
+                    <div class="gis-pip-actions">
+                      <button type="button" class="gis-pip-btn" id="btnPipJumpToMinimap" title="Jump to full interactive junction minimap above">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                        Full View
+                      </button>
+                      <button type="button" class="gis-pip-btn" id="btnPipToggleMinimize" title="Minimize / Expand PIP">—</button>
+                    </div>
+                  </div>
+                  <div class="gis-pip-body" id="gisPipBody">
+                    <div class="gis-pip-svg-container" id="gisPipSvgContainer"></div>
+                    <div class="gis-pip-info-row">
+                      <span id="gisPipLane1" class="gis-pip-lane">NS: Shivaji Rd</span>
+                      <span class="gis-pip-divider">✕</span>
+                      <span id="gisPipLane2" class="gis-pip-lane">EW: Tilak Rd</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="city-gis-map-container" id="cityGisMapWrapper">
+                <!-- Leaflet Map Mount Point (Carto Dark Matter / OSM / Esri) -->
+                <div id="cityGisMap"></div>
+
+                <!-- Custom Map Controls (Bottom Right) -->
+                <div class="gis-map-controls" id="gisMapControls">
+                  <button type="button" class="gis-ctrl-btn" id="btnGisZoomIn" title="Zoom In" aria-label="Zoom In">+</button>
+                  <button type="button" class="gis-ctrl-btn" id="btnGisZoomOut" title="Zoom Out" aria-label="Zoom Out">−</button>
+                  <button type="button" class="gis-ctrl-btn" id="btnGisLayerToggle" title="Toggle Basemap Style (Esri Dark / Carto Dark)" aria-label="Layer Toggle">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -630,7 +1671,7 @@
         </div>
       </section>
 
-      <!-- ──── DIFF ANALYSIS: CORRIDOR FLOW & ANPR DISCREPANCY ──── -->
+ <!-- DIFF ANALYSIS: CORRIDOR FLOW & ANPR DISCREPANCY -->
       <section class="view" id="view-diff-analysis" role="region" aria-label="Corridor Flow and ANPR Discrepancy Diff">
         <div class="page-hdr">
           <div class="flex items-center justify-between">
@@ -682,19 +1723,25 @@
 
             <!-- Center Comparative Delta -->
             <div class="diff-center-delta">
-              <div style="font-size:10.5px;font-weight:700;color:#94a3b8;letter-spacing:0.8px;text-transform:uppercase;" data-i18n="diff_center_title">CORRIDOR VARIANCE</div>
-              <div class="delta-badge favorable" id="diffPcuDeltaBadge">Δ +4.0 PCU</div>
-              <div style="font-size:11px;color:#cbd5e1;" id="diffPcuDesc">Corridor 1 Demand +33% Higher</div>
-              
-              <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);margin:4px 0;"></div>
-              
-              <div style="font-size:10px;color:#94a3b8;" data-i18n="diff_queue_variance">Queue Variance</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#38bdf8;" id="diffQueueDelta">0m Delta</div>
-              
-              <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);margin:4px 0;"></div>
+              <div class="diff-delta-section">
+                <div style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.8px;text-transform:uppercase;" data-i18n="diff_center_title">CORRIDOR VARIANCE</div>
+                <div class="delta-badge favorable" id="diffPcuDeltaBadge">Δ +4.0 PCU</div>
+                <div style="font-size:11px;color:#cbd5e1;" id="diffPcuDesc">Corridor 1 Demand +33% Higher</div>
+              </div>
 
-              <div style="font-size:10px;color:#94a3b8;" data-i18n="diff_signal_bias">Adaptive ATSC Bias</div>
-              <div class="badge badge-green" id="diffSignalBias" style="font-size:10px;">PRIORITY TO CORRIDOR 1</div>
+              <div class="diff-delta-divider"></div>
+
+              <div class="diff-delta-section">
+                <div style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.6px;text-transform:uppercase;" data-i18n="diff_queue_variance">Queue Variance</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#38bdf8;" id="diffQueueDelta">0m Delta</div>
+              </div>
+
+              <div class="diff-delta-divider"></div>
+
+              <div class="diff-delta-section">
+                <div style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.6px;text-transform:uppercase;" data-i18n="diff_signal_bias">Adaptive ATSC Bias</div>
+                <div class="badge badge-green" id="diffSignalBias" style="font-size:10px;">PRIORITY TO CORRIDOR 1</div>
+              </div>
             </div>
 
             <!-- Lane 2 Card -->
@@ -734,12 +1781,17 @@
           <div class="card">
             <div class="card-hdr">
               <div class="flex items-center gap-10">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span data-i18n="diff_anpr_vahan_inspector">ANPR Optical vs VAHAN National Registry Discrepancy Inspector</span>
+                <div style="width:28px;height:28px;border-radius:6px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);display:flex;align-items:center;justify-content:center;color:#38bdf8;">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <span style="font-weight:700;letter-spacing:0.4px;" data-i18n="diff_anpr_vahan_inspector">ANPR Optical vs VAHAN National Registry Discrepancy Inspector</span>
               </div>
-              <div class="flex items-center gap-8">
-                <label for="diffVehicleSelect" class="text-xs text-muted" data-i18n="diff_select_vehicle">Select Active Vehicle:</label>
-                <select class="form-input" id="diffVehicleSelect" style="padding:3px 8px;font-size:11px;min-width:180px;height:28px;">
+              <div class="diff-vehicle-select-wrap">
+                <label for="diffVehicleSelect" class="diff-vehicle-select-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  <span data-i18n="diff_select_vehicle">Target Vehicle:</span>
+                </label>
+                <select id="diffVehicleSelect">
                   <option value="">-- Active Minimap Vehicles --</option>
                 </select>
               </div>
@@ -747,7 +1799,7 @@
             <div class="card-body">
               <div class="diff-inspector-grid">
                 <!-- Optical ANPR Read -->
-                <div class="diff-inspect-card">
+                <div class="diff-inspect-card optical-anpr">
                   <div class="diff-inspect-hdr">
                     <span style="color:#38bdf8;" data-i18n="diff_anpr_header">Live Optical ANPR Detection</span>
                     <span class="badge badge-blue">EDGE OCR (YOLOv8 + LPRNet)</span>
@@ -780,7 +1832,7 @@
                 </div>
 
                 <!-- VAHAN Registry Cross-Check -->
-                <div class="diff-inspect-card">
+                <div class="diff-inspect-card vahan-registry">
                   <div class="diff-inspect-hdr">
                     <span style="color:#10b981;" data-i18n="diff_vahan_header">VAHAN National Registry Record</span>
                     <span class="badge badge-green">MoRTH NIC REST BINDING</span>
@@ -813,22 +1865,27 @@
                 </div>
               </div>
 
-              <div class="mt-12 p-10 rounded flex items-center justify-between" id="diffVerdictBox" style="background:rgba(16, 185, 129, 0.08);border:1px solid rgba(16, 185, 129, 0.25);">
-                <div class="flex items-center gap-10">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <div class="diff-verdict-banner is-compliant" id="diffVerdictBox">
+                <div class="flex items-center gap-12">
+                  <div class="diff-verdict-icon" id="diffVerdictIcon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
                   <div>
-                    <div style="font-size:12px;font-weight:700;color:#10b981;" id="diffVerdictTitle" data-i18n="diff_verdict_title">VERDICT: 100% REGISTRY COMPLIANT — NO DISCREPANCY</div>
-                    <div style="font-size:11px;color:#94a3b8;" id="diffVerdictSub" data-i18n="diff_verdict_sub">Optical vehicle dimensions, classification, and license plate match NIC VAHAN national motor database.</div>
+                    <div class="diff-verdict-title" style="color:#10b981;" id="diffVerdictTitle" data-i18n="diff_verdict_title">VERDICT: 100% REGISTRY COMPLIANT — NO DISCREPANCY</div>
+                    <div class="diff-verdict-sub" id="diffVerdictSub" data-i18n="diff_verdict_sub">Optical vehicle dimensions, classification, and license plate match NIC VAHAN national motor database.</div>
                   </div>
                 </div>
-                <button class="btn btn-outline btn-sm" id="btnExportDiffAudit" data-i18n="btn_export_audit">Export Audit Cert</button>
+                <button class="diff-export-btn" id="btnExportDiffAudit" data-i18n="btn_export_audit">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>Export Audit Cert</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ──── 1. FLEET OVERVIEW ──── -->
+ <!-- 1. FLEET OVERVIEW -->
       <section class="view" id="view-fleet-overview" role="region" aria-label="Fleet Overview">
         <div class="page-hdr">
           <h1 data-i18n="fleet_overview_title">Active Fleet Inventory & Deployment</h1>
@@ -910,7 +1967,7 @@
         </div>
       </section>
 
-      <!-- ──── 2. INCIDENT LOGS ──── -->
+ <!-- 2. INCIDENT LOGS -->
       <section class="view" id="view-incident-logs" role="region" aria-label="Incident Logs">
         <div class="page-hdr">
           <h1 data-i18n="incident_logs_title">Traffic & Security Incident Ledger</h1>
@@ -989,7 +2046,7 @@
         </div>
       </section>
 
-      <!-- ──── 3. ROUTE MGMT ──── -->
+ <!-- 3. ROUTE MGMT -->
       <section class="view" id="view-route-mgmt" role="region" aria-label="Route Management">
         <div class="page-hdr">
           <h1 data-i18n="route_mgmt_title">Corridor Flow & Autonomous Green Corridors</h1>
@@ -1097,8 +2154,8 @@
                   </div>
                 </div>
                 <div class="flex gap-6 mt-4">
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_optimize_cycle" onclick="alert('Cycle re-timing command sent to JM Road corridor')">Optimize Cycle</button>
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_flush_queue" onclick="alert('Queue flush cycle triggered')">Flush Queue</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_optimize_cycle" onclick="window.notify ? window.notify('Cycle re-timing command sent to JM Road corridor', 'info') : alert('Cycle re-timing command sent to JM Road corridor')">Optimize Cycle</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_flush_queue" onclick="window.notify ? window.notify('Queue flush cycle triggered', 'info') : alert('Queue flush cycle triggered')">Flush Queue</button>
                 </div>
               </div>
 
@@ -1124,8 +2181,8 @@
                   </div>
                 </div>
                 <div class="flex gap-6 mt-4">
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_extend_green" onclick="alert('Signal cycle extended +25s on FC Road')">Extend Green +25s</button>
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_vms_diversion" onclick="alert('VMS Diversion broadcasted to Senapati Bapat Rd')">VMS Diversion</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_extend_green" onclick="window.notify ? window.notify('Signal cycle extended +25s on FC Road', 'info') : alert('Signal cycle extended +25s on FC Road')">Extend Green +25s</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_vms_diversion" onclick="window.notify ? window.notify('VMS Diversion broadcasted to Senapati Bapat Rd', 'info') : alert('VMS Diversion broadcasted to Senapati Bapat Rd')">VMS Diversion</button>
                 </div>
               </div>
 
@@ -1151,8 +2208,8 @@
                   </div>
                 </div>
                 <div class="flex gap-6 mt-4">
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_auto_clearance" onclick="alert('Split cycle extension applied to Swargate')">Auto Clearance</button>
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_dispatch_tow" onclick="alert('Patrol Tow Unit TOW-03 dispatched to Swargate flyover')">Dispatch Tow Unit</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_auto_clearance" onclick="window.notify ? window.notify('Split cycle extension applied to Swargate', 'info') : alert('Split cycle extension applied to Swargate')">Auto Clearance</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_dispatch_tow" onclick="window.notify ? window.notify('Patrol Tow Unit TOW-03 dispatched to Swargate flyover', 'info') : alert('Patrol Tow Unit TOW-03 dispatched to Swargate flyover')">Dispatch Tow Unit</button>
                 </div>
               </div>
 
@@ -1178,8 +2235,8 @@
                   </div>
                 </div>
                 <div class="flex gap-6 mt-4">
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_check_radar" onclick="alert('Radar speed warning mode verified on Airport Rd')">Check Speed Radar</button>
-                  <button class="btn btn-outline btn-xs" data-i18n="btn_progression_banding" onclick="alert('Green wave progression active')">Progression Banding</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_check_radar" onclick="window.notify ? window.notify('Radar speed warning mode verified on Airport Rd', 'info') : alert('Radar speed warning mode verified on Airport Rd')">Check Speed Radar</button>
+                  <button class="btn btn-outline btn-xs" data-i18n="btn_progression_banding" onclick="window.notify ? window.notify('Green wave progression active', 'info') : alert('Green wave progression active')">Progression Banding</button>
                 </div>
               </div>
             </div>
@@ -1187,7 +2244,7 @@
         </div>
       </section>
 
-      <!-- ──── 4. ASSET DATABASE ──── -->
+ <!-- 4. ASSET DATABASE -->
       <section class="view" id="view-asset-database" role="region" aria-label="Asset Database">
         <div class="page-hdr">
           <h1 data-i18n="asset_database_title">ICCC Smart Infrastructure & Asset Ledger</h1>
@@ -1235,7 +2292,7 @@
                 <option value="ECB" data-i18n="opt_hw_ecb">Emergency Call Boxes</option>
               </select>
             </div>
-            <button class="btn btn-outline btn-sm" data-i18n="btn_refresh_diagnostics" onclick="alert('Asset telemetry health diagnostics refreshed across all 248 nodes.')">
+            <button class="btn btn-outline btn-sm" data-i18n="btn_refresh_diagnostics" onclick="window.notify ? window.notify('Asset telemetry health diagnostics refreshed across all 248 nodes.', 'success') : alert('Asset telemetry health diagnostics refreshed across all 248 nodes.')">
               Refresh Diagnostics
             </button>
           </div>
@@ -1292,7 +2349,7 @@
         </div>
       </section>
 
-      <!-- ──── 5. STAFF ──── -->
+ <!-- 5. STAFF -->
       <section class="view" id="view-staff" role="region" aria-label="Staff Roster">
         <div class="page-hdr">
           <h1 data-i18n="staff_title">Command Personnel & Field Traffic Roster</h1>
@@ -1334,7 +2391,7 @@
                 <option value="STANDBY" data-i18n="opt_status_standby">Standby</option>
               </select>
             </div>
-            <button class="btn btn-outline btn-sm" data-i18n="btn_broadcast_tactical" onclick="alert('Direct tactical broadcast alert sent to all 48 on-duty officers.')">
+            <button class="btn btn-outline btn-sm" data-i18n="btn_broadcast_tactical" onclick="window.notify ? window.notify('Direct tactical broadcast alert sent to all 48 on-duty officers.', 'warning') : alert('Direct tactical broadcast alert sent to all 48 on-duty officers.')">
               Broadcast Tactical Alert
             </button>
           </div>
@@ -1360,7 +2417,7 @@
         </div>
       </section>
 
-      <!-- ──── 6. SYSTEM LOGS ──── -->
+ <!-- 6. SYSTEM LOGS -->
       <section class="view" id="view-system-logs" role="region" aria-label="System Logs">
         <div class="page-hdr">
           <h1 data-i18n="system_logs_title">System Telemetry & Security Audit Ledger</h1>
@@ -1404,7 +2461,7 @@
         </div>
       </section>
 
-      <!-- ──── 7. VIDEO INGEST (Utility) ──── -->
+ <!-- 7. VIDEO INGEST (Utility) -->
       <section class="view" id="view-video-ingest" role="region" aria-label="Video Ingest">
         <div class="page-hdr">
           <h1 data-i18n="nav_video_ingest">Video Ingest & CCTV Stream</h1>
@@ -1421,11 +2478,12 @@
                 <div class="form-group">
                   <label class="form-label" for="rtspJunctionSelect" data-i18n="label_junction_node">Junction Camera Node</label>
                   <select class="form-input" id="rtspJunctionSelect">
-                    <option value="CAM-01">CAM-01: Swargate Bus Depot Junction</option>
-                    <option value="CAM-02">CAM-02: FC Road — Goodluck Chowk</option>
-                    <option value="CAM-03" selected>CAM-03: JM Road — Balgandharva Chowk</option>
-                    <option value="CAM-05">CAM-05: Hinjewadi Phase-1 Circle</option>
-                    <option value="CAM-08">CAM-08: Airport Road 509 Junction</option>
+                    <option value="CAM-01" selected>CAM-01: Swargate Chowk — NH-60 x Tilak Road</option>
+                    <option value="CAM-02">CAM-02: Alka Talkies Chowk — Sambhaji Bridge Splay</option>
+                    <option value="CAM-03">CAM-03: JM Road — Balgandharva Chowk</option>
+                    <option value="CAM-04">CAM-04: FC Road — Goodluck Cafe Chowk</option>
+                    <option value="CAM-05">CAM-05: Karve Road — Deccan Gymkhana Hub</option>
+                    <option value="CAM-06">CAM-06: Sambhaji Bridge — Lakdi Pul Mutha Crossing</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -1488,6 +2546,1127 @@
   <script src="js/telemetry_socket.js"></script>
   <script src="js/command.js"></script>
   <script src="js/dashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+ /* City GIS Minimap Interactive Engine */
+    (function () {
+      function initPuneGisMinimap() {
+        const mapContainer = document.getElementById('cityGisMap');
+        if (!mapContainer || typeof L === 'undefined') return;
+
+        // Prevent duplicate initialization
+        if (window._puneGisMapInstance) return;
+
+        // Basemap 1: Carto Dark Matter (High detail, crisp streets, supports zoom 20-22 overscaling)
+        const cartoApiKey = 'cb1_3qs8_1_3cc049bf5d4d5e6ebeae1222';
+        const cartoDarkUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=' + cartoApiKey;
+        const cartoLayer = L.tileLayer(cartoDarkUrl, {
+          attribution: '&copy; OpenStreetMap &copy; CARTO',
+          subdomains: 'abcd',
+          maxNativeZoom: 19,
+          maxZoom: 22,
+          minZoom: 10
+        });
+
+        // Basemap 2: Standard OpenStreetMap (Full street labels and buildings at high zoom)
+        const osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const osmLayer = L.tileLayer(osmUrl, {
+          attribution: '&copy; OpenStreetMap contributors',
+          maxNativeZoom: 19,
+          maxZoom: 22,
+          minZoom: 10
+        });
+
+        // Basemap 3: Esri World Dark Gray Base
+        const esriDarkUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+        const esriLayer = L.tileLayer(esriDarkUrl, {
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+          maxNativeZoom: 16,
+          maxZoom: 22,
+          minZoom: 10
+        });
+
+        // Initialize Map centered at Deccan Gymkhana / Alka Talkies corridor with Carto Dark by default!
+        const cityMap = L.map('cityGisMap', {
+          center: [18.5140, 73.8470],
+          zoom: 13.5,
+          maxZoom: 22,
+          minZoom: 10,
+          zoomControl: false,
+          attributionControl: false
+        });
+        cartoLayer.addTo(cityMap);
+        window._puneGisMapInstance = cityMap;
+        window.cityMap = cityMap;
+        window.zoomToMetroStation = function (lat, lng) {
+          if (window.cityMap) {
+            window.cityMap.flyTo([lat, lng], 15, { animate: true, duration: 0.8 });
+          }
+        };
+        let currentBasemap = 'carto';
+
+        // ══ Mutha River Emergency Water Route Corridor (Snapped to Mutha River Channel) ══
+        const muthaRiverPath = [
+          [18.4950, 73.8320],
+          [18.5020, 73.8355],
+          [18.5070, 73.8385],
+          [18.5115, 73.8420],
+          [18.5138, 73.8448],
+          [18.5175, 73.8465],
+          [18.5220, 73.8495],
+          [18.5265, 73.8540],
+          [18.5300, 73.8585],
+          [18.5340, 73.8640],
+          [18.5375, 73.8740],
+          [18.5395, 73.8865]
+        ];
+
+        const waterRouteGroup = L.layerGroup();
+        // Base cyan river glow
+        L.polyline(muthaRiverPath, {
+          color: '#06b6d4',
+          weight: 7,
+          opacity: 0.5,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(waterRouteGroup);
+
+        // Dashed yellow emergency channel line
+        const dashedYellowLine = L.polyline(muthaRiverPath, {
+          color: '#eab308',
+          weight: 3,
+          dashArray: '7, 8',
+          opacity: 0.95,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(waterRouteGroup);
+
+        dashedYellowLine.bindTooltip('MUTHA RIVER EMERGENCY WATER ROUTE (CORRIDOR A-1)', {
+          className: 'gis-water-tooltip',
+          sticky: true
+        });
+        waterRouteGroup.addTo(cityMap);
+
+        // ══ PUNE METRO NETWORK: AQUA LINE, PURPLE LINE & STATIONS ══
+        const metroGroup = L.layerGroup();
+        const metroMarkersMap = {};
+
+        // Complete 21 Pune Metro Stations Database
+        const puneMetroStations = [
+          // Aqua Line (Line 2: Vanaz <-> Ramwadi)
+          {
+            id: 'st-vanaz',
+            name: 'Vanaz',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5074, 73.8053],
+            type: 'Elevated Viaduct (Depot & West Terminus)',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Kothrud West Surveillance Grid',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-anand-nagar',
+            name: 'Anand Nagar',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5065, 73.8135],
+            type: 'Elevated Viaduct over Paud Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Paud Road Sector 1 Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-ideal-colony',
+            name: 'Ideal Colony',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5068, 73.8188],
+            type: 'Elevated Viaduct over Paud Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Paud Phata Junction Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-nal-stop',
+            name: 'Nal Stop',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5073, 73.8286],
+            type: 'Double-Decker Flyover Station (Karve Rd)',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 7 min',
+            cctvNear: 'CAM-05 Karve Road Feeder',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-garware-college',
+            name: 'Garware College',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5120, 73.8381],
+            type: 'Elevated Viaduct on Karve Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 7 min',
+            cctvNear: 'CAM-05 Karve Rd Approach',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-deccan-gymkhana',
+            name: 'Deccan Gymkhana',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5164, 73.8444],
+            type: 'River Viaduct Station (Mutha River)',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'CAM-06 Sambhaji Bridge & CAM-04 FC Rd',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-sambhaji-udyan',
+            name: 'Chh. Sambhaji Udyan',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5190, 73.8485],
+            type: 'Riverfront Promenade Viaduct Station',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'CAM-03 JM Road / Balgandharva',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-pmc',
+            name: 'PMC Bhavan',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5235, 73.8525],
+            type: 'Civic Centre Elevated Viaduct',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'Pune Municipal Corp HQ Surveillance',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-civil-court',
+            name: 'Civil Court Interchange',
+            line: 'interchange',
+            lineName: 'Aqua & Purple Dual Interchange',
+            coords: [18.5269, 73.8581],
+            type: 'Triangular Hub (Elevated + Deep Underground)',
+            interchange: true,
+            frequency: 'Peak: 3 min (Both Lines)',
+            cctvNear: 'District Court & Sancheti ANPR',
+            status: 'Operational • Primary Metropolitan Interchange'
+          },
+          {
+            id: 'st-mangalwar-peth',
+            name: 'Mangalwar Peth / RTO',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5282, 73.8675],
+            type: 'Elevated Viaduct over Sassoon Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'RTO Office & Sassoon Hospital Gateway',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-pune-station',
+            name: 'Pune Railway Station',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5286, 73.8742],
+            type: 'Intermodal Rail Terminal Interchange',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 6 min',
+            cctvNear: 'Pune Junction Railway Security',
+            status: 'Operational • High Passenger Footfall'
+          },
+          {
+            id: 'st-ruby-hall',
+            name: 'Ruby Hall Clinic',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5332, 73.8810],
+            type: 'Elevated Viaduct on Dhole Patil Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Dhole Patil Rd Corridor Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-bund-garden',
+            name: 'Bund Garden',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5395, 73.8865],
+            type: 'Elevated Viaduct crossing Mutha-Mula River',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Bund Garden Bridge Surveillance Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-yerawada',
+            name: 'Yerawada',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5510, 73.8885],
+            type: 'Elevated Viaduct over Pune-Ahmednagar Road',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Nagar Road Highway Checkpoint',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-kalyani-nagar',
+            name: 'Kalyani Nagar',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5495, 73.9030],
+            type: 'Elevated Viaduct in Kalyani Nagar Corridor',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'East Avenue IT Corridor Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-ramwadi',
+            name: 'Ramwadi',
+            line: 'aqua',
+            lineName: 'Aqua Line 2',
+            coords: [18.5570, 73.9086],
+            type: 'Elevated Viaduct (East Terminus / Viman Nagar)',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'Viman Nagar / Airport Road Gateway',
+            status: 'Operational (06:00 - 22:00)'
+          },
+
+          // Purple Line (Line 1: PCMC <-> Swargate)
+          {
+            id: 'st-range-hills',
+            name: 'Range Hills / Khadki',
+            line: 'purple',
+            lineName: 'Purple Line 1',
+            coords: [18.5530, 73.8460],
+            type: 'Elevated Viaduct over Old Mumbai-Pune Hwy',
+            interchange: false,
+            frequency: 'Peak: 5 min • Off-Peak: 8 min',
+            cctvNear: 'NH-48 Inbound Surveillance Node',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-shivajinagar',
+            name: 'Shivajinagar Station',
+            line: 'purple',
+            lineName: 'Purple Line 1',
+            coords: [18.5328, 73.8494],
+            type: 'Underground Multimodal Interchange Gateway',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'Shivajinagar ST Bus Stand & Suburban Rly',
+            status: 'Operational • High Passenger Footfall'
+          },
+          {
+            id: 'st-budhwar-peth',
+            name: 'Budhwar Peth / Kasba',
+            line: 'purple',
+            lineName: 'Purple Line 1',
+            coords: [18.5185, 73.8576],
+            type: 'Deep Underground Station (Historic Core)',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'Dagdusheth & Shaniwar Wada Corridor',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-mandai',
+            name: 'Mandai Heritage Market',
+            line: 'purple',
+            lineName: 'Purple Line 1',
+            coords: [18.5120, 73.8575],
+            type: 'Deep Underground Station (Phule Mandai)',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 7 min',
+            cctvNear: 'Tulshibaug & Mahatma Phule Mandai',
+            status: 'Operational (06:00 - 22:00)'
+          },
+          {
+            id: 'st-swargate',
+            name: 'Swargate Multimodal Hub',
+            line: 'purple',
+            lineName: 'Purple Line 1',
+            coords: [18.4996, 73.8577],
+            type: 'Deep Underground Southern Terminus & Bus Hub',
+            interchange: false,
+            frequency: 'Peak: 4 min • Off-Peak: 6 min',
+            cctvNear: 'CAM-01 Swargate Chowk Primary Feeder',
+            status: 'Operational • Major Multimodal Hub'
+          }
+        ];
+
+        // 1. Aqua Line Track (Vanaz to Ramwadi — Snapped to Street & Viaduct Geometry)
+        const aquaTrackPath = [
+          [18.5074, 73.8053], [18.5070, 73.8090], [18.5065, 73.8135], [18.5066, 73.8160], [18.5068, 73.8188],
+          [18.5070, 73.8235], [18.5073, 73.8286], [18.5085, 73.8320], [18.5102, 73.8350], [18.5120, 73.8381],
+          [18.5135, 73.8405], [18.5150, 73.8425], [18.5164, 73.8444], [18.5178, 73.8465], [18.5190, 73.8485],
+          [18.5212, 73.8505], [18.5235, 73.8525], [18.5255, 73.8550], [18.5269, 73.8581], [18.5275, 73.8630],
+          [18.5282, 73.8675], [18.5285, 73.8710], [18.5286, 73.8742], [18.5305, 73.8780], [18.5332, 73.8810],
+          [18.5365, 73.8840], [18.5395, 73.8865], [18.5450, 73.8875], [18.5510, 73.8885], [18.5505, 73.8960],
+          [18.5495, 73.9030], [18.5535, 73.9060], [18.5570, 73.9086]
+        ];
+
+        // Aqua Outer Glowing Aura
+        L.polyline(aquaTrackPath, {
+          color: '#0891b2',
+          weight: 8,
+          opacity: 0.45,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(metroGroup);
+
+        // Aqua Core Neon Track
+        const aquaTrack = L.polyline(aquaTrackPath, {
+          color: '#00f0ff',
+          weight: 4.5,
+          opacity: 0.98,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(metroGroup);
+
+        aquaTrack.bindTooltip('🔵 PUNE METRO AQUA LINE (LINE 2: VANAZ — RAMWADI)', {
+          className: 'gis-metro-tooltip-aqua',
+          sticky: true
+        });
+
+        // 2. Purple Line Track (Range Hills to Swargate — Snapped to Highway & Tunnel Alignment)
+        const purpleTrackPath = [
+          [18.5530, 73.8460], [18.5460, 73.8470], [18.5390, 73.8485], [18.5328, 73.8494], [18.5295, 73.8510],
+          [18.5280, 73.8540], [18.5269, 73.8581], [18.5230, 73.8580], [18.5185, 73.8576], [18.5150, 73.8575],
+          [18.5120, 73.8575], [18.5060, 73.8576], [18.5020, 73.8577], [18.4996, 73.8577]
+        ];
+
+        // Purple Outer Glowing Aura
+        L.polyline(purpleTrackPath, {
+          color: '#7e22ce',
+          weight: 8,
+          opacity: 0.45,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(metroGroup);
+
+        // Purple Core Neon Track
+        const purpleTrack = L.polyline(purpleTrackPath, {
+          color: '#c084fc',
+          weight: 4.5,
+          opacity: 0.98,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(metroGroup);
+
+        purpleTrack.bindTooltip('🟣 PUNE METRO PURPLE LINE (LINE 1: PCMC — SWARGATE)', {
+          className: 'gis-metro-tooltip-purple',
+          sticky: true
+        });
+
+        // Render Visible Station Badges on Map Canvas
+        puneMetroStations.forEach(st => {
+          const pillWidth = Math.max(76, st.name.length * 7 + 42);
+          const stDivIcon = L.divIcon({
+            className: 'gis-metro-station-div',
+            html: '<div class="gis-metro-station-pill ' + st.line + '" id="metroStPill_' + st.id + '" title="' + st.name + ' (' + st.lineName + ') — Click for Station Details">' +
+                    '<span class="gis-metro-station-bulb"></span>' +
+                    '<span class="gis-metro-station-icon">🚇</span>' +
+                    '<span class="gis-metro-station-name">' + st.name + '</span>' +
+                    (st.interchange ? '<span class="gis-metro-interchange-badge">🔀 INT</span>' : '') +
+                  '</div>',
+            iconSize: [pillWidth, 24],
+            iconAnchor: [pillWidth / 2, 12],
+            popupAnchor: [0, -14]
+          });
+
+          const stPopupContent =
+            '<div class="gis-metro-pop-card">' +
+              '<div class="gis-metro-pop-header">' +
+                '<div class="gis-metro-pop-title"><span>🚇</span><span>' + st.name + '</span></div>' +
+                '<span class="gis-metro-pop-badge ' + st.line + '">' + (st.interchange ? 'DUAL INTERCHANGE' : st.line.toUpperCase() + ' LINE') + '</span>' +
+              '</div>' +
+              '<div class="gis-metro-pop-detail">' + st.type + ' &bull; ' + st.lineName + '</div>' +
+              '<div class="gis-metro-pop-stat-grid">' +
+                '<div class="gis-metro-pop-stat-box"><div class="lbl">Train Frequency</div><div class="val">' + st.frequency + '</div></div>' +
+                '<div class="gis-metro-pop-stat-box"><div class="lbl">Operating Hours</div><div class="val">' + st.status + '</div></div>' +
+                '<div class="gis-metro-pop-stat-box" style="grid-column: span 2;"><div class="lbl">Surveillance &amp; Road Feeder</div><div class="val" style="color:#38bdf8;">' + st.cctvNear + '</div></div>' +
+              '</div>' +
+              '<button type="button" class="gis-metro-pop-focus-btn" onclick="window.zoomToMetroStation(' + st.coords[0] + ', ' + st.coords[1] + ');">' +
+                '🔍 Zoom to Station Level' +
+              '</button>' +
+            '</div>';
+
+          const stMarker = L.marker(st.coords, { icon: stDivIcon });
+          stMarker.bindPopup(stPopupContent, {
+            maxWidth: 320,
+            className: 'gis-metro-popup'
+          });
+          stMarker.addTo(metroGroup);
+          metroMarkersMap[st.id] = stMarker;
+        });
+
+        metroGroup.addTo(cityMap);
+
+        // Populate Top Metro Stations Quick Navigation Ribbon
+        const ribbonContainer = document.getElementById('gisMetroChipsContainer');
+        if (ribbonContainer) {
+          ribbonContainer.innerHTML = puneMetroStations.map(st =>
+            '<button type="button" class="gis-metro-ribbon-chip ' + st.line + '" data-stid="' + st.id + '" title="Focus ' + st.name + ' (' + st.lineName + ')">' +
+              '<span>🚇</span>' +
+              '<span>' + st.name + '</span>' +
+              (st.interchange ? '<span class="gis-metro-interchange-badge">🔀</span>' : '') +
+            '</button>'
+          ).join('');
+
+          ribbonContainer.querySelectorAll('.gis-metro-ribbon-chip').forEach(btn => {
+            btn.addEventListener('click', function () {
+              const stId = this.getAttribute('data-stid');
+              const st = puneMetroStations.find(s => s.id === stId);
+              if (!st) return;
+              cityMap.flyTo(st.coords, 16, { animate: true, duration: 0.8 });
+              if (metroMarkersMap[st.id]) {
+                setTimeout(() => metroMarkersMap[st.id].openPopup(), 400);
+              }
+            });
+          });
+        }
+
+        // ══ FILTERED ROAD HIERARCHY (CURVE-ALIGNED TO REAL STREETS) ══
+        const roadsGroup = L.layerGroup();
+
+        // ── A. HIGHWAYS (State & National Arterials) ──
+        const highways = [
+          {
+            name: 'Old Pune-Mumbai Highway (NH-48 Inbound Corridor)',
+            coords: [
+              [18.5600, 73.8410],
+              [18.5530, 73.8460],
+              [18.5440, 73.8475],
+              [18.5370, 73.8485],
+              [18.5328, 73.8494],
+              [18.5305, 73.8525],
+              [18.5285, 73.8560]
+            ]
+          },
+          {
+            name: 'Pune-Satara National Highway (NH-48 South Corridor)',
+            coords: [
+              [18.4996, 73.8577],
+              [18.4940, 73.8570],
+              [18.4870, 73.8565],
+              [18.4800, 73.8550],
+              [18.4720, 73.8540],
+              [18.4650, 73.8530]
+            ]
+          },
+          {
+            name: 'Pune-Solapur Highway (NH-65 Eastbound Corridor)',
+            coords: [
+              [18.4996, 73.8577],
+              [18.5005, 73.8640],
+              [18.5020, 73.8710],
+              [18.5035, 73.8780],
+              [18.5045, 73.8890],
+              [18.5055, 73.9020]
+            ]
+          },
+          {
+            name: 'Paud Road Arterial Expressway (SH-114 West Link)',
+            coords: [
+              [18.5065, 73.8135],
+              [18.5055, 73.8080],
+              [18.5045, 73.8010],
+              [18.5035, 73.7940],
+              [18.5020, 73.7850]
+            ]
+          }
+        ];
+
+        highways.forEach(hwy => {
+          L.polyline(hwy.coords, {
+            color: '#7c2d12',
+            weight: 7,
+            opacity: 0.5,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }).addTo(roadsGroup);
+
+          const p = L.polyline(hwy.coords, {
+            color: '#fb923c',
+            weight: 4.5,
+            opacity: 0.95,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }).addTo(roadsGroup);
+
+          p.bindTooltip('🟠 HIGHWAY: ' + hwy.name, {
+            className: 'gis-road-tooltip-hwy',
+            sticky: true
+          });
+        });
+
+        // ── B. MAIN ROADS (Primary City Arterials Snapped to Street Grid) ──
+        const mainRoads = [
+          {
+            name: 'Fergusson College (FC) Road Arterial',
+            coords: [
+              [18.5155, 73.8402],
+              [18.5173, 73.8415],
+              [18.5200, 73.8418],
+              [18.5235, 73.8420],
+              [18.5270, 73.8424],
+              [18.5305, 73.8428],
+              [18.5340, 73.8432]
+            ]
+          },
+          {
+            name: 'Jangali Maharaj (JM) Road Boulevard',
+            coords: [
+              [18.5155, 73.8438],
+              [18.5175, 73.8450],
+              [18.5195, 73.8465],
+              [18.5224, 73.8486],
+              [18.5255, 73.8505],
+              [18.5285, 73.8518],
+              [18.5315, 73.8525]
+            ]
+          },
+          {
+            name: 'Shivaji Road (Heritage Central Spine)',
+            coords: [
+              [18.4996, 73.8577],
+              [18.5060, 73.8576],
+              [18.5120, 73.8575],
+              [18.5165, 73.8565],
+              [18.5195, 73.8553],
+              [18.5235, 73.8542],
+              [18.5265, 73.8535]
+            ]
+          },
+          {
+            name: 'Bajirao Road (South-North Arterial)',
+            coords: [
+              [18.4996, 73.8560],
+              [18.5045, 73.8548],
+              [18.5090, 73.8544],
+              [18.5135, 73.8540],
+              [18.5175, 73.8545],
+              [18.5215, 73.8532]
+            ]
+          },
+          {
+            name: 'Tilak Road (Alka Talkies to Swargate Link)',
+            coords: [
+              [18.5121, 73.8436],
+              [18.5090, 73.8470],
+              [18.5060, 73.8505],
+              [18.5030, 73.8540],
+              [18.4996, 73.8577]
+            ]
+          },
+          {
+            name: 'Shastri Road (Alka Talkies to Dandekar Bridge & Sinhagad Rd)',
+            coords: [
+              [18.5121, 73.8436],
+              [18.5080, 73.8430],
+              [18.5030, 73.8415],
+              [18.4980, 73.8400],
+              [18.4930, 73.8390]
+            ]
+          },
+          {
+            name: 'Karve Road Arterial (Alka Talkies to Deccan, Nal Stop & Kothrud)',
+            coords: [
+              [18.5121, 73.8436],
+              [18.5140, 73.8415],
+              [18.5145, 73.8395],
+              [18.5120, 73.8381],
+              [18.5095, 73.8330],
+              [18.5073, 73.8286],
+              [18.5068, 73.8188],
+              [18.5065, 73.8135]
+            ]
+          },
+          {
+            name: 'Laxmi Road (Central City Commercial Spine)',
+            coords: [
+              [18.5121, 73.8436],
+              [18.5135, 73.8480],
+              [18.5150, 73.8525],
+              [18.5165, 73.8560],
+              [18.5170, 73.8600],
+              [18.5155, 73.8680]
+            ]
+          },
+          {
+            name: 'Kelkar Road (Lakdi Pul to Appa Balwant Chowk)',
+            coords: [
+              [18.5138, 73.8448],
+              [18.5155, 73.8500],
+              [18.5175, 73.8545]
+            ]
+          }
+        ];
+
+        mainRoads.forEach(mr => {
+          L.polyline(mr.coords, {
+            color: '#0369a1',
+            weight: 5.5,
+            opacity: 0.45,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }).addTo(roadsGroup);
+
+          const p = L.polyline(mr.coords, {
+            color: '#38bdf8',
+            weight: 3.5,
+            opacity: 0.95,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }).addTo(roadsGroup);
+
+          p.bindTooltip('🔷 MAIN ROAD: ' + mr.name, {
+            className: 'gis-road-tooltip-main',
+            sticky: true
+          });
+        });
+
+        // ── C. WALKING ROADS (Pedestrian Only Corridors Snapped to Promenades) ──
+        const walkingRoads = [
+          {
+            name: 'FC Road Pedestrian Shopping Promenade',
+            coords: [
+              [18.5173, 73.8415],
+              [18.5200, 73.8418],
+              [18.5235, 73.8420],
+              [18.5250, 73.8422]
+            ]
+          },
+          {
+            name: 'Laxmi Road Heritage Market Pedestrian Zone',
+            coords: [
+              [18.5135, 73.8480],
+              [18.5150, 73.8525],
+              [18.5165, 73.8560],
+              [18.5170, 73.8600]
+            ]
+          },
+          {
+            name: 'Mutha Riverfront Heritage Walkway & Park Link',
+            coords: [
+              [18.5115, 73.8420],
+              [18.5138, 73.8448],
+              [18.5175, 73.8465],
+              [18.5220, 73.8495]
+            ]
+          },
+          {
+            name: 'Tulshibaug Heritage Market Walking Precinct',
+            coords: [
+              [18.5135, 73.8540],
+              [18.5140, 73.8550],
+              [18.5150, 73.8570]
+            ]
+          },
+          {
+            name: 'Deccan Gymkhana Sports & Jogging Track',
+            coords: [
+              [18.5150, 73.8385],
+              [18.5165, 73.8390],
+              [18.5168, 73.8415],
+              [18.5152, 73.8410],
+              [18.5150, 73.8385]
+            ]
+          }
+        ];
+
+        walkingRoads.forEach(wr => {
+          const p = L.polyline(wr.coords, {
+            color: '#34d399',
+            weight: 3.2,
+            dashArray: '5, 5',
+            opacity: 0.95,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }).addTo(roadsGroup);
+
+          p.bindTooltip('🟢 WALKING ROAD: ' + wr.name, {
+            className: 'gis-road-tooltip-walk',
+            sticky: true
+          });
+        });
+
+        roadsGroup.addTo(cityMap);
+
+        // ══ Real Pune Camera Feed Surveillance Network (Calibrated to Real Landmark Coordinates) ══
+        const cameraFeeds = [
+          {
+            id: 'CAM-01',
+            name: 'CAM-01: Swargate Chowk — Shivaji Road',
+            status: 'Normal',
+            statusType: 'normal',
+            icon: '📷',
+            coords: [18.4996, 73.8577],
+            corridor: 'Swargate Multimodal Hub & Underground Metro Terminus',
+            specs: '1080p @ 25 FPS, 38ms latency, Active NVDEC decode',
+            detections: '94 Veh/min • PCU 24.2',
+            violations: '0 Active • 99.4% Compliance',
+            violationClass: 'text-success',
+            hardware: 'Hikvision DarkFighter 4K PTZ'
+          },
+          {
+            id: 'CAM-02',
+            name: 'CAM-02: Alka Talkies Chowk — Tilak Road',
+            status: 'Violating',
+            statusType: 'violating',
+            icon: '⚠️',
+            coords: [18.5121, 73.8436],
+            corridor: 'Alka Talkies Chowk / Deccan East Y-Fork Approach',
+            specs: '1080p @ 25 FPS, 44ms latency, Active NVDEC decode',
+            detections: '122 Veh/min • PCU 36.8',
+            violations: '3 Active (2x Red Light Jump, 1x Triple Riding)',
+            violationClass: 'text-danger',
+            hardware: 'Axis Q1656-LE ANPR Node #2'
+          },
+          {
+            id: 'CAM-03',
+            name: 'CAM-03: JM Road — Balgandharva Chowk',
+            status: 'Normal',
+            statusType: 'normal',
+            icon: '📷',
+            coords: [18.5224, 73.8486],
+            corridor: 'JM Road Boulevard & Sambhaji Udyan Metro Link',
+            specs: '1080p @ 25 FPS, 36ms latency, Active NVDEC decode',
+            detections: '88 Veh/min • PCU 21.0',
+            violations: '0 Active • 98.9% Compliance',
+            violationClass: 'text-success',
+            hardware: 'Hikvision DeepinView 4K Fixed'
+          },
+          {
+            id: 'CAM-04',
+            name: 'CAM-04: FC Road — Goodluck Chowk',
+            status: 'Warning',
+            statusType: 'warning',
+            icon: '⚠️',
+            coords: [18.5173, 73.8415],
+            corridor: 'Fergusson College Commercial & Shopping Promenade',
+            specs: '1080p @ 25 FPS, 41ms latency, Active NVDEC decode',
+            detections: '108 Veh/min • PCU 29.5',
+            violations: '1 Active (Unauthorized Curb Encroachment)',
+            violationClass: 'text-warning',
+            hardware: 'Bosch Dinion Inteox 7100i AI-Cam'
+          },
+          {
+            id: 'CAM-05',
+            name: 'CAM-05: Karve Road — Deccan Gymkhana',
+            status: 'Warning',
+            statusType: 'warning',
+            icon: '📷',
+            coords: [18.5145, 73.8395],
+            corridor: 'Karve Road Inbound & Garware College Metro Node',
+            specs: '1080p @ 25 FPS, 42ms latency, Active NVDEC decode',
+            detections: '104 Veh/min • PCU 31.2',
+            violations: '1 Active (Heavy PCU Surge Spillback)',
+            violationClass: 'text-warning',
+            hardware: 'Axis Q1656-LE AI Junction Node'
+          },
+          {
+            id: 'CAM-06',
+            name: 'CAM-06: Sambhaji Bridge (Lakdi Pul)',
+            status: 'Violating',
+            statusType: 'violating',
+            icon: '⚠️',
+            coords: [18.5138, 73.8448],
+            corridor: 'Lakdi Pul Mutha River Crossing & Deccan Metro Viaduct',
+            specs: '1080p @ 25 FPS, 47ms latency, Active NVDEC decode',
+            detections: '136 Veh/min • PCU 38.6',
+            violations: '2 Active (Wrong-Way Entry & Heavy Vehicle Ban)',
+            violationClass: 'text-danger',
+            hardware: 'Uniview Prime-I 8MP ANPR Gateway'
+          }
+        ];
+
+        const cameraMarkersMap = {};
+        const cameraGroup = L.featureGroup();
+        let selectedCameraId = 'CAM-01';
+
+        // Update PIP floating preview on the GIS map
+        function updateGisMinimapPip(camId, layout) {
+          const pipTitle = document.getElementById('gisPipTitle');
+          const pipSvg = document.getElementById('gisPipSvgContainer');
+          const pipLane1 = document.getElementById('gisPipLane1');
+          const pipLane2 = document.getElementById('gisPipLane2');
+
+          const layouts = (typeof JUNCTION_LAYOUTS !== 'undefined' ? JUNCTION_LAYOUTS : (window.JUNCTION_LAYOUTS || null));
+          const l = layout || (layouts ? layouts[camId] : null);
+          if (pipTitle && l) pipTitle.textContent = l.badge;
+          if (pipLane1 && l) pipLane1.textContent = 'NS: ' + l.lane1.split('(')[0].trim();
+          if (pipLane2 && l) pipLane2.textContent = 'EW: ' + l.lane2.split('(')[0].trim();
+          if (pipSvg && l && typeof l.getSvg === 'function') {
+            pipSvg.innerHTML = l.getSvg();
+          }
+        }
+        window.updateGisMinimapPip = updateGisMinimapPip;
+
+        // Smooth jump to full junction minimap above
+        window.scrollToJunctionMinimap = function (camId) {
+          selectCamera(camId);
+          const el = document.getElementById('fleetMapCanvas') || document.querySelector('.junction-minimap-card');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('minimap-highlight-pulse');
+            setTimeout(() => el.classList.remove('minimap-highlight-pulse'), 2200);
+          }
+        };
+
+        // Camera selection and minimap synchronization
+        function selectCamera(camId, skipMinimap) {
+          selectedCameraId = camId;
+          const targetCam = cameraFeeds.find(c => c.id === camId);
+          if (!targetCam) return;
+
+          // Highlight camera pill in Leaflet
+          Object.keys(cameraMarkersMap).forEach(id => {
+            const markerEl = cameraMarkersMap[id].getElement();
+            if (markerEl) {
+              const pill = markerEl.querySelector('.gis-cam-pill');
+              if (pill) {
+                pill.classList.toggle('active-camera', id === camId);
+              }
+            }
+          });
+
+          // Highlight quick buttons
+          document.querySelectorAll('.gis-quick-cam-chip').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-cam') === camId);
+          });
+
+          // Center map smoothly
+          cityMap.panTo(targetCam.coords, { animate: true, duration: 0.8 });
+
+          // Synchronize Live PIP preview
+          updateGisMinimapPip(camId);
+
+          // Synchronize Full Interactive Minimap Above
+          if (!skipMinimap && typeof window.switchJunctionCamera === 'function') {
+            window.switchJunctionCamera(camId, { skipGis: true });
+          }
+        }
+        window._highlightGisCamera = function (camId) {
+          selectCamera(camId, true);
+        };
+
+        cameraFeeds.forEach(function (cam) {
+          const pillIcon = L.divIcon({
+            className: 'gis-cam-div-icon',
+            html: '<div class="gis-cam-pill status-' + cam.statusType + (cam.id === selectedCameraId ? ' active-camera' : '') + '" id="camPill_' + cam.id + '" title="' + cam.name + ' — Click to sync minimap">' +
+                    '<span class="pill-icon">' + cam.icon + '</span>' +
+                    '<span class="pill-name">' + cam.id + '</span>' +
+                    '<span class="pill-pulse pulse-' + cam.statusType + '"></span>' +
+                  '</div>',
+            iconSize: [88, 26],
+            iconAnchor: [44, 13],
+            popupAnchor: [0, -14]
+          });
+
+          const popupContent =
+            '<div class="gis-cam-popup">' +
+              '<div class="gis-pop-top">' +
+                '<span class="gis-pop-badge ' + cam.statusType + '">' + cam.status.toUpperCase() + '</span>' +
+                '<span class="gis-pop-id">' + cam.id + '</span>' +
+              '</div>' +
+              '<div class="gis-pop-name">' + cam.name + '</div>' +
+              '<div class="gis-pop-grid">' +
+                '<div class="gis-pop-row"><span class="gis-pop-k">Location:</span><span class="gis-pop-v">' + cam.corridor + '</span></div>' +
+                '<div class="gis-pop-row"><span class="gis-pop-k">Live Specs:</span><span class="gis-pop-v">' + cam.specs + '</span></div>' +
+                '<div class="gis-pop-row"><span class="gis-pop-k">Flow Density:</span><span class="gis-pop-v">' + cam.detections + '</span></div>' +
+                '<div class="gis-pop-row"><span class="gis-pop-k">Violations:</span><span class="gis-pop-v ' + cam.violationClass + '">' + cam.violations + '</span></div>' +
+                '<div class="gis-pop-row"><span class="gis-pop-k">Hardware:</span><span class="gis-pop-v">' + cam.hardware + '</span></div>' +
+              '</div>' +
+              '<div class="gis-pop-footer">' +
+                '<span>NVDEC Low-Latency Sync: 0.4s</span>' +
+                '<span style="color:#38bdf8;font-weight:700;">● Minimap Connected</span>' +
+              '</div>' +
+              '<button type="button" class="gis-pop-inspect-btn" onclick="window.scrollToJunctionMinimap(\'' + cam.id + '\')">' +
+                '<span>🔎 Inspect Junction Minimap Above</span>' +
+              '</button>' +
+            '</div>';
+
+          const marker = L.marker(cam.coords, { icon: pillIcon });
+          marker.bindPopup(popupContent, {
+            maxWidth: 320,
+            className: 'gis-city-popup'
+          });
+
+          marker.on('click', function () {
+            selectCamera(cam.id);
+          });
+
+          marker.addTo(cameraGroup);
+          cameraMarkersMap[cam.id] = marker;
+        });
+
+        cameraGroup.addTo(cityMap);
+
+        // Bind PIP jump and toggle buttons
+        const btnPipJump = document.getElementById('btnPipJumpToMinimap');
+        if (btnPipJump) {
+          btnPipJump.onclick = function () {
+            window.scrollToJunctionMinimap(selectedCameraId);
+          };
+        }
+        const btnPipToggle = document.getElementById('btnPipToggleMinimize');
+        const pipEl = document.getElementById('gisLiveMinimapPip');
+        if (btnPipToggle && pipEl) {
+          btnPipToggle.onclick = function () {
+            pipEl.classList.toggle('minimized');
+            btnPipToggle.textContent = pipEl.classList.contains('minimized') ? '□' : '—';
+          };
+        }
+
+        // Initialize PIP with default CAM-01
+        selectCamera('CAM-01', false);
+
+        // Bind quick camera buttons in the Status HUD
+        document.querySelectorAll('.gis-quick-cam-chip').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const camId = this.getAttribute('data-cam');
+            selectCamera(camId);
+          });
+        });
+
+        // ══ Custom Map Controls (Bottom Right) ══
+        const btnZoomIn = document.getElementById('btnGisZoomIn');
+        if (btnZoomIn) btnZoomIn.onclick = function () { cityMap.zoomIn(); };
+
+        const btnZoomOut = document.getElementById('btnGisZoomOut');
+        if (btnZoomOut) btnZoomOut.onclick = function () { cityMap.zoomOut(); };
+
+        const btnLayerToggle = document.getElementById('btnGisLayerToggle');
+        if (btnLayerToggle) {
+          btnLayerToggle.onclick = function () {
+            if (currentBasemap === 'carto') {
+              cityMap.removeLayer(cartoLayer);
+              osmLayer.addTo(cityMap);
+              currentBasemap = 'osm';
+              btnLayerToggle.title = 'Current: OpenStreetMap Standard (Click for Esri Canvas)';
+            } else if (currentBasemap === 'osm') {
+              cityMap.removeLayer(osmLayer);
+              esriLayer.addTo(cityMap);
+              currentBasemap = 'esri';
+              btnLayerToggle.title = 'Current: Esri Canvas (Click for Carto Dark)';
+            } else {
+              cityMap.removeLayer(esriLayer);
+              cartoLayer.addTo(cityMap);
+              currentBasemap = 'carto';
+              btnLayerToggle.title = 'Current: Carto Dark (Click for OpenStreetMap)';
+            }
+          };
+        }
+
+        // ══ HUD Overlay Actions ══
+        const btnViewAll = document.getElementById('btnGisViewAllCameras');
+        if (btnViewAll) {
+          btnViewAll.onclick = function () {
+            cityMap.fitBounds(cameraGroup.getBounds(), { padding: [35, 35], maxZoom: 14 });
+          };
+        }
+
+        // ══ Card Toolbar Actions ══
+        const btnFitCorridor = document.getElementById('btnGisFitCorridor');
+        if (btnFitCorridor) {
+          btnFitCorridor.onclick = function () {
+            cityMap.setView([18.5140, 73.8470], 13.5);
+          };
+        }
+
+        // Metro Lines Toggle Button
+        const btnToggleMetro = document.getElementById('btnGisToggleMetro');
+        if (btnToggleMetro) {
+          btnToggleMetro.onclick = function () {
+            if (cityMap.hasLayer(metroGroup)) {
+              cityMap.removeLayer(metroGroup);
+              btnToggleMetro.classList.remove('active');
+            } else {
+              cityMap.addLayer(metroGroup);
+              btnToggleMetro.classList.add('active');
+            }
+          };
+        }
+
+        // Roads Layer Toggle Button (Highways, Main Roads, Walking Roads)
+        const btnToggleRoads = document.getElementById('btnGisToggleRoads');
+        if (btnToggleRoads) {
+          btnToggleRoads.onclick = function () {
+            if (cityMap.hasLayer(roadsGroup)) {
+              cityMap.removeLayer(roadsGroup);
+              btnToggleRoads.classList.remove('active');
+            } else {
+              cityMap.addLayer(roadsGroup);
+              btnToggleRoads.classList.add('active');
+            }
+          };
+        }
+
+        const btnToggleWaterRoute = document.getElementById('btnGisToggleWaterRoute');
+        if (btnToggleWaterRoute) {
+          btnToggleWaterRoute.onclick = function () {
+            if (cityMap.hasLayer(waterRouteGroup)) {
+              cityMap.removeLayer(waterRouteGroup);
+              btnToggleWaterRoute.classList.remove('active');
+            } else {
+              cityMap.addLayer(waterRouteGroup);
+              btnToggleWaterRoute.classList.add('active');
+            }
+          };
+        }
+
+        const btnToggleStreamAll = document.getElementById('btnGisToggleStreamAll');
+        if (btnToggleStreamAll) {
+          btnToggleStreamAll.onclick = function () {
+            if (cityMap.hasLayer(cameraGroup)) {
+              cityMap.removeLayer(cameraGroup);
+              btnToggleStreamAll.classList.remove('active');
+            } else {
+              cameraGroup.addTo(cityMap);
+              btnToggleStreamAll.classList.add('active');
+            }
+          };
+        }
+
+        // Responsive Map Invalidation
+        window.addEventListener('resize', function () {
+          cityMap.invalidateSize();
+        });
+        setTimeout(function () { cityMap.invalidateSize(); }, 300);
+        setTimeout(function () { cityMap.invalidateSize(); }, 800);
+
+        // When user switches views
+        document.querySelectorAll('[data-view]').forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            setTimeout(function () { cityMap.invalidateSize(); }, 120);
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPuneGisMinimap);
+      } else {
+        setTimeout(initPuneGisMinimap, 50);
+      }
+    })();
+  </script>
 
   <footer class="gov-footer">
     <div class="gov-footer-left">

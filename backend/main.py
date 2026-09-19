@@ -64,7 +64,6 @@ async def health_check():
         "version": "1.0.0"
     }
 
-
 @app.get("/api/system/time", tags=["System"])
 async def get_system_time():
     """
@@ -79,14 +78,12 @@ async def get_system_time():
         "server_time_iso": now_ist.strftime("%Y-%m-%dT%H:%M:%S+05:30")
     }
 
-
 # ── Include Routers ──
 app.include_router(auth.router)
 app.include_router(telemetry.router)
 app.include_router(vehicle.router)
 app.include_router(anpr.router)
 app.include_router(junction_router.router)
-
 
 if __name__ == "__main__":
     import uvicorn

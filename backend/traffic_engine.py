@@ -15,12 +15,10 @@ class Corridor(str, Enum):
     NS = "NS"  # North-South
     EW = "EW"  # East-West
 
-
 class LightState(str, Enum):
     GREEN = "GREEN"
     AMBER = "AMBER"
     ALL_RED = "ALL_RED"
-
 
 class SubPhase(str, Enum):
     THROUGH = "THROUGH"
@@ -30,14 +28,12 @@ class SubPhase(str, Enum):
     TURN_AMBER = "TURN_AMBER"
     ALL_RED = "ALL_RED"
 
-
 class VehicleClass(str, Enum):
     MOTORCYCLE = "MOTORCYCLE"
     AUTO = "AUTO"
     CAR = "CAR"
     LCV = "LCV"
     BUS_TRUCK = "BUS_TRUCK"
-
 
 # Passenger Car Unit (PCU) equivalence weights.
 PCU_WEIGHTS: Dict[VehicleClass, float] = {
@@ -56,10 +52,7 @@ ALL_RED_SECONDS: float = 2.0
 TURN_ARROW_SECONDS: float = 7.0
 TURN_AMBER_SECONDS: float = 2.5
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Data model
-# ──────────────────────────────────────────────────────────────────────────
 
 @dataclass
 class VehicleCounts:
@@ -91,7 +84,6 @@ class VehicleCounts:
             + self.lcv * PCU_WEIGHTS[VehicleClass.LCV]
             + self.bus_truck * PCU_WEIGHTS[VehicleClass.BUS_TRUCK]
         )
-
 
 @dataclass
 class JunctionSnapshot:
@@ -337,10 +329,7 @@ class JunctionSnapshot:
             },
         }
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Controller
-# ──────────────────────────────────────────────────────────────────────────
 
 class AdaptiveJunctionController:
     """
@@ -396,7 +385,7 @@ class AdaptiveJunctionController:
         """Attach a simulation engine that generates dynamic vehicles and counts."""
         self._simulation_engine = engine
 
-    # ── Telemetry ingestion ──────────────────────────────────────────
+ # ── Telemetry ingestion
 
     def update_detection(self, corridor: Corridor, counts: VehicleCounts) -> None:
         """Feed the latest simulated/real YOLO vehicle counts for a corridor."""
@@ -429,7 +418,7 @@ class AdaptiveJunctionController:
     def _pcu(self, corridor: Corridor) -> float:
         return self._counts[corridor].pcu_total()
 
-    # ── Core state machine ───────────────────────────────────────────
+ # ── Core state machine
 
     def tick(self) -> JunctionSnapshot:
         """
@@ -561,7 +550,7 @@ class AdaptiveJunctionController:
         elif new_state == LightState.ALL_RED:
             self._transition_to_sub_phase(SubPhase.ALL_RED, at_time)
 
-    # ── Snapshot / serialization ─────────────────────────────────────
+ # ── Snapshot / serialization
 
     def _snapshot(self, now: float, vehicles: Optional[List[Dict[str, Any]]] = None) -> JunctionSnapshot:
         elapsed = now - self._state_entered_at

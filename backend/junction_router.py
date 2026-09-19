@@ -33,11 +33,11 @@ from backend.services.traffic_simulation import simulation_engine
 
 router = APIRouter(tags=["Adaptive Junction Control"])
 
-# ── Shared controller instance (single junction) ────────────────────────
+# ── Shared controller instance (single junction)
 controller = AdaptiveJunctionController(initial_active=Corridor.NS)
 controller.set_simulation_engine(simulation_engine)
 
-# ── Camera Feed Input & Regulation State ────────────────────────────────
+# ── Camera Feed Input & Regulation State
 _feed_state = {
     "source_type": "pre_downloaded",  # "pre_downloaded", "local_file", "mjpeg", "webcam"
     "source_name": "Pune JM Road Chowk (Pre-Downloaded Edge Footage)",
@@ -47,7 +47,7 @@ _feed_state = {
     "status": "OPERATIONAL",
 }
 
-# ── Connection registry for the telemetry broadcast ─────────────────────
+# ── Connection registry for the telemetry broadcast
 _active_connections: List[WebSocket] = []
 _broadcast_lock = asyncio.Lock()
 
@@ -63,10 +63,7 @@ _modulation_broadcast_task: "asyncio.Task | None" = None
 _simulator_task: asyncio.Task | None = None
 _broadcast_task: asyncio.Task | None = None
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Simulated YOLO detector feed
-# ──────────────────────────────────────────────────────────────────────────
 
 async def _simulate_yolo_detection_feed() -> None:
     """
@@ -103,10 +100,7 @@ async def _simulate_yolo_detection_feed() -> None:
         # Clean shutdown — no cleanup required beyond letting the task end.
         raise
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # 1 Hz broadcast loop
-# ──────────────────────────────────────────────────────────────────────────
 
 async def _broadcast_loop() -> None:
     """
@@ -134,7 +128,6 @@ async def _broadcast_loop() -> None:
     except asyncio.CancelledError:
         raise
 
-
 def _ensure_background_tasks_running() -> None:
     """Lazily start the simulator and broadcast loops on first connection."""
     global _simulator_task, _broadcast_task
@@ -149,10 +142,7 @@ def _ensure_background_tasks_running() -> None:
     if _broadcast_task is None or _broadcast_task.done():
         _broadcast_task = loop.create_task(_broadcast_loop())
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # WebSocket endpoint
-# ──────────────────────────────────────────────────────────────────────────
 
 @router.websocket("/ws/junction-telemetry")
 async def junction_telemetry_endpoint(websocket: WebSocket):
@@ -199,17 +189,13 @@ async def junction_telemetry_endpoint(websocket: WebSocket):
             if websocket in _active_connections:
                 _active_connections.remove(websocket)
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Convenience REST endpoint (non-WebSocket clients / debugging)
-# ──────────────────────────────────────────────────────────────────────────
 
 @router.get("/api/junction/state")
 async def get_junction_state():
     """One-shot snapshot of the junction controller state over plain HTTP."""
     snapshot = controller.tick()
     return snapshot.to_payload()
-
 
 @router.get("/api/junction/minimap")
 @router.get("/api/junction/lanes")
@@ -248,7 +234,6 @@ async def get_junction_minimap():
         "straight_count": sum(1 for v in payload.get("vehicles", []) if (v.get("turn_blinker") is None or v.get("turn_blinker") == "NONE") and str(v.get("turn_intent")).lower() in ("straight", "none")),
         "capacity_per_lane": 2,
     }
-
 
 @router.get("/api/junction/vehicles")
 async def get_junction_vehicles(
@@ -299,7 +284,6 @@ async def get_junction_vehicles(
         "vehicles": vehicles,
     }
 
-
 @router.get("/api/junction/vehicle/{vehicle_identifier}")
 async def get_vehicle_tooltip_detail(vehicle_identifier: str):
     """
@@ -326,7 +310,6 @@ async def get_vehicle_tooltip_detail(vehicle_identifier: str):
         "tooltip": found.get("tooltip_lines", []),
     }
 
-
 @router.get("/api/junction/constraints")
 async def get_junction_constraints():
     """Static safety constraint values enforced by the controller."""
@@ -346,10 +329,7 @@ async def get_junction_constraints():
         },
     }
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Camera Feed Input & Traffic Regulation Endpoints
-# ──────────────────────────────────────────────────────────────────────────
 
 class FeedInputPayload(BaseModel):
     source_type: str = Field("pre_downloaded", description="Feed type: pre_downloaded, local_file, mjpeg_stream, webcam")
@@ -357,12 +337,10 @@ class FeedInputPayload(BaseModel):
     stream_url: Optional[str] = Field(None, description="Stream URI if remote stream")
     corridor: Optional[str] = Field("ALL", description="Target corridor or ALL")
 
-
 class RegulationOverridePayload(BaseModel):
     action: Optional[str] = Field(None, description="Action: FORCE_NS, FORCE_EW, ALL_RED, RESUME_AUTO")
     command: Optional[str] = Field(None, description="Alternative alias for action from frontend clients")
     reason: Optional[str] = Field("Manual Operator Command", description="Reason for override")
-
 
 class VehicleCountPayload(BaseModel):
     corridor: str = Field(..., description="Corridor: NS or EW")
@@ -371,7 +349,6 @@ class VehicleCountPayload(BaseModel):
     car: int = 0
     lcv: int = 0
     bus_truck: int = 0
-
 
 @router.get("/api/junction/feed-status")
 async def get_feed_status():
@@ -382,7 +359,6 @@ async def get_feed_status():
         "light_state": controller.light_state.value,
         "cycle_count": controller.cycle_count,
     }
-
 
 @router.post("/api/junction/feed-input")
 async def set_feed_input(payload: FeedInputPayload):
@@ -410,7 +386,6 @@ async def set_feed_input(payload: FeedInputPayload):
                 pass
 
     return {"status": "SUCCESS", "feed": _feed_state}
-
 
 @router.post("/api/junction/regulation-override")
 async def regulation_override(payload: RegulationOverridePayload):
@@ -460,7 +435,6 @@ async def regulation_override(payload: RegulationOverridePayload):
         "snapshot": snapshot.to_payload(),
     }
 
-
 @router.post("/api/junction/update-counts")
 async def update_vehicle_counts(payload: VehicleCountPayload):
     """
@@ -482,12 +456,10 @@ async def update_vehicle_counts(payload: VehicleCountPayload):
         "pcu_total": counts.pcu_total(),
     }
 
-
 # Minimal fallback JPEG frame (1x1 gray pixel)
 _FALLBACK_JPEG = bytes.fromhex(
     "ffd8ffe000104a46494600010101004800480000ffdb004300080606070605080707070909080a0c140d0c0b0b0c1912130f141d1a1f1e1d1a1c1c20242e2720222c231c1c2837292c30313434341f27393d38323c2e333432ffc0000b080001000101011100ffc4001f0000010501010101010100000000000000000102030405060708090a0bffda0008010100003f007f00ffd9"
 )
-
 
 @router.get("/api/junction/video-feed")
 async def junction_video_feed():
@@ -515,10 +487,7 @@ async def junction_video_feed():
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Traffic Modulation — simplified 2D grid + per-arm signal view
-# ──────────────────────────────────────────────────────────────────────────
 # Backend-only addition to support a future "Traffic Modulation" frontend
 # tab: a digitalized/simplified 2D lane-occupancy grid and per-arm (N/S/
 # E/W) signal colors, derived from the SAME real controller state as the
@@ -557,7 +526,6 @@ async def _modulation_broadcast_loop() -> None:
     except asyncio.CancelledError:
         raise
 
-
 def _ensure_modulation_task_running() -> None:
     global _modulation_broadcast_task
     _ensure_background_tasks_running()  # ensures the shared controller has live data
@@ -569,7 +537,6 @@ def _ensure_modulation_task_running() -> None:
     if _modulation_broadcast_task is None or _modulation_broadcast_task.done():
         _modulation_broadcast_task = loop.create_task(_modulation_broadcast_loop())
 
-
 @router.get("/api/junction/modulation/state")
 async def get_modulation_state():
     """
@@ -579,7 +546,6 @@ async def get_modulation_state():
     """
     snapshot = controller.tick()
     return build_modulation_view(snapshot)
-
 
 @router.websocket("/ws/junction-modulation")
 async def junction_modulation_endpoint(websocket: WebSocket):
@@ -634,12 +600,10 @@ async def junction_modulation_endpoint(websocket: WebSocket):
             if websocket in _modulation_connections:
                 _modulation_connections.remove(websocket)
 
-
 # Full Video Ingestion (analyzes uploaded file up to 200MB)
 ALLOWED_VIDEO_CONTENT_TYPES = {
     "video/mp4", "video/webm", "video/x-m4v", "video/quicktime", "video/x-matroska",
 }
-
 
 @router.post("/api/junction/ingest-video")
 async def ingest_video(file: UploadFile = File(...)):

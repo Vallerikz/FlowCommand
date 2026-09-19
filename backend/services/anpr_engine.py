@@ -34,7 +34,6 @@ MAX_CANDIDATES_TO_OCR = 6          # cap OCR calls per image for latency
 
 OCR_CONFIG = "--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-
 @dataclass
 class PlateCandidate:
     bbox: Tuple[int, int, int, int]  # x, y, w, h in the original image
@@ -43,7 +42,6 @@ class PlateCandidate:
     normalized_text: str = ""
     is_valid_format: bool = False
     format_type: Optional[str] = None
-
 
 def _locate_candidate_regions(gray: np.ndarray) -> List[Tuple[int, int, int, int]]:
     """Classical contour-based plate localization. Returns (x, y, w, h) boxes."""
@@ -70,7 +68,6 @@ def _locate_candidate_regions(gray: np.ndarray) -> List[Tuple[int, int, int, int
 
     return candidates[:MAX_CANDIDATES_TO_OCR]
 
-
 def _prepare_for_ocr(gray: np.ndarray, bbox: Tuple[int, int, int, int]) -> np.ndarray:
     x, y, w, h = bbox
     crop = gray[y : y + h, x : x + w]
@@ -84,7 +81,6 @@ def _prepare_for_ocr(gray: np.ndarray, bbox: Tuple[int, int, int, int]) -> np.nd
     crop = cv2.bilateralFilter(crop, 9, 75, 75)
     _, thresh = cv2.threshold(crop, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return thresh
-
 
 def _ocr_region(gray: np.ndarray, bbox: Tuple[int, int, int, int]) -> Tuple[str, float]:
     """Returns (raw_text, mean_word_confidence 0-100)."""
@@ -112,7 +108,6 @@ def _ocr_region(gray: np.ndarray, bbox: Tuple[int, int, int, int]) -> Tuple[str,
     raw_text = "".join(words)
     mean_conf = sum(confidences) / len(confidences) if confidences else 0.0
     return raw_text, mean_conf
-
 
 def recognize_plate_from_image(image_bytes: bytes) -> Dict[str, Any]:
     """
@@ -201,10 +196,7 @@ def recognize_plate_from_image(image_bytes: bytes) -> Dict[str, Any]:
         ],
     }
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Full-Video ANPR Scan (merged in from a parallel dev copy, verified honest)
-# ──────────────────────────────────────────────────────────────────────────
 # Adds the ability to OCR-scan an ENTIRE uploaded video, start to finish,
 # rather than a single image. Reuses the same real OpenCV localization +
 # Tesseract OCR + plate_validator pipeline above, just applied per-frame
@@ -217,7 +209,6 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
-
 @dataclass
 class VideoPlateAggregate:
     plate: str
@@ -228,7 +219,6 @@ class VideoPlateAggregate:
     last_seen_sec: float
     sample_ocr_text: str
 
-
 @dataclass
 class VideoScanResult:
     total_frames_in_video: int
@@ -237,7 +227,6 @@ class VideoScanResult:
     frame_stride: int
     plates: List[VideoPlateAggregate]
     processing_time_sec: float
-
 
 def scan_video_file(
     path: str,

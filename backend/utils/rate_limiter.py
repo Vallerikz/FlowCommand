@@ -10,7 +10,6 @@ from fastapi.responses import JSONResponse
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["10/minute"])
 
-
 def rate_limit_exceeded_handler(request: Request, exc):
     """
     Custom 429 response matching VIMS API error schema.

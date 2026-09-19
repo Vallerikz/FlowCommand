@@ -22,7 +22,6 @@ ALLOWED_VIDEO_CONTENT_TYPES = {
     "video/mp4", "video/webm", "video/x-m4v", "video/quicktime", "video/x-matroska", "video/avi",
 }
 
-
 @router.post("/recognize")
 @limiter.limit("20/minute")
 async def recognize_plate(request: Request, file: UploadFile = File(...)):
@@ -43,7 +42,6 @@ async def recognize_plate(request: Request, file: UploadFile = File(...)):
 
     result = recognize_plate_from_image(contents)
     return result
-
 
 @router.post("/scan-video")
 @limiter.limit("5/minute")

@@ -60,34 +60,24 @@ ROI_COLOR = (60, 220, 60)      # green BGR for ROI outline
 TEXT_COLOR = (255, 255, 255)
 OVERLAY_BG = (20, 20, 20)
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Small geometry / drawing helpers
-# ──────────────────────────────────────────────────────────────────────────
 
 def _left_half_polygon(width: int, height: int) -> np.ndarray:
     return np.array([[0, 0], [width // 2, 0], [width // 2, height], [0, height]], dtype=np.int32)
 
-
 def _right_half_polygon(width: int, height: int) -> np.ndarray:
     return np.array([[width // 2, 0], [width, 0], [width, height], [width // 2, height]], dtype=np.int32)
-
 
 def _full_frame_polygon(width: int, height: int) -> np.ndarray:
     return np.array([[0, 0], [width, 0], [width, height], [0, height]], dtype=np.int32)
 
-
 def _box_center(x1: float, y1: float, x2: float, y2: float) -> Tuple[float, float]:
     return (x1 + x2) / 2.0, (y1 + y2) / 2.0
-
 
 def _center_inside_polygon(center: Tuple[float, float], polygon: np.ndarray) -> bool:
     return cv2.pointPolygonTest(polygon, center, False) >= 0
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Data model
-# ──────────────────────────────────────────────────────────────────────────
 
 @dataclass
 class Detection:
@@ -97,7 +87,6 @@ class Detection:
     y1: float
     x2: float
     y2: float
-
 
 @dataclass
 class CorridorFrameState:
@@ -121,10 +110,7 @@ class CorridorFrameState:
         with self.lock:
             return self.jpeg_bytes
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Shared YOLO inference wrapper (thread-safe: one model, serialized calls)
-# ──────────────────────────────────────────────────────────────────────────
 
 class _SharedYoloModel:
     """
@@ -169,10 +155,7 @@ class _SharedYoloModel:
 
         return detections
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Per-corridor ROI view (drives detection -> PCU -> drawing for one corridor)
-# ──────────────────────────────────────────────────────────────────────────
 
 class _CorridorView:
     """
@@ -226,7 +209,6 @@ class _CorridorView:
             total += IRC_PCU_WEIGHTS.get(d.category, 0.0)
         return total
 
-
 def _draw_annotations(
     frame: np.ndarray,
     views: List[_CorridorView],
@@ -264,10 +246,7 @@ def _draw_annotations(
 
     return annotated
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Corridor worker thread — owns a capture, decodes, detects, annotates
-# ──────────────────────────────────────────────────────────────────────────
 
 class CorridorWorker(threading.Thread):
     """
@@ -371,10 +350,7 @@ class CorridorWorker(threading.Thread):
                 self._capture.release()
             logger.info("Released video capture for %s", self.video_path)
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Public engine facade
-# ──────────────────────────────────────────────────────────────────────────
 
 class VideoEngine:
     """
@@ -407,7 +383,7 @@ class VideoEngine:
         self._workers: List[CorridorWorker] = []
         self._started = False
 
-    # ── Lifecycle ────────────────────────────────────────────────────
+ # ── Lifecycle
 
     def start(self) -> None:
         if self._started:
@@ -469,7 +445,7 @@ class VideoEngine:
         self._started = False
         logger.info("Video engine stopped; all capture threads released.")
 
-    # ── Frame access for streaming endpoints ───────────────────────────
+ # ── Frame access for streaming endpoints
 
     def latest_jpeg(self, corridor: Corridor) -> Optional[bytes]:
         state = self.ns_state if corridor == Corridor.NS else self.ew_state

@@ -18,7 +18,6 @@ REGEX_COMMERCIAL_TRANSPORT = re.compile(r"^[A-Z]{2}[0-9]{2}[A-Z]{1}[0-9]{4}$")
 # 4. Legacy / Vintage Format: e.g. MMU1234, BMU12, DDA1234, MRC123
 REGEX_LEGACY_VINTAGE = re.compile(r"^[A-Z]{2,3}[0-9]{1,4}$")
 
-
 def normalize_plate(raw_plate: str) -> str:
     """
     Strips all spaces, hyphens, and dots, converting to uppercase.
@@ -26,7 +25,6 @@ def normalize_plate(raw_plate: str) -> str:
     if not raw_plate or not isinstance(raw_plate, str):
         return ""
     return re.sub(r"[\s\-\.]+", "", raw_plate).upper()
-
 
 def validate_indian_plate(raw_plate: str) -> Tuple[bool, str, Optional[str], Optional[str]]:
     """

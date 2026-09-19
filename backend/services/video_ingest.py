@@ -26,7 +26,6 @@ LARGE_BLOB_AREA_PX = 2600
 # genuinely covering the full timeline (see _pick_sample_frame_indices).
 MAX_FRAMES_TO_PROCESS = 300
 
-
 @dataclass
 class CorridorTally:
     small: int = 0   # ~ motorcycle-sized blobs
@@ -42,14 +41,12 @@ class CorridorTally:
             "bus_truck": self.large,
         }
 
-
 def _classify_blob_area(area: float) -> str:
     if area >= LARGE_BLOB_AREA_PX:
         return "large"
     if area >= MEDIUM_BLOB_AREA_PX:
         return "medium"
     return "small"
-
 
 def _pick_sample_frame_indices(total_frames: int, max_samples: int) -> list:
     """
@@ -64,7 +61,6 @@ def _pick_sample_frame_indices(total_frames: int, max_samples: int) -> list:
     if count <= 1:
         return [0]
     return sorted(set(int(round(i * (total_frames - 1) / (count - 1))) for i in range(count)))
-
 
 def analyze_video_file(file_path: str) -> Dict:
     """
@@ -146,7 +142,6 @@ def analyze_video_file(file_path: str) -> Dict:
             "unique-vehicle tracking."
         ),
     }
-
 
 async def save_upload_capped(file, max_bytes: int = MAX_UPLOAD_BYTES) -> Optional[str]:
     """

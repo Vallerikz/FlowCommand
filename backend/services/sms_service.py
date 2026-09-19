@@ -13,7 +13,7 @@ from typing import Any, Dict, Optional
 
 logger = logging.getLogger("vims.sms")
 
-# ─── Configuration from environment ───
+# Configuration from environment
 SMS_PROVIDER = os.getenv("VIMS_SMS_PROVIDER", "demo").lower()
 SMS_API_URL = os.getenv("VIMS_SMS_API_URL", "").strip()
 SMS_API_KEY = os.getenv("VIMS_SMS_API_KEY", "").strip()

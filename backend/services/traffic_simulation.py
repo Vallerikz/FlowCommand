@@ -22,10 +22,7 @@ from typing import Dict, List, Optional, Tuple, Any
 
 from backend.traffic_engine import Corridor, LightState, VehicleClass, PCU_WEIGHTS
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Vehicle Class Configuration & Indian Road Characteristics
-# ──────────────────────────────────────────────────────────────────────────
 
 @dataclass
 class VehicleClassConfig:
@@ -40,7 +37,6 @@ class VehicleClassConfig:
     overtake_tendency: float  # 0.0 to 1.0 likelihood to initiate overtake when blocked
     color: str                # hex color for minimap rendering
     sample_models: List[str]
-
 
 CLASS_CONFIGS: Dict[VehicleClass, VehicleClassConfig] = {
     VehicleClass.MOTORCYCLE: VehicleClassConfig(
@@ -176,10 +172,7 @@ INDIAN_OWNERS = [
     ("Western Infrastructure Ltd", "ACTIVE", 1, "Overweight cargo permit pending inspection"),
 ]
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Simulated Vehicle Entity
-# ──────────────────────────────────────────────────────────────────────────
 
 @dataclass
 class SimulatedVehicle:
@@ -428,10 +421,7 @@ class SimulatedVehicle:
             ],
         }
 
-
-# ──────────────────────────────────────────────────────────────────────────
 # Indian Road Traffic Simulation Engine
-# ──────────────────────────────────────────────────────────────────────────
 
 class IndianTrafficSimulationEngine:
     """
@@ -458,7 +448,7 @@ class IndianTrafficSimulationEngine:
         self._seed_initial_vehicles(Corridor.NS, count=10)
         self._seed_initial_vehicles(Corridor.EW, count=8)
 
-    # ── Factory Helpers ───────────────────────────────────────────────
+ # ── Factory Helpers
 
     def _generate_plate(self, vclass: VehicleClass) -> Tuple[str, str, str]:
         """Generates an authentic Indian license plate number based on class."""
@@ -644,7 +634,7 @@ class IndianTrafficSimulationEngine:
 
             self._vehicles[corridor].append(veh)
 
-    # ── Simulation Update Step ────────────────────────────────────────
+ # ── Simulation Update Step
 
     def tick(
         self,
@@ -988,7 +978,7 @@ class IndianTrafficSimulationEngine:
                     v1.lane_sharing_with_id = v0.id
                     v1.lane_sharing_with_desc = f"{v0.make_model} ({v0.plate_number})"
 
-    # ── Export & Telemetry Feed ───────────────────────────────────────
+ # ── Export & Telemetry Feed
 
     def get_corridor_counts(self, corridor: Corridor) -> Dict[str, int]:
         """Calculates live per-class vehicle counts directly from simulated vehicles."""
@@ -1044,7 +1034,6 @@ class IndianTrafficSimulationEngine:
             "capacity_per_lane": 2,
             "simulation_mode": "INDIAN_ROAD_DYNAMIC_OVERTAKING_DUAL_SLOT_WITH_TURNS",
         }
-
 
 # Global simulation instance shared across router & controller
 simulation_engine = IndianTrafficSimulationEngine()

@@ -12,7 +12,6 @@ import time
 
 router = APIRouter(tags=["Telemetry & Live Streaming"])
 
-
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
@@ -32,9 +31,7 @@ class ConnectionManager:
             except Exception:
                 self.disconnect(connection)
 
-
 manager = ConnectionManager()
-
 
 @router.websocket("/ws/telemetry")
 async def websocket_telemetry_endpoint(websocket: WebSocket):
@@ -61,7 +58,6 @@ async def websocket_telemetry_endpoint(websocket: WebSocket):
     except Exception:
         manager.disconnect(websocket)
 
-
 @router.get("/api/telemetry/nodes")
 async def get_camera_nodes():
     """
@@ -82,7 +78,6 @@ async def get_camera_nodes():
         ]
     }
 
-
 class AlertBroadcastPayload(BaseModel):
     """Typed payload for broadcasting alerts — prevents arbitrary JSON injection."""
     alert_type: str = Field(..., description="Alert category, e.g. HOTLIST_HIT, ANOMALY, INCIDENT")
@@ -91,7 +86,6 @@ class AlertBroadcastPayload(BaseModel):
     junction_id: Optional[str] = Field(None, description="Originating junction/camera ID")
     plate: Optional[str] = Field(None, description="Related vehicle plate if applicable")
     metadata: Optional[Dict[str, Any]] = Field(None, description="Additional structured data")
-
 
 @router.post("/api/telemetry/broadcast")
 async def broadcast_alert(
