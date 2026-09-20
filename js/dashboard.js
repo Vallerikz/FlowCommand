@@ -497,8 +497,8 @@
               <line x1="466" y1="110" x2="466" y2="162" stroke="#ffffff" stroke-width="3.5"/>
 
               <!-- Lane 1 Markings -->
-              <line x1="400" y1="0" x2="400" y2="114" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="114" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="114" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -511,8 +511,8 @@
               <line x1="0" y1="286" x2="352" y2="226" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="210" x2="800" y2="150" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="238" x2="340" y2="180" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="460" y1="160" x2="800" y2="102" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="180" x2="0" y2="238" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="460" y1="160" x2="800" y2="102" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="214" x2="334" y2="157" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="466" y1="135" x2="800" y2="78" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="262" x2="334" y2="205" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -568,8 +568,8 @@
               <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="112" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -579,7 +579,7 @@
               <rect x="448" y="122" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="470" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
@@ -593,7 +593,7 @@
               <polygon points="0,230 348,170 352,170 352,218 0,300" fill="url(#roadAsphaltDiag)"/>
               <line x1="0" y1="230" x2="348" y2="170" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="0" y1="300" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="0" y1="265" x2="340" y2="192" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="192" x2="0" y2="265" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="248" x2="330" y2="182" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="282" x2="330" y2="206" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
@@ -665,8 +665,8 @@
               <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="112" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -679,8 +679,8 @@
               <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="170" x2="340" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="170" x2="0" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="146" x2="330" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="194" x2="330" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -739,8 +739,8 @@
               <line x1="448" y1="0" x2="448" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="252" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="76" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="264" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="76" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="264" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="70" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="76" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="264" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -750,7 +750,7 @@
               <rect x="0" y="88" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="0" y1="88" x2="352" y2="88" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="0" y1="184" x2="352" y2="184" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="0" y1="136" x2="340" y2="136" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="136" x2="0" y2="136" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="112" x2="340" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="160" x2="334" y2="160" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
@@ -758,7 +758,7 @@
               <rect x="448" y="156" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="448" y1="156" x2="800" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="252" x2="800" y2="252" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="460" y1="204" x2="800" y2="204" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="204" x2="800" y2="204" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="466" y1="180" x2="800" y2="180" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="460" y1="228" x2="800" y2="228" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
@@ -810,8 +810,8 @@
 
               <!-- Lane 1 (NS Road) -->
               <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
-              <line x1="400" y1="0" x2="400" y2="114" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="242" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="114" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="242" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="114" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="242" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -819,8 +819,8 @@
 
               <!-- Lane 2 (75° Oblique Arterial Road) -->
               <polygon points="0,174 800,102 800,198 0,270" fill="url(#roadAsphaltDiag)"/>
-              <line x1="0" y1="222" x2="340" y2="191" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="460" y1="181" x2="800" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="191" x2="0" y2="222" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="460" y1="181" x2="800" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="198" x2="330" y2="168" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="470" y1="156" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="246" x2="330" y2="216" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -905,8 +905,8 @@
               <rect x="344" y="222" width="8" height="6" fill="#94a3b8"/><rect x="344" y="252" width="8" height="6" fill="#94a3b8"/><rect x="344" y="282" width="8" height="6" fill="#94a3b8"/><rect x="344" y="312" width="8" height="6" fill="#94a3b8"/>
               <rect x="448" y="222" width="8" height="6" fill="#94a3b8"/><rect x="448" y="252" width="8" height="6" fill="#94a3b8"/><rect x="448" y="282" width="8" height="6" fill="#94a3b8"/><rect x="448" y="312" width="8" height="6" fill="#94a3b8"/>
 
-              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="112" x2="400" y2="0" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -919,8 +919,8 @@
               <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="170" x2="340" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="340" y1="170" x2="0" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="12 8" stroke-opacity="0.85"/>
               <line x1="0" y1="146" x2="330" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="0" y1="194" x2="330" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
               <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
