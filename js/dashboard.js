@@ -417,7 +417,8 @@
           <stop offset="100%" stop-color="#042f2e"/>
         </linearGradient>
         <pattern id="junctionBoxHatch" width="16" height="16" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1.5" />
+          <line x1="0" y1="0" x2="0" y2="16" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.45" />
+          <line x1="0" y1="0" x2="16" y2="0" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.45" />
         </pattern>
       </defs>
     `;
@@ -427,38 +428,38 @@
         <!-- North Signal (governs Lane 1 Southbound) -->
         <g id="sigHeadN" transform="translate(${posN.x}, ${posN.y})">
           <rect x="0" y="0" width="22" height="54" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
-          <circle id="sigLensN_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
-          <circle id="sigLensN_A" cx="11" cy="24" r="5" class="signal-lens amber"/>
-          <circle id="sigLensN_G" cx="11" cy="37" r="5" class="signal-lens green"/>
-          <path id="sigLensN_ArrowL" class="turn-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="sigLensN_ArrowR" class="turn-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="sigLensN_R" cx="11" cy="11" r="5" class="sig-lens signal-lens red active-red" fill="#ef4444" stroke="#fca5a5" stroke-width="0.8"/>
+          <circle id="sigLensN_A" cx="11" cy="24" r="5" class="sig-lens signal-lens amber" fill="#331d04" stroke="#211202" stroke-width="0.8"/>
+          <circle id="sigLensN_G" cx="11" cy="37" r="5" class="sig-lens signal-lens green" fill="#052414" stroke="#03160c" stroke-width="0.8"/>
+          <path id="sigLensN_ArrowL" class="turn-arrow sig-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensN_ArrowR" class="turn-arrow sig-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
         <!-- South Signal (governs Lane 1 Northbound) -->
         <g id="sigHeadS" transform="translate(${posS.x}, ${posS.y})">
           <rect x="0" y="0" width="22" height="54" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
-          <circle id="sigLensS_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
-          <circle id="sigLensS_A" cx="11" cy="24" r="5" class="signal-lens amber"/>
-          <circle id="sigLensS_G" cx="11" cy="37" r="5" class="signal-lens green"/>
-          <path id="sigLensS_ArrowL" class="turn-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="sigLensS_ArrowR" class="turn-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="sigLensS_R" cx="11" cy="11" r="5" class="sig-lens signal-lens red active-red" fill="#ef4444" stroke="#fca5a5" stroke-width="0.8"/>
+          <circle id="sigLensS_A" cx="11" cy="24" r="5" class="sig-lens signal-lens amber" fill="#331d04" stroke="#211202" stroke-width="0.8"/>
+          <circle id="sigLensS_G" cx="11" cy="37" r="5" class="sig-lens signal-lens green" fill="#052414" stroke="#03160c" stroke-width="0.8"/>
+          <path id="sigLensS_ArrowL" class="turn-arrow sig-arrow" d="M 14 47 L 8 47 M 8 47 L 11 44 M 8 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensS_ArrowR" class="turn-arrow sig-arrow" d="M 8 47 L 14 47 M 14 47 L 11 44 M 14 47 L 11 50" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
         <!-- West Signal (governs Lane 2 Eastbound) -->
         <g id="sigHeadW" transform="translate(${posW.x}, ${posW.y})">
           <rect x="0" y="0" width="54" height="22" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
-          <circle id="sigLensW_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
-          <circle id="sigLensW_A" cx="24" cy="11" r="5" class="signal-lens amber"/>
-          <circle id="sigLensW_G" cx="37" cy="11" r="5" class="signal-lens green"/>
-          <path id="sigLensW_ArrowL" class="turn-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="sigLensW_ArrowR" class="turn-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="sigLensW_R" cx="11" cy="11" r="5" class="sig-lens signal-lens red active-red" fill="#ef4444" stroke="#fca5a5" stroke-width="0.8"/>
+          <circle id="sigLensW_A" cx="24" cy="11" r="5" class="sig-lens signal-lens amber" fill="#331d04" stroke="#211202" stroke-width="0.8"/>
+          <circle id="sigLensW_G" cx="37" cy="11" r="5" class="sig-lens signal-lens green" fill="#052414" stroke="#03160c" stroke-width="0.8"/>
+          <path id="sigLensW_ArrowL" class="turn-arrow sig-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensW_ArrowR" class="turn-arrow sig-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
         <!-- East Signal (governs Lane 2 Westbound) -->
         <g id="sigHeadE" transform="translate(${posE.x}, ${posE.y})">
           <rect x="0" y="0" width="54" height="22" rx="4" fill="#09090b" stroke="#27272a" stroke-width="1"/>
-          <circle id="sigLensE_R" cx="11" cy="11" r="5" class="signal-lens red active-red"/>
-          <circle id="sigLensE_A" cx="24" cy="11" r="5" class="signal-lens amber"/>
-          <circle id="sigLensE_G" cx="37" cy="11" r="5" class="signal-lens green"/>
-          <path id="sigLensE_ArrowL" class="turn-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="sigLensE_ArrowR" class="turn-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="sigLensE_R" cx="11" cy="11" r="5" class="sig-lens signal-lens red active-red" fill="#ef4444" stroke="#fca5a5" stroke-width="0.8"/>
+          <circle id="sigLensE_A" cx="24" cy="11" r="5" class="sig-lens signal-lens amber" fill="#331d04" stroke="#211202" stroke-width="0.8"/>
+          <circle id="sigLensE_G" cx="37" cy="11" r="5" class="sig-lens signal-lens green" fill="#052414" stroke="#03160c" stroke-width="0.8"/>
+          <path id="sigLensE_ArrowL" class="turn-arrow sig-arrow" d="M 47 14 L 47 8 M 47 8 L 44 11 M 47 8 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="sigLensE_ArrowR" class="turn-arrow sig-arrow" d="M 47 8 L 47 14 M 47 14 L 44 11 M 47 14 L 50 11" stroke="#3f3f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
       `;
     }
@@ -471,8 +472,8 @@
         lane1: 'Shivaji Road / NH-60 (North-South)',
         lane2: 'Tilak Road / Shankarsheth (East-West Skewed 65°)',
         type: 'skewed_65',
-        stopLines: { N: 120, S: 218, W: 346, E: 452 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 114, yMax: 226 },
+        stopLines: { N: 104, S: 236, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 114, yMax: 226 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -489,12 +490,19 @@
               <line x1="448" y1="0" x2="448" y2="114" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="210" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="118" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="222" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="120" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="116" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="224" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="220" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <!-- Stop Lines in Advance of Crosswalks -->
+              <line x1="352" y1="104" x2="400" y2="104" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="236" x2="448" y2="236" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="183" x2="334" y2="235" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="110" x2="466" y2="162" stroke="#ffffff" stroke-width="3.5"/>
+
+              <!-- Lane 1 Markings -->
+              <line x1="400" y1="0" x2="400" y2="114" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="114" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="236" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2: 65° Skewed Diagonal Road -->
               <polygon points="0,190 800,54 800,150 0,286" fill="url(#roadAsphaltDiag)"/>
@@ -503,36 +511,30 @@
               <line x1="0" y1="286" x2="352" y2="226" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="210" x2="800" y2="150" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="238" x2="335" y2="181" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="159" x2="800" y2="102" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="214" x2="335" y2="157" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="135" x2="800" y2="78" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="262" x2="335" y2="205" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="183" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="238" x2="340" y2="180" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="160" x2="800" y2="102" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="214" x2="334" y2="157" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="466" y1="135" x2="800" y2="78" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="262" x2="334" y2="205" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="466" y1="183" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Center Intersection Parallelogram Box -->
               <polygon points="352,130 448,114 448,210 352,226" fill="#0d0d10"/>
               <polygon points="352,130 448,114 448,210 352,226" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
 
-              <!-- Angled Zebra Crosswalks -->
-              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
-                <line x1="356" y1="116" x2="444" y2="101" stroke-dasharray="6 6"/>
-                <line x1="356" y1="122" x2="444" y2="107" stroke-dasharray="6 6"/>
-                <line x1="356" y1="234" x2="444" y2="219" stroke-dasharray="6 6"/>
-                <line x1="356" y1="240" x2="444" y2="225" stroke-dasharray="6 6"/>
-                <line x1="338" y1="135" x2="338" y2="231" stroke-dasharray="6 6"/>
-                <line x1="344" y1="134" x2="344" y2="230" stroke-dasharray="6 6"/>
-                <line x1="456" y1="110" x2="456" y2="206" stroke-dasharray="6 6"/>
-                <line x1="462" y1="109" x2="462" y2="205" stroke-dasharray="6 6"/>
+              <!-- Angled Zebra Crosswalks (Between Stop Line and Junction Box) -->
+              <g stroke="rgba(255,255,255,0.75)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                <line x1="356" y1="120" x2="444" y2="120" stroke-dasharray="6 6"/>
+                <line x1="356" y1="222" x2="444" y2="222" stroke-dasharray="6 6"/>
+                <line x1="356" y1="228" x2="444" y2="228" stroke-dasharray="6 6"/>
+                <line x1="340" y1="135" x2="340" y2="231" stroke-dasharray="6 6"/>
+                <line x1="346" y1="134" x2="346" y2="230" stroke-dasharray="6 6"/>
+                <line x1="454" y1="110" x2="454" y2="206" stroke-dasharray="6 6"/>
+                <line x1="460" y1="109" x2="460" y2="205" stroke-dasharray="6 6"/>
               </g>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="124" x2="400" y2="116" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="222" x2="448" y2="214" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="346" y1="180" x2="346" y2="228" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="452" y1="112" x2="452" y2="160" stroke="#ffffff" stroke-width="3.5"/>
-
-              ${getSignalHeadsSvg({ x: 326, y: 64 }, { x: 454, y: 232 }, { x: 292, y: 248 }, { x: 468, y: 80 })}
+              ${getSignalHeadsSvg({ x: 326, y: 50 }, { x: 454, y: 242 }, { x: 276, y: 244 }, { x: 472, y: 76 })}
             </svg>
           `;
         }
@@ -545,8 +547,8 @@
         lane1: 'Tilak Rd / Sambhaji Bridge Connector (NS)',
         lane2: 'Kumthekar & Kelkar Roads (EW Fork)',
         type: 'y_fork',
-        stopLines: { N: 120, S: 220, W: 348, E: 450 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        stopLines: { N: 104, S: 236, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 122, yMax: 218 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -566,34 +568,34 @@
               <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="236" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 East (Horizontal Road) -->
               <rect x="448" y="122" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="448" y1="122" x2="800" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 West: Kumthekar Road (Upper Branch, Westbound Exit) -->
               <rect x="0" y="122" width="352" height="48" fill="url(#roadAsphaltH)"/>
               <line x1="0" y1="122" x2="352" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="0" y1="170" x2="352" y2="170" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="146" x2="330" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 West: Kelkar Road (Lower Splay Branch, Eastbound Entrance) -->
               <polygon points="0,230 348,170 352,170 352,218 0,300" fill="url(#roadAsphaltDiag)"/>
               <line x1="0" y1="230" x2="348" y2="170" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="0" y1="300" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="0" y1="265" x2="335" y2="194" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="248" x2="335" y2="182" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="282" x2="335" y2="206" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="265" x2="340" y2="192" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="248" x2="330" y2="182" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="282" x2="330" y2="206" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Chevron Gore Island (Gore Area Dividing Kumthekar & Kelkar Roads) -->
               <polygon points="60,170 348,170 60,220" fill="#18181b" stroke="#eab308" stroke-width="2"/>
@@ -614,25 +616,25 @@
               <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
               <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
 
-              <!-- Crosswalks -->
+              <!-- Crosswalks (Between Stop Line and Junction Box) -->
               <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
-                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
-                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
-                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
-                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
-                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
-                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
-                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
-                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+                <line x1="356" y1="112" x2="444" y2="112" stroke-dasharray="6 6"/>
+                <line x1="356" y1="118" x2="444" y2="118" stroke-dasharray="6 6"/>
+                <line x1="356" y1="222" x2="444" y2="222" stroke-dasharray="6 6"/>
+                <line x1="356" y1="228" x2="444" y2="228" stroke-dasharray="6 6"/>
+                <line x1="340" y1="126" x2="340" y2="214" stroke-dasharray="6 6"/>
+                <line x1="346" y1="126" x2="346" y2="214" stroke-dasharray="6 6"/>
+                <line x1="454" y1="126" x2="454" y2="214" stroke-dasharray="6 6"/>
+                <line x1="460" y1="126" x2="460" y2="214" stroke-dasharray="6 6"/>
               </g>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="348" y1="170" x2="348" y2="218" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+              <!-- Stop Lines (Positioned in advance of Crosswalks) -->
+              <line x1="352" y1="104" x2="400" y2="104" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="236" x2="448" y2="236" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="170" x2="334" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="122" x2="466" y2="170" stroke="#ffffff" stroke-width="3.5"/>
 
-              ${getSignalHeadsSvg({ x: 326, y: 68 }, { x: 454, y: 230 }, { x: 310, y: 236 }, { x: 466, y: 96 })}
+              ${getSignalHeadsSvg({ x: 326, y: 50 }, { x: 454, y: 242 }, { x: 276, y: 244 }, { x: 472, y: 76 })}
             </svg>
           `;
         }
@@ -645,8 +647,8 @@
         lane1: 'Jangali Maharaj Path (North-South)',
         lane2: 'J.M. Road 6-Lane Arterial (East-West)',
         type: 'square_90',
-        stopLines: { N: 120, S: 220, W: 350, E: 450 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        stopLines: { N: 104, S: 236, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 122, yMax: 218 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -663,12 +665,12 @@
               <line x1="448" y1="0" x2="448" y2="122" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="236" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 (EW Road) -->
               <rect x="0" y="122" width="800" height="96" fill="url(#roadAsphaltH)"/>
@@ -677,36 +679,36 @@
               <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="170" x2="335" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="194" x2="335" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="170" x2="340" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="146" x2="330" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="194" x2="330" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Center Junction Box -->
               <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
               <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
 
-              <!-- Crosswalks -->
+              <!-- Crosswalks (Between Stop Line and Junction Box) -->
               <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
-                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
-                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
-                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
-                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
-                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
-                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
-                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
-                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+                <line x1="356" y1="112" x2="444" y2="112" stroke-dasharray="6 6"/>
+                <line x1="356" y1="118" x2="444" y2="118" stroke-dasharray="6 6"/>
+                <line x1="356" y1="222" x2="444" y2="222" stroke-dasharray="6 6"/>
+                <line x1="356" y1="228" x2="444" y2="228" stroke-dasharray="6 6"/>
+                <line x1="340" y1="126" x2="340" y2="214" stroke-dasharray="6 6"/>
+                <line x1="346" y1="126" x2="346" y2="214" stroke-dasharray="6 6"/>
+                <line x1="454" y1="126" x2="454" y2="214" stroke-dasharray="6 6"/>
+                <line x1="460" y1="126" x2="460" y2="214" stroke-dasharray="6 6"/>
               </g>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="350" y1="170" x2="350" y2="218" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+              <!-- Stop Lines (Positioned in advance of Crosswalks) -->
+              <line x1="352" y1="104" x2="400" y2="104" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="236" x2="448" y2="236" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="170" x2="334" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="122" x2="466" y2="170" stroke="#ffffff" stroke-width="3.5"/>
 
-              ${getSignalHeadsSvg({ x: 328, y: 68 }, { x: 454, y: 230 }, { x: 296, y: 226 }, { x: 466, y: 96 })}
+              ${getSignalHeadsSvg({ x: 326, y: 50 }, { x: 454, y: 242 }, { x: 276, y: 244 }, { x: 472, y: 76 })}
             </svg>
           `;
         }
@@ -719,8 +721,8 @@
         lane1: 'Fergusson College Road (North-South)',
         lane2: 'Deccan Gymkhana Approach (Staggered EW)',
         type: 'offset_staggered',
-        stopLines: { N: 84, S: 256, W: 346, E: 454 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 78, yMax: 262 },
+        stopLines: { N: 70, S: 270, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 88, yMax: 252 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -737,52 +739,52 @@
               <line x1="448" y1="0" x2="448" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="252" x2="448" y2="340" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="400" y1="0" x2="400" y2="78" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="262" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="78" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="78" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="262" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="262" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="400" y1="0" x2="400" y2="76" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="264" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="70" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="76" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="264" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="270" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- West Approach (Higher: y=88..184) -->
               <rect x="0" y="88" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="0" y1="88" x2="352" y2="88" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="0" y1="184" x2="352" y2="184" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="0" y1="136" x2="335" y2="136" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="112" x2="335" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="160" x2="335" y2="160" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="136" x2="340" y2="136" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="112" x2="340" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="160" x2="334" y2="160" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- East Approach (Lower: y=156..252) -->
               <rect x="448" y="156" width="352" height="96" fill="url(#roadAsphaltH)"/>
               <line x1="448" y1="156" x2="800" y2="156" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="252" x2="800" y2="252" stroke="#3f3f46" stroke-width="1.5"/>
-              <line x1="465" y1="204" x2="800" y2="204" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="180" x2="800" y2="180" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="228" x2="800" y2="228" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="460" y1="204" x2="800" y2="204" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="466" y1="180" x2="800" y2="180" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="460" y1="228" x2="800" y2="228" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
-              <!-- Center Junction Staggered Dogleg Box -->
+              <!-- Center Yellow Box Junction (Offset Staggered Dogleg) -->
               <polygon points="352,88 448,156 448,252 352,184" fill="#0d0d10"/>
-              <polygon points="352,88 448,156 448,252 352,184" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+              <polygon points="352,88 448,156 448,252 352,184" fill="url(#junctionBoxHatch)" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.85"/>
 
-              <!-- Crosswalks -->
+              <!-- Crosswalks (Between Stop Line and Junction Box) -->
               <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
-                <line x1="356" y1="74" x2="444" y2="74" stroke-dasharray="6 6"/>
-                <line x1="356" y1="80" x2="444" y2="80" stroke-dasharray="6 6"/>
-                <line x1="356" y1="260" x2="444" y2="260" stroke-dasharray="6 6"/>
-                <line x1="356" y1="266" x2="444" y2="266" stroke-dasharray="6 6"/>
-                <line x1="338" y1="92" x2="338" y2="180" stroke-dasharray="6 6"/>
-                <line x1="344" y1="92" x2="344" y2="180" stroke-dasharray="6 6"/>
-                <line x1="456" y1="160" x2="456" y2="248" stroke-dasharray="6 6"/>
-                <line x1="462" y1="160" x2="462" y2="248" stroke-dasharray="6 6"/>
+                <line x1="356" y1="76" x2="444" y2="76" stroke-dasharray="6 6"/>
+                <line x1="356" y1="82" x2="444" y2="82" stroke-dasharray="6 6"/>
+                <line x1="356" y1="258" x2="444" y2="258" stroke-dasharray="6 6"/>
+                <line x1="356" y1="264" x2="444" y2="264" stroke-dasharray="6 6"/>
+                <line x1="340" y1="92" x2="340" y2="180" stroke-dasharray="6 6"/>
+                <line x1="346" y1="92" x2="346" y2="180" stroke-dasharray="6 6"/>
+                <line x1="454" y1="160" x2="454" y2="248" stroke-dasharray="6 6"/>
+                <line x1="460" y1="160" x2="460" y2="248" stroke-dasharray="6 6"/>
               </g>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="84" x2="400" y2="84" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="256" x2="448" y2="256" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="346" y1="136" x2="346" y2="184" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="454" y1="156" x2="454" y2="204" stroke="#ffffff" stroke-width="3.5"/>
+              <!-- Stop Lines (Positioned in advance of Crosswalks) -->
+              <line x1="352" y1="70" x2="400" y2="70" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="270" x2="448" y2="270" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="136" x2="334" y2="184" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="156" x2="466" y2="204" stroke="#ffffff" stroke-width="3.5"/>
 
-              ${getSignalHeadsSvg({ x: 326, y: 34 }, { x: 454, y: 262 }, { x: 292, y: 192 }, { x: 468, y: 130 })}
+              ${getSignalHeadsSvg({ x: 326, y: 34 }, { x: 454, y: 276 }, { x: 292, y: 192 }, { x: 468, y: 130 })}
             </svg>
           `;
         }
@@ -795,8 +797,8 @@
         lane1: 'Prabhat Road Corridor (North-South)',
         lane2: 'Karve Road Commercial Arterial (Oblique EW)',
         type: 'oblique_75',
-        stopLines: { N: 114, S: 226, W: 346, E: 454 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 110, yMax: 232 },
+        stopLines: { N: 104, S: 248, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 122, yMax: 248 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -808,21 +810,21 @@
 
               <!-- Lane 1 (NS Road) -->
               <rect x="352" y="0" width="96" height="340" fill="url(#roadAsphaltV)"/>
-              <line x1="400" y1="0" x2="400" y2="110" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="230" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="110" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="110" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="230" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="230" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="400" y1="0" x2="400" y2="114" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="242" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="114" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="242" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="248" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 (75° Oblique Arterial Road) -->
               <polygon points="0,174 800,102 800,198 0,270" fill="url(#roadAsphaltDiag)"/>
-              <line x1="0" y1="222" x2="335" y2="192" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="180" x2="800" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="198" x2="335" y2="168" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="156" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="246" x2="335" y2="216" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="204" x2="800" y2="174" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="222" x2="340" y2="191" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="181" x2="800" y2="150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="198" x2="330" y2="168" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="156" x2="800" y2="126" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="246" x2="330" y2="216" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="204" x2="800" y2="174" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Large Rounded Corner Fillet Curbs (r=28) -->
               <path d="M 0 174 L 324 145 A 28 28 0 0 1 352 117 L 352 0" stroke="#3f3f46" stroke-width="2" fill="none"/>
@@ -830,17 +832,29 @@
               <path d="M 0 270 L 324 241 A 28 28 0 0 0 352 269 L 352 340" stroke="#3f3f46" stroke-width="2" fill="none"/>
               <path d="M 448 340 L 448 231 A 28 28 0 0 1 476 203 L 800 198" stroke="#3f3f46" stroke-width="2" fill="none"/>
 
-              <!-- Oblique Center Box -->
-              <polygon points="352,126 448,118 448,214 352,222" fill="#0d0d10"/>
-              <polygon points="352,126 448,118 448,214 352,222" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
+              <!-- Oblique Center Box (Aligned precisely to 75° road profile) -->
+              <polygon points="352,142 448,134 448,230 352,238" fill="#0d0d10"/>
+              <polygon points="352,142 448,134 448,230 352,238" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="116" x2="400" y2="112" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="228" x2="448" y2="224" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="346" y1="192" x2="346" y2="240" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="454" y1="126" x2="454" y2="174" stroke="#ffffff" stroke-width="3.5"/>
+              <!-- Crosswalks (Between Stop Line and Junction Box) -->
+              <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
+                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
+                <line x1="356" y1="120" x2="444" y2="120" stroke-dasharray="6 6"/>
+                <line x1="356" y1="236" x2="444" y2="236" stroke-dasharray="6 6"/>
+                <line x1="356" y1="242" x2="444" y2="242" stroke-dasharray="6 6"/>
+                <line x1="340" y1="150" x2="340" y2="238" stroke-dasharray="6 6"/>
+                <line x1="346" y1="150" x2="346" y2="238" stroke-dasharray="6 6"/>
+                <line x1="454" y1="134" x2="454" y2="222" stroke-dasharray="6 6"/>
+                <line x1="460" y1="134" x2="460" y2="222" stroke-dasharray="6 6"/>
+              </g>
 
-              ${getSignalHeadsSvg({ x: 324, y: 64 }, { x: 456, y: 236 }, { x: 292, y: 238 }, { x: 468, y: 88 })}
+              <!-- Stop Lines (Positioned in advance of Crosswalks) -->
+              <line x1="352" y1="104" x2="400" y2="104" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="248" x2="448" y2="248" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="190" x2="334" y2="238" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="134" x2="466" y2="182" stroke="#ffffff" stroke-width="3.5"/>
+
+              ${getSignalHeadsSvg({ x: 326, y: 50 }, { x: 454, y: 254 }, { x: 276, y: 244 }, { x: 472, y: 76 })}
             </svg>
           `;
         }
@@ -853,8 +867,8 @@
         lane1: 'Sambhaji Bridge Deck (North-South)',
         lane2: 'Kelkar Riverside Road (East-West Riverbank)',
         type: 'river_bridge',
-        stopLines: { N: 120, S: 220, W: 350, E: 450 },
-        junctionZone: { xMin: 340, xMax: 460, yMin: 108, yMax: 230 },
+        stopLines: { N: 104, S: 236, W: 334, E: 466 },
+        junctionZone: { xMin: 352, xMax: 448, yMin: 122, yMax: 218 },
         getSvg: function () {
           return `
             <svg id="junctionSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -891,12 +905,12 @@
               <rect x="344" y="222" width="8" height="6" fill="#94a3b8"/><rect x="344" y="252" width="8" height="6" fill="#94a3b8"/><rect x="344" y="282" width="8" height="6" fill="#94a3b8"/><rect x="344" y="312" width="8" height="6" fill="#94a3b8"/>
               <rect x="448" y="222" width="8" height="6" fill="#94a3b8"/><rect x="448" y="252" width="8" height="6" fill="#94a3b8"/><rect x="448" y="282" width="8" height="6" fill="#94a3b8"/><rect x="448" y="312" width="8" height="6" fill="#94a3b8"/>
 
-              <line x1="400" y1="0" x2="400" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="400" y1="235" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="376" y1="0" x2="376" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="0" x2="424" y2="105" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="376" y1="235" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="424" y1="235" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="400" y1="0" x2="400" y2="112" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="400" y1="228" x2="400" y2="340" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="376" y1="0" x2="376" y2="104" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="0" x2="424" y2="112" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="376" y1="228" x2="376" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="424" y1="236" x2="424" y2="340" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Lane 2 (Kelkar Riverside Road) -->
               <rect x="0" y="122" width="800" height="96" fill="url(#roadAsphaltH)"/>
@@ -905,36 +919,36 @@
               <line x1="0" y1="218" x2="352" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
               <line x1="448" y1="218" x2="800" y2="218" stroke="#3f3f46" stroke-width="1.5"/>
 
-              <line x1="0" y1="170" x2="335" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="465" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
-              <line x1="0" y1="146" x2="335" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="0" y1="194" x2="335" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <line x1="465" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="170" x2="340" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="460" y1="170" x2="800" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6" stroke-opacity="0.85"/>
+              <line x1="0" y1="146" x2="330" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="0" y1="194" x2="330" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="146" x2="800" y2="146" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <line x1="470" y1="194" x2="800" y2="194" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
               <!-- Bridge Pier Abutments Center Junction Box -->
               <rect x="352" y="122" width="96" height="96" fill="#0d0d10"/>
               <rect x="352" y="122" width="96" height="96" fill="url(#junctionBoxHatch)" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 2" stroke-opacity="0.45"/>
 
-              <!-- Crosswalks -->
+              <!-- Crosswalks (Between Stop Line and Junction Box) -->
               <g stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="butt">
-                <line x1="356" y1="108" x2="444" y2="108" stroke-dasharray="6 6"/>
-                <line x1="356" y1="114" x2="444" y2="114" stroke-dasharray="6 6"/>
-                <line x1="356" y1="226" x2="444" y2="226" stroke-dasharray="6 6"/>
-                <line x1="356" y1="232" x2="444" y2="232" stroke-dasharray="6 6"/>
-                <line x1="338" y1="126" x2="338" y2="214" stroke-dasharray="6 6"/>
-                <line x1="344" y1="126" x2="344" y2="214" stroke-dasharray="6 6"/>
-                <line x1="456" y1="126" x2="456" y2="214" stroke-dasharray="6 6"/>
-                <line x1="462" y1="126" x2="462" y2="214" stroke-dasharray="6 6"/>
+                <line x1="356" y1="112" x2="444" y2="112" stroke-dasharray="6 6"/>
+                <line x1="356" y1="118" x2="444" y2="118" stroke-dasharray="6 6"/>
+                <line x1="356" y1="222" x2="444" y2="222" stroke-dasharray="6 6"/>
+                <line x1="356" y1="228" x2="444" y2="228" stroke-dasharray="6 6"/>
+                <line x1="340" y1="126" x2="340" y2="214" stroke-dasharray="6 6"/>
+                <line x1="346" y1="126" x2="346" y2="214" stroke-dasharray="6 6"/>
+                <line x1="454" y1="126" x2="454" y2="214" stroke-dasharray="6 6"/>
+                <line x1="460" y1="126" x2="460" y2="214" stroke-dasharray="6 6"/>
               </g>
 
-              <!-- Stop Lines -->
-              <line x1="352" y1="120" x2="400" y2="120" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="400" y1="220" x2="448" y2="220" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="350" y1="170" x2="350" y2="218" stroke="#ffffff" stroke-width="3.5"/>
-              <line x1="450" y1="122" x2="450" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+              <!-- Stop Lines (Positioned in advance of Crosswalks) -->
+              <line x1="352" y1="104" x2="400" y2="104" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="400" y1="236" x2="448" y2="236" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="334" y1="170" x2="334" y2="218" stroke="#ffffff" stroke-width="3.5"/>
+              <line x1="466" y1="122" x2="466" y2="170" stroke="#ffffff" stroke-width="3.5"/>
 
-              ${getSignalHeadsSvg({ x: 326, y: 68 }, { x: 454, y: 230 }, { x: 296, y: 226 }, { x: 466, y: 96 })}
+              ${getSignalHeadsSvg({ x: 326, y: 50 }, { x: 454, y: 242 }, { x: 276, y: 244 }, { x: 472, y: 76 })}
             </svg>
           `;
         }
@@ -961,8 +975,17 @@
         lensR.classList.toggle('active-red', color === 'RED');
         lensA.classList.toggle('active-amber', color === 'AMBER');
         lensG.classList.toggle('active-green', color === 'GREEN');
-        if (arrowL) arrowL.classList.toggle('active-green', arrowL_State === 'GREEN');
-        if (arrowR) arrowR.classList.toggle('active-green', arrowR_State === 'GREEN');
+        lensR.setAttribute('fill', color === 'RED' ? '#ef4444' : '#3b1111');
+        lensA.setAttribute('fill', color === 'AMBER' ? '#f59e0b' : '#331d04');
+        lensG.setAttribute('fill', color === 'GREEN' ? '#22c55e' : '#052414');
+        if (arrowL) {
+          arrowL.classList.toggle('active-green', arrowL_State === 'GREEN');
+          arrowL.setAttribute('stroke', arrowL_State === 'GREEN' ? '#22c55e' : '#3f3f46');
+        }
+        if (arrowR) {
+          arrowR.classList.toggle('active-green', arrowR_State === 'GREEN');
+          arrowR.setAttribute('stroke', arrowR_State === 'GREEN' ? '#22c55e' : '#3f3f46');
+        }
       }
 
       setLens(el.lensNR, el.lensNA, el.lensNG, sigNS, el.lensNArrowL, el.lensNArrowR, arrowL_NS, arrowR_NS);
@@ -1661,7 +1684,7 @@
         } else if (laneKey === 'EW_WB') {
           if (x > 352 && x < 448) {
             const t = (448 - x) / 96;
-            const slope = (-68 / 96) * 6 * t * (1 - t);
+            const slope = (68 / 96) * 6 * t * (1 - t);
             return Math.atan2(-slope, -1);
           }
           return Math.PI;
@@ -2475,8 +2498,14 @@
         if (leadVeh) {
           if (leadGap <= MIN_GAP) {
             if (inJunctionZone || isPastStopLine) {
-              // Inside junction: NEVER freeze to 0! Match lead speed with positive clearance floor
-              targetSpeed = Math.max(1.3, leadVeh.currentSpeed);
+              // Inside junction: NEVER freeze to 0! Match lead speed smoothly with safe clearance
+              const speedRatio = Math.max(0.15, leadGap / MIN_GAP);
+              targetSpeed = Math.min(leadVeh.currentSpeed * speedRatio, v.baseSpeed);
+              if (leadGap < 12) {
+                targetSpeed = Math.max(0.2, leadVeh.currentSpeed * 0.5);
+                v.currentSpeed = Math.min(v.currentSpeed, targetSpeed);
+              }
+              v.isBraking = true;
             } else {
               targetSpeed = 0;
               v.currentSpeed = 0;
@@ -2498,7 +2527,7 @@
  // - Vehicles with turnBlinker 'left' are governed ONLY by arrowL 'GREEN'
  // - Vehicles with turnBlinker 'right' are governed ONLY by arrowR 'GREEN'
         // - Vehicles without blinker (Straight) are governed ONLY by through circular signal (never enter on turn arrows!)
-        if (!isPastStopLine && !inJunctionZone && v.turnState !== 'turning') {
+        if (!isPastStopLine && v.turnState !== 'turning') {
           let activeSig = 'RED';
           if (v.turnBlinker === 'left') {
             activeSig = arrowL_Sig === 'GREEN' ? 'GREEN' : 'RED';
@@ -2690,13 +2719,27 @@
           // 1. Both vehicles stopped at signal / in queue: stationary vehicles never push each other!
           if (vi.currentSpeed < 0.02 && vj.currentSpeed < 0.02) continue;
 
-          // 2. Same lane, different sub-lanes (2 vehicles per lane side-by-side):
+          // 2. Same lane, same sub-lane: longitudinal following (step 5) already manages headway!
+          if (vi.lane === vj.lane && vi.subLane === vj.subLane && vi.turnState !== 'turning' && vj.turnState !== 'turning') {
+            continue;
+          }
+
+          // 3. Same lane, different sub-lanes (2 vehicles per lane side-by-side):
           // They run on parallel sub-tracks 22px apart. Only separate if lateral distance is dangerously close
           if (vi.lane === vj.lane && vi.subLane !== vj.subLane && vi.turnState !== 'turning' && vj.turnState !== 'turning') {
             const latDiff = (vi.lane.startsWith('NS')) ? Math.abs(vj.x - vi.x) : Math.abs(vj.y - vi.y);
             const longDiff = (vi.lane.startsWith('NS')) ? Math.abs(vj.y - vi.y) : Math.abs(vj.x - vi.x);
             // If they maintain their separate sub-lane lateral tracks (>14px), they are safely abreast!
             if (latDiff >= 14 || longDiff > ((vi.length + vj.length) / 2 + 6)) continue;
+          }
+
+          // 4. Opposing directional traffic in separate halves of the road (Crucial for CAM-04 Goodluck Chowk!)
+          // Eastbound vs Westbound, or Northbound vs Southbound: opposing traffic travels on opposite sides of the centerline.
+          // They must NEVER repel each other backwards when passing head-to-head through the junction cut!
+          const isOpposingEW = (vi.lane === 'EW_EB' && vj.lane === 'EW_WB') || (vi.lane === 'EW_WB' && vj.lane === 'EW_EB');
+          const isOpposingNS = (vi.lane === 'NS_SB' && vj.lane === 'NS_NB') || (vi.lane === 'NS_NB' && vj.lane === 'NS_SB');
+          if ((isOpposingEW || isOpposingNS) && vi.turnState !== 'turning' && vj.turnState !== 'turning') {
+            continue;
           }
 
           const dx = vj.x - vi.x;
@@ -2714,13 +2757,16 @@
             const ny = dy / dist;
 
             if (inJunction) {
-              // Inside junction: separate laterally and preserve clearing speed
-              vj.x += nx * overlap * 0.5;
-              vj.y += ny * overlap * 0.5;
-              vi.x -= nx * overlap * 0.5;
-              vi.y -= ny * overlap * 0.5;
-              vi.currentSpeed = Math.max(vi.currentSpeed, 1.4);
-              vj.currentSpeed = Math.max(vj.currentSpeed, 1.4);
+              // Inside junction: separate laterally rather than pushing vehicles backwards against forward momentum
+              if (vi.lane.startsWith('NS') || vj.lane.startsWith('NS')) {
+                vj.x += nx * overlap * 0.4;
+                vi.x -= nx * overlap * 0.4;
+              } else {
+                vj.y += ny * overlap * 0.4;
+                vi.y -= ny * overlap * 0.4;
+              }
+              vi.currentSpeed = Math.max(vi.currentSpeed, 1.2);
+              vj.currentSpeed = Math.max(vj.currentSpeed, 1.2);
             } else {
               // Outside junction: slow/stop trailing vehicle without creating position jitter
               let trailing = (vj.currentSpeed >= vi.currentSpeed) ? vj : vi;
