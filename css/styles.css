@@ -269,6 +269,21 @@ a:hover { text-decoration: underline; }
   height: 16px;
 }
 
+.sys-emblem img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.sys-brand-logo {
+  height: 32px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
 .sys-header .sys-brand-textblock {
   display: flex;
   flex-direction: column;

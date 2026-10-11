@@ -26,6 +26,26 @@ LARGE_BLOB_AREA_PX = 2600
 # genuinely covering the full timeline (see _pick_sample_frame_indices).
 MAX_FRAMES_TO_PROCESS = 300
 
+# MOG2 model parameters. `history` is how many recent frames the mixture
+# tracks, so convergence needs on the order of `history` frames. Warm-up must
+# be generous relative to it: detecting too early yields a mask that splits
+# each vehicle into separate edge strips (and briefly reports the whole frame
+# as foreground), which inflates every downstream count.
+MOG2_HISTORY = 50
+MOG2_VAR_THRESHOLD = 40
+MOG2_WARMUP_FRAMES = 60
+
+# A vehicle blob should never cover most of the corridor ROI. Anything above
+# this fraction of the ROI is un-converged background or a global lighting
+# change, not a vehicle.
+MAX_BLOB_AREA_FRACTION = 0.30
+
+
+def _max_plausible_blob_area(roi: np.ndarray) -> float:
+    """Upper bound for a single vehicle blob within this ROI, in pixels."""
+    return float(roi.shape[0] * roi.shape[1]) * MAX_BLOB_AREA_FRACTION
+
+
 @dataclass
 class CorridorTally:
     small: int = 0   # ~ motorcycle-sized blobs
@@ -47,6 +67,31 @@ def _classify_blob_area(area: float) -> str:
     if area >= MEDIUM_BLOB_AREA_PX:
         return "medium"
     return "small"
+
+
+def _reset_subtractor(subtractor) -> None:
+    """
+    Discard the learned background model, across OpenCV versions.
+
+    MOG2's Python binding exposes the reset as `reset()` in some builds and
+    only `clear()` in others (notably OpenCV 5.x, where `reset()` is gone).
+    Calling `.reset()` blindly raises AttributeError and aborts the whole
+    video analysis, so probe for it and fall back.
+    """
+    reset = getattr(subtractor, "reset", None)
+    if callable(reset):
+        reset()
+        return
+    clear = getattr(subtractor, "clear", None)
+    if callable(clear):
+        clear()
+        return
+    # Last resort: rebuild via the stored params is not reachable here, and a
+    # subtractor without either method would be an OpenCV build we cannot use.
+    raise RuntimeError(
+        "Background subtractor supports neither reset() nor clear(); "
+        "cannot clear its background model."
+    )
 
 def _pick_sample_frame_indices(total_frames: int, max_samples: int) -> list:
     """
@@ -82,41 +127,63 @@ def analyze_video_file(file_path: str) -> Dict:
     duration_sec = (total_frames / fps) if fps > 0 and total_frames > 0 else None
 
     sample_indices = _pick_sample_frame_indices(total_frames, MAX_FRAMES_TO_PROCESS)
+    sample_set = set(sample_indices)
 
-    bg_subtractor_ns = cv2.createBackgroundSubtractorMOG2(history=250, varThreshold=40, detectShadows=False)
-    bg_subtractor_ew = cv2.createBackgroundSubtractorMOG2(history=250, varThreshold=40, detectShadows=False)
+    bg_subtractor_ns = cv2.createBackgroundSubtractorMOG2(
+        history=MOG2_HISTORY, varThreshold=MOG2_VAR_THRESHOLD, detectShadows=False
+    )
+    bg_subtractor_ew = cv2.createBackgroundSubtractorMOG2(
+        history=MOG2_HISTORY, varThreshold=MOG2_VAR_THRESHOLD, detectShadows=False
+    )
 
     tally = {"NS": CorridorTally(), "EW": CorridorTally()}
     frames_actually_read = 0
+    # A MOG2 model needs a few frames to learn the background before its mask
+    # means anything; detections taken before that are just "everything".
+    warmup_frames = MOG2_WARMUP_FRAMES
+    detected_frames = 0
 
     try:
-        for idx in sample_indices:
-            if total_frames > 0:
-                cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
+        # Decode SEQUENTIALLY rather than seeking to the sampled indices.
+        # MOG2 is a running-background algorithm: frames must be temporally
+        # adjacent for the model to converge. Seeking makes every sampled
+        # frame the model's *first* frame, which classifies 100% of pixels as
+        # foreground and turns the whole frame into one giant blob.
+        for idx in range(total_frames):
             ok, frame = cap.read()
             if not ok or frame is None:
+                break
+
+            is_warmup = idx < warmup_frames
+            is_sample = idx in sample_set
+
+            # Feed all contiguous warmup frames to MOG2 to converge the background model.
+            # After warmup, process only the sampled frames to bound runtime.
+            if not is_warmup and not is_sample:
                 continue
+
             frames_actually_read += 1
+            if not is_warmup:
+                detected_frames += 1
 
             height, width = frame.shape[:2]
             mid_x = width // 2
-            ns_roi = frame[:, :mid_x]
-            ew_roi = frame[:, mid_x:]
+            rois = (("NS", frame[:, :mid_x], bg_subtractor_ns), ("EW", frame[:, mid_x:], bg_subtractor_ew))
 
-            for corridor, roi, subtractor in (("NS", ns_roi, bg_subtractor_ns), ("EW", ew_roi, bg_subtractor_ew)):
-                # MOG2 is a running-background model: it only converges on
-                # temporally adjacent frames. Our sample indices are seconds
-                # apart, so reuse would classify nearly everything as
-                # foreground. Reset before each detection pass instead.
-                subtractor.reset()
+            for corridor, roi, subtractor in rois:
                 mask = subtractor.apply(roi)
+                if is_warmup:
+                    # Still training the background model — nothing to detect yet.
+                    continue
                 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
                 mask = cv2.dilate(mask, np.ones((5, 5), np.uint8), iterations=2)
                 contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
                 for contour in contours:
                     area = cv2.contourArea(contour)
-                    if area < MIN_BLOB_AREA_PX:
+                    # Reject blobs that cover most of the corridor: that is
+                    # un-converged background, not a vehicle.
+                    if area < MIN_BLOB_AREA_PX or area > _max_plausible_blob_area(roi):
                         continue
                     size_class = _classify_blob_area(area)
                     if size_class == "small":
@@ -136,6 +203,8 @@ def analyze_video_file(file_path: str) -> Dict:
         "fps_reported": round(fps, 2) if fps else None,
         "duration_sec": round(duration_sec, 2) if duration_sec else None,
         "coverage": "full_duration_evenly_sampled",
+        "mog2_warmup_frames": MOG2_WARMUP_FRAMES,
+        "frames_after_warmup": detected_frames,
         "counts": {
             "NS": tally["NS"].as_vehicle_counts(),
             "EW": tally["EW"].as_vehicle_counts(),

@@ -1023,6 +1023,18 @@
                   border-radius: 5px !important;
                 }
                 /* Station Marker Nodes & Interactive Badges */
+                .gis-metro-emoji-fixed {
+                  background: transparent !important;
+                  border: none !important;
+                }
+                .gis-metro-emoji-icon {
+                  font-size: 18px;
+                  line-height: 22px;
+                  display: block;
+                  text-align: center;
+                  filter: drop-shadow(0 0 4px rgba(0,0,0,0.7));
+                  pointer-events: none;
+                }
                 .gis-metro-station-div {
                   background: transparent !important;
                   border: none !important;
@@ -1347,9 +1359,9 @@
                 </div>
                 <div class="junction-toolbar-actions">
                   <button type="button" class="junction-act-btn active" id="btnGisToggleStreamAll" title="Toggle Camera Markers">CAMERAS (6)</button>
-                  <button type="button" class="junction-act-btn active" id="btnGisToggleMetro" title="Toggle Pune Metro Aqua &amp; Purple Lines">METRO (AQUA &amp; PURPLE)</button>
-                  <button type="button" class="junction-act-btn active" id="btnGisToggleRoads" title="Toggle Highways, Main Roads &amp; Walking Roads">ROADS (HWY / MAIN / WALK)</button>
-                  <button type="button" class="junction-act-btn active" id="btnGisToggleWaterRoute" title="Toggle Emergency Water Route">WATER ROUTE</button>
+                  <button type="button" class="junction-act-btn" id="btnGisToggleMetro" title="Toggle Pune Metro Aqua &amp; Purple Lines">METRO (AQUA &amp; PURPLE)</button>
+                  <button type="button" class="junction-act-btn" id="btnGisToggleRoads" title="Toggle Highways, Main Roads &amp; Walking Roads">ROADS (HWY / MAIN / WALK)</button>
+                  <button type="button" class="junction-act-btn" id="btnGisToggleWaterRoute" title="Toggle Emergency Water Route">WATER ROUTE</button>
                   <button type="button" class="junction-act-btn" id="btnGisFitCorridor" title="Reset View to Deccan Corridor">RESET VIEW</button>
                 </div>
               </div>
@@ -2684,7 +2696,7 @@
           className: 'gis-water-tooltip',
           sticky: true
         });
-        waterRouteGroup.addTo(cityMap);
+        // waterRouteGroup not added by default — user toggles it on
 
         // ══ PUNE METRO NETWORK: AQUA LINE, PURPLE LINE & STATIONS ══
         const metroGroup = L.layerGroup();
@@ -3055,7 +3067,18 @@
           metroMarkersMap[st.id] = stMarker;
         });
 
-        metroGroup.addTo(cityMap);
+        // Fixed-size 🚇 emoji markers — stay same size at all zoom levels
+        puneMetroStations.forEach(function(st) {
+          var emojiIcon = L.divIcon({
+            className: 'gis-metro-emoji-fixed',
+            html: '<span class="gis-metro-emoji-icon">🚇</span>',
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+          });
+          L.marker(st.coords, { icon: emojiIcon, interactive: false, zIndexOffset: 1000 }).addTo(metroGroup);
+        });
+
+        // metroGroup not added by default — user toggles it on
 
         // Populate Top Metro Stations Quick Navigation Ribbon
         const ribbonContainer = document.getElementById('gisMetroChipsContainer');
@@ -3346,7 +3369,7 @@
           });
         });
 
-        roadsGroup.addTo(cityMap);
+        // roadsGroup not added by default — user toggles it on
 
         // ══ Real Pune Camera Feed Surveillance Network (Calibrated to Real Landmark Coordinates) ══
         const cameraFeeds = [

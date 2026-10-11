@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")/.."
 echo "=== FlowCommand VIMS — Smart India Hackathon ==="
 echo "Starting backend..."
 pip install -r backend/requirements.txt -q

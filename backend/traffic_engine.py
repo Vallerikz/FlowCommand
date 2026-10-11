@@ -10,7 +10,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 from threading import Lock
-from typing import Callable, Dict, Optional, List, Any
+from typing import Callable, Dict, Optional, List, Any, Union
 
 class Corridor(str, Enum):
     NS = "NS"  # North-South
@@ -186,9 +186,12 @@ class JunctionSnapshot:
 
         corridor_balance_delta = round((self.ns_pcu - self.ew_pcu) / total_pcu, 2) if total_pcu > 0.0 else 0.0
 
+        active_corr_val = self.active_corridor.value if hasattr(self.active_corridor, "value") else str(self.active_corridor)
+        light_state_val = self.light_state.value if hasattr(self.light_state, "value") else str(self.light_state)
+
         return {
-            "active_corridor": self.active_corridor.value,
-            "light_state": self.light_state.value,
+            "active_corridor": active_corr_val,
+            "light_state": light_state_val,
             "sub_phase": self.sub_phase,
             "arrow_l": self.arrow_l,
             "arrow_r": self.arrow_r,
@@ -251,7 +254,7 @@ class JunctionSnapshot:
                         },
                     ],
                 },
-                "active_corridor": self.active_corridor.value,
+                "active_corridor": active_corr_val,
                 "active_lane_id": f"LANE-1-NS" if self.active_corridor == Corridor.NS else "LANE-2-EW",
             },
             "lanes": {
@@ -396,8 +399,10 @@ class AdaptiveJunctionController:
         with self._counts_lock:
             self._counts[corridor] = counts
 
-    def force_corridor_green(self, corridor: Corridor) -> None:
+    def force_corridor_green(self, corridor: Union[Corridor, str]) -> None:
         """Manual priority or emergency wave override for traffic regulation."""
+        if isinstance(corridor, str):
+            corridor = Corridor.NS if corridor.strip().upper() == "NS" else Corridor.EW
         if self.active_corridor == corridor and self.sub_phase == SubPhase.THROUGH:
             self._state_entered_at = self._clock()
             return
