@@ -20,14 +20,14 @@ powershell -NoProfile -Command ^
   "$tempStaging = Join-Path $env:TEMP 'fc_staging'; " ^
   "if(Test-Path $tempStaging){Remove-Item $tempStaging -Recurse -Force}; " ^
   "New-Item $tempStaging -ItemType Directory | Out-Null; " ^
-  "foreach($d in @('backend','js','assets','css')){" ^
+  "foreach($d in @('backend','js','assets','css','scripts')){" ^
   "  if(Test-Path $d){" ^
   "    Copy-Item $d $tempStaging\$d -Recurse -Force; " ^
   "    Get-ChildItem $tempStaging\$d -Recurse -Directory -Filter '__pycache__' | Remove-Item -Recurse -Force -EA SilentlyContinue; " ^
   "    Get-ChildItem $tempStaging\$d -Recurse -File -Filter '*.pyc' | Remove-Item -Force -EA SilentlyContinue; " ^
   "  }" ^
   "}; " ^
-  "foreach($f in @('index.html','command.html','dashboard.html','citizen.html','requirements.txt')){" ^
+  "foreach($f in @('index.html','command.html','dashboard.html','citizen.html','requirements.txt','.env.example')){" ^
   "  if(Test-Path $f){Copy-Item $f $tempStaging\$f}" ^
   "}; " ^
   "$items = Get-ChildItem $tempStaging; " ^

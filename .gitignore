@@ -9,12 +9,14 @@ dist/
 *.egg-info/
 .eggs/
 
-# Virtual Environments
+# Virtual Environments & Portable Runtimes
 venv/
 .venv/
 env/
 ENV/
 .python-version
+python/
+.kilo/
 
 # Environment & Secrets
 .env
