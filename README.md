@@ -1,15 +1,50 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Vallerikz/FlowCommand/main/assets/logo.png" alt="FlowCommand by Urban Flow" width="220" />
+</p>
+
 ## Smart India Hackathon 2026 — Team Submission
 
-Problem Statement: Intelligent Traffic Management System for Urban India
+**Problem Statement:** Intelligent Traffic Management System for Urban India  
+**Target Deployment:** Pune City Traffic Command & Smart Intersections
 
-Quick Demo (60 seconds):
-1. Run ./start.sh (or start.bat on Windows)
-2. Open http://localhost:3000/index.html
-3. Login: Badge MH-PI-4501 | Password admin123 | OTP 123456
-4. Navigate: Command Centre -> Live Junction Telemetry
-5. Try: Force N-S / Force E-W / Emergency All-Red overrides
-6. Try: Vehicle Registry Query with MH12DE1433 or DL04CAF5571
-7. Try: Upload any .mp4 traffic video -> Execute 5-Stage Pipeline
+---
+
+### Quick Launch for Judges & Evaluators
+
+#### Option 1: Direct Single-Click Executable (Recommended)
+You can directly download the standalone launcher without downloading the entire repository archive:
+> 📦 **[Download FlowCommand.exe (Direct Release)](https://github.com/Vallerikz/FlowCommand/releases/latest/download/FlowCommand.exe)**
+
+1. Double-click **`FlowCommand.exe`**.
+2. Accept the statutory consent agreement (DPDP Act 2023 compliance).
+3. The launcher will automatically:
+   - Extract the full application suite into your `Downloads\FlowCommand` directory.
+   - Detect or configure the Python environment and install required dependencies.
+   - Start the FastAPI backend on port `8000` and the web server on port `3000`.
+   - Open your default browser directly to `http://localhost:3000/index.html`.
+4. **Offline Demo Mode:** If you do not have an active internet connection or Python installed, select **Prototype Demo Mode** to immediately explore the system offline.
+
+#### Option 2: Download ZIP from GitHub
+1. Download the ZIP file from GitHub and extract it.
+2. Inside you will find **`FlowCommand.exe`** and this offline guide.
+3. Double-click **`FlowCommand.exe`** to start.
+
+---
+
+### Demo Login Credentials
+
+| Portal | Identifier | Password / MFA |
+|---|---|---|
+| **Officer Portal** (Law Enforcement) | Badge: `MH-PI-4501` | Password: `admin123`  \|  OTP: `123456` |
+| **Citizen Portal** (Public Grievance) | Mobile: `9876543210` | OTP: `123456` |
+
+### Sample Vehicles to Query (Offline Fallback Supported)
+* `MH12DE1433` — Maruti Suzuki Swift (Active RC, 3 Pending Challans)
+* `DL04CAF5571` — Mahindra Scorpio (FLAGGED — Active FIR-2026/8812 Theft Bulletin)
+* `MH12AB1001` — Bajaj Pulsar 150 (Active RC, Clean Compliance)
+* `MH14EU4092` — Hyundai Creta (PUCC Expired, Wrong-way Violation)
+* `22BH1234A` — Honda Activa 6G (Bharat Series Transferable)
+* `MH12T1111` — Ashok Leyland Cargo Hauler (HCV Overload Challans)
 
 ---
 

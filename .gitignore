@@ -9,12 +9,14 @@ dist/
 *.egg-info/
 .eggs/
 
-# Virtual Environments
+# Virtual Environments & Portable Runtimes
 venv/
 .venv/
 env/
 ENV/
 .python-version
+python/
+.kilo/
 
 # Environment & Secrets
 .env
@@ -60,3 +62,14 @@ yarn-error.log*
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Release Bundle Exclusion (Full source maintained on 'develop' branch)
+backend/
+css/
+js/
+assets/
+scripts/
+tools/
+*.html
+requirements.txt
+.env.example
