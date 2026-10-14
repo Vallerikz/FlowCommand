@@ -1,15 +1,4 @@
-"""
-FlowCommand SIH26127 — Gods Eye View Telemetry, CCTV Pack & ANPR Trajectory API.
-================================================================================
-Orchestrates WebSocket and REST endpoints for Pune City 3D spatial integration:
-- WS  /ws/pune-telemetry: 2 Hz junction Webster state broadcast
-- GET /api/cctv/pune-pack: Server-registered intersection CCTV camera pack
-- GET /api/anpr/trajectory/{plate_query}: Fuzzy spatio-temporal trajectory GeoJSON
-- POST /api/junction/override: Signal phase manual override
-- GET  /api/corridor/congestion/{corridor_name}: Corridor-level PCU/congestion report
-- POST /api/corridor/green-corridor/activate: Emergency route preemption
-- POST /api/corridor/green-corridor/deactivate: Restore normal operation
-"""
+"""Endpoints for Pune City telemetry, camera feeds, ANPR, and video ingestion."""
 
 from __future__ import annotations
 
@@ -49,14 +38,8 @@ logger = logging.getLogger("flowcommand.api")
 api_router = APIRouter(tags=["Gods Eye View — Pune Telemetry & Space"])
 
 _DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "pune_intersections.json"
-
-# In-memory registry cache
 _REGISTRY_DATA: Optional[Dict[str, Any]] = None
-
-# Active overrides: junction_id -> { phase, expire_timestamp }
 _SIGNAL_OVERRIDES: Dict[str, Dict[str, Any]] = {}
-
-# Active Green Corridor: { from_junction, to_junction, route, active, activated_at }
 _ACTIVE_GREEN_CORRIDOR: Optional[Dict[str, Any]] = None
 
 
@@ -81,10 +64,6 @@ class GreenCorridorRequest(BaseModel):
     from_junction: str = Field(..., description="Starting intersection ID")
     to_junction: str = Field(..., description="Destination intersection ID")
 
-
-# ---------------------------------------------------------------------------
-# 1. WS /ws/pune-telemetry (2 Hz junction state broadcast)
-# ---------------------------------------------------------------------------
 
 @api_router.websocket("/ws/pune-telemetry")
 async def ws_pune_telemetry(websocket: WebSocket) -> None:
@@ -118,7 +97,6 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
             now_iso = now_utc.isoformat()
             now_epoch = now_utc.timestamp()
 
-            # Clean expired overrides
             expired_keys = [
                 k for k, v in _SIGNAL_OVERRIDES.items() if v.get("expire_timestamp", 0) <= now_epoch
             ]
@@ -133,7 +111,6 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
                 coords = item.get("coordinates_wgs84", [73.8567, 18.5204, 560.0])
 
                 sim = junction_sim_state.get(jid, {})
-                # Random drift per tick
                 counts = {
                     "2W": max(2, int(sim.get("base_2w", 18) + random.randint(-4, 4))),
                     "Car": max(1, int(sim.get("base_car", 12) + random.randint(-3, 3))),
@@ -142,14 +119,12 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
                     "Truck": max(0, int(sim.get("base_truck", 1) + random.randint(-1, 1))),
                 }
 
-                # Check if this junction is on an active green corridor
                 is_corridor_preempted = False
                 if _ACTIVE_GREEN_CORRIDOR and _ACTIVE_GREEN_CORRIDOR.get("active"):
                     corridor_route = _ACTIVE_GREEN_CORRIDOR.get("route", [])
                     if jid in corridor_route:
                         is_corridor_preempted = True
 
-                # Check manual override
                 active_override = _SIGNAL_OVERRIDES.get(jid)
 
                 queue_m = round(max(5.0, sim.get("queue_m", 30.0) + random.uniform(-4.0, 4.0)), 1)
@@ -157,7 +132,6 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
                 sim["queue_m"] = queue_m
                 sim["wait_s"] = wait_s
 
-                # Compute junction state using Grok's Webster optimizer
                 state = compute_junction_state(
                     junction_id=jid,
                     vehicle_counts=counts,
@@ -175,7 +149,6 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
                     state["recommended_green_sec"] = active_override.get("duration_sec", 45)
                     state["ai_boost_sec"] = 0
 
-                # Optional ANPR frame processing hook
                 anpr_hits = process_frame_anpr(None, jid, now_iso)
 
                 j_data = {
@@ -214,16 +187,9 @@ async def ws_pune_telemetry(websocket: WebSocket) -> None:
         logger.warning("Error in /ws/pune-telemetry: %s", exc)
 
 
-# ---------------------------------------------------------------------------
-# 2. GET /api/cctv/pune-pack (Server-registered CCTV cameras)
-# ---------------------------------------------------------------------------
-
 @api_router.get("/api/cctv/pune-pack")
 async def get_cctv_pune_pack() -> Dict[str, Any]:
-    """
-    Returns server-registered CCTV cameras from the Pune smart intersection registry.
-    Strictly server-registered metadata with calibrated poses and 3D WGS84 positions.
-    """
+    """Returns server-registered CCTV cameras from the Pune smart intersection registry."""
     registry = _get_registry()
     cameras: List[Dict[str, Any]] = []
 
@@ -235,7 +201,6 @@ async def get_cctv_pune_pack() -> Dict[str, Any]:
         for cam in item.get("cameras", []):
             pose = dict(cam.get("pose", {}))
             cam_coords = list(jcoords)
-            # Apply height offset from pose
             if len(cam_coords) > 2 and "height_m" in pose:
                 cam_coords[2] = round(float(cam_coords[2]) + float(pose["height_m"]), 2)
 
@@ -259,16 +224,9 @@ async def get_cctv_pune_pack() -> Dict[str, Any]:
     }
 
 
-# ---------------------------------------------------------------------------
-# 3. GET /api/anpr/trajectory/{plate_query}
-# ---------------------------------------------------------------------------
-
 @api_router.get("/api/anpr/trajectory/{plate_query}")
 async def get_anpr_trajectory(plate_query: str) -> Dict[str, Any]:
-    """
-    Reconstructs fuzzy spatio-temporal vehicle trajectory across Pune smart intersections.
-    Returns GeoJSON FeatureCollection with confirmed sightings and interpolated road segments.
-    """
+    """Reconstructs spatio-temporal vehicle trajectory across Pune smart intersections."""
     clean_query = plate_query.strip().upper()
     if not clean_query:
         raise HTTPException(
@@ -278,7 +236,6 @@ async def get_anpr_trajectory(plate_query: str) -> Dict[str, Any]:
 
     try:
         fc = reconstruct_trajectory(clean_query)
-        # If no sightings exist in real-time memory yet, seed mock trajectory for Pune demo
         if not fc.get("features"):
             _seed_demo_trajectory(clean_query)
             fc = reconstruct_trajectory(clean_query)
@@ -292,7 +249,6 @@ async def get_anpr_trajectory(plate_query: str) -> Dict[str, Any]:
 
 
 def _seed_demo_trajectory(plate: str) -> None:
-    """Seeds historical sightings for demonstration if no live sightings exist."""
     from backend.cv_pipeline.anpr_tracker import record_sighting
 
     sightings = [
@@ -314,10 +270,6 @@ def _seed_demo_trajectory(plate: str) -> None:
             edit_distance=0,
         )
 
-
-# ---------------------------------------------------------------------------
-# 4. Voice Tool API Endpoints (Signal Override, Green Corridor, Reports)
-# ---------------------------------------------------------------------------
 
 @api_router.post("/api/junction/override")
 async def override_junction_signal(req: SignalOverrideRequest) -> Dict[str, Any]:
@@ -390,7 +342,6 @@ async def get_corridor_congestion_report(corridor_name: str) -> Dict[str, Any]:
     name_clean = corridor_name.strip().lower()
     registry = _get_registry()
 
-    # Map corridor name to junctions
     corridor_map = {
         "fc road": ["university_chowk", "sancheti_chowk", "deccan_gymkhana"],
         "fergusson college road": ["university_chowk", "sancheti_chowk", "deccan_gymkhana"],
@@ -402,7 +353,6 @@ async def get_corridor_congestion_report(corridor_name: str) -> Dict[str, Any]:
 
     junction_ids = corridor_map.get(name_clean)
     if not junction_ids:
-        # Fallback: search junction road names
         matched = []
         for j in registry.get("intersections", []):
             roads = [r.lower() for r in j.get("roads", [])]
@@ -415,7 +365,6 @@ async def get_corridor_congestion_report(corridor_name: str) -> Dict[str, Any]:
     scores = []
 
     for jid in junction_ids:
-        # Sample realistic PCU
         counts = {"2W": random.randint(15, 30), "Car": random.randint(10, 20), "Bus": 2}
         pcu, _ = compute_pcu_load(counts)
         score = compute_congestion_score(pcu, queue_length_m=45.0, avg_wait_s=30.0)
@@ -438,10 +387,6 @@ async def get_corridor_congestion_report(corridor_name: str) -> Dict[str, Any]:
         "monitored_junctions": junction_reports,
     }
 
-
-# ---------------------------------------------------------------------------
-# 5. POST /api/video/ingest-anpr (Surveillance Video Ingestion & ANPR Brief)
-# ---------------------------------------------------------------------------
 
 JUNCTION_NAMES: Dict[str, str] = {
     "CAM-01": "Swargate Chowk (NH-60 x Tilak Road)",
@@ -470,7 +415,6 @@ async def ingest_and_describe_video(
     junction_name = JUNCTION_NAMES.get(junction_id, f"Junction {junction_id}")
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # If demo mode is explicitly requested or no file was uploaded
     if demo or file is None or not getattr(file, "filename", None):
         brief = (
             f"Surveillance footage from {junction_name} [{junction_id}]. "
@@ -560,7 +504,6 @@ async def ingest_and_describe_video(
             "keyframes": [],
         }
 
-    # Process real uploaded video file
     suffix = os.path.splitext(file.filename or "")[1] or ".mp4"
     temp_fd, temp_path = tempfile.mkstemp(suffix=suffix)
     try:
@@ -611,14 +554,12 @@ async def ingest_and_describe_video(
                 t_sec = round(frame_idx / fps, 1)
                 timestamp_str = f"{now_iso[:11]}{int(t_sec//3600):02d}:{int((t_sec%3600)//60):02d}:{int(t_sec%60):02d}Z"
 
-                # Run ANPR plate detector
                 try:
                     anpr_results = process_frame_anpr(frame, junction_id, timestamp_str)
                 except Exception as e:
                     logger.debug("process_frame_anpr failed on frame %d: %s", frame_idx, e)
                     anpr_results = []
 
-                # Count vehicles and detect plates
                 for item in anpr_results:
                     plate_matched = item.get("plate_matched") or item.get("plate_raw")
                     if plate_matched:
@@ -635,7 +576,6 @@ async def ingest_and_describe_video(
                         if item.get("speed_kmh"):
                             speed_estimates.append(float(item["speed_kmh"]))
 
-                # Vehicle blob count from contour analysis
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 blur = cv2.GaussianBlur(gray, (5, 5), 0)
                 edged = cv2.Canny(blur, 50, 150)
@@ -651,10 +591,8 @@ async def ingest_and_describe_video(
                     elif area >= 7000 and area < (width * height * 0.25):
                         vehicle_counts["bus_truck"] += 1
 
-                # Capture keyframe thumbnail
                 if frame_idx in keyframe_targets and len(keyframes) < 3:
                     annotated = frame.copy()
-                    # Draw annotations
                     for item in anpr_results:
                         bx = item.get("bbox")
                         if bx and len(bx) == 4:
@@ -663,7 +601,6 @@ async def ingest_and_describe_video(
                             tag = f"{item.get('plate_matched', 'PLATE')} ({int(item.get('ocr_confidence', 0.9)*100)}%)"
                             cv2.putText(annotated, tag, (x1, max(15, y1 - 6)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 215, 255), 1)
 
-                    # Resize for compact payload
                     thumb = cv2.resize(annotated, (320, 180), interpolation=cv2.INTER_AREA)
                     ok_enc, buf = cv2.imencode(".jpg", thumb, [int(cv2.IMWRITE_JPEG_QUALITY), 75])
                     if ok_enc:
@@ -679,7 +616,6 @@ async def ingest_and_describe_video(
 
         cap.release()
 
-        # Normalize counts across sample size
         scale_factor = max(1.0, float(total_frames) / max(float(frames_scanned), 1.0)) * 0.15
         mc_cnt = max(3, int(vehicle_counts["motorcycle"] * scale_factor))
         car_cnt = max(2, int(vehicle_counts["car"] * scale_factor))
@@ -690,12 +626,11 @@ async def ingest_and_describe_video(
         pcu_load = round(mc_cnt * 0.5 + car_cnt * 1.0 + auto_cnt * 1.2 + heavy_cnt * 3.0, 1)
         mean_speed = round(float(sum(speed_estimates) / len(speed_estimates)), 1) if speed_estimates else 36.5
 
-        # Format plates and lookup VAHAN records
         formatted_plates = []
         valid_count = 0
         flagged_count = 0
 
-        # If OCR did not detect plates (e.g. Tesseract missing on system), seed with junction registered vehicle
+        # Fall back to a sample junction plate if none detected
         if not detected_plates_map:
             seed_plate = "MH12DE1433" if junction_id in ("CAM-04", "CAM-05") else "MH12AB1001"
             reg_info = DEMO_REGISTRY.get(seed_plate, {})
@@ -744,7 +679,6 @@ async def ingest_and_describe_video(
                     "notes": reg_info.get("enforcement_status", {}).get("notes", "ANPR sighting logged."),
                 })
 
-        # Synthesize brief description of input video
         score = min(max(pcu_load / 60.0, 0.15), 0.95)
         los = "LOS A (Free Flow)" if score < 0.3 else "LOS B (Reasonably Free Flow)" if score < 0.45 else "LOS C (Stable Flow)" if score < 0.65 else "LOS D (Approaching Capacity)" if score < 0.85 else "LOS E/F (Congested)"
         pct_2w = round((mc_cnt / max(total_veh, 1)) * 100)

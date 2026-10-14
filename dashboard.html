@@ -1718,7 +1718,7 @@
             </div>
           </div>
 
-          <!-- BOTTOM-MOST: Surveillance Video Ingestion & ANPR Scene Intelligence -->
+          <!-- Surveillance Video Ingestion -->
           <div class="live-video-ingest-area" id="liveVideoIngestSection">
             <div class="card">
               <div class="card-hdr flex items-center justify-between">
@@ -1741,9 +1741,7 @@
               </div>
 
               <div class="card-body">
-                <!-- Ingestion Dropzone & Monitor Grid -->
                 <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; align-items: start;">
-                  <!-- Left: Ingestion Dropzone & Staged Controls -->
                   <div>
                     <div class="upload-zone" id="liveVideoUploadZone" role="button" tabindex="0" aria-label="Upload traffic CCTV recording for ANPR analysis">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1756,7 +1754,6 @@
                     </div>
                     <input type="file" id="liveVideoFileInput" accept="video/mp4,video/webm,video/x-m4v,video/quicktime,video/avi" class="hidden" aria-label="Select video file">
 
-                    <!-- Actions Bar -->
                     <div class="flex items-center justify-between gap-10 mt-12 flex-wrap">
                       <div class="flex items-center gap-8">
                         <button type="button" class="btn btn-primary btn-sm flex items-center gap-6" id="btnAnalyzeLiveVideo" disabled>
@@ -1773,7 +1770,6 @@
                       <div class="text-xs text-muted font-mono" id="liveIngestFileMeta">No footage selected</div>
                     </div>
 
-                    <!-- Progress Bar -->
                     <div class="mt-12 hidden" id="liveIngestProgressWrap">
                       <div class="flex justify-between text-xs mb-4">
                         <span id="liveIngestStatusLabel" class="text-muted">Decoding video frames...</span>
@@ -1785,7 +1781,6 @@
                     </div>
                   </div>
 
-                  <!-- Right: CCTV Video Monitor Player & Canvas -->
                   <div class="video-monitor-panel">
                     <div class="flex items-center justify-between text-xs text-muted mb-6">
                       <span class="font-mono font-bold text-amber">SURVEILLANCE MONITOR FEED</span>
@@ -1802,21 +1797,16 @@
                   </div>
                 </div>
 
-                <!-- OUTPUT RESULTS SECTION -->
                 <div id="liveIngestResults" class="mt-16 hidden">
-                  <!-- Brief Description Card -->
                   <div class="alert-bar alert-blue" style="padding: 14px 16px; border-left: 4px solid var(--alert-blue); background: var(--alert-blue-soft); margin-bottom: 12px; border-radius: var(--radius);">
                     <div class="flex items-center gap-8 mb-6">
                       <span style="font-size: 16px;">📋</span>
                       <span class="font-bold text-sm" style="color: var(--alert-blue); letter-spacing: 0.5px;">SURVEILLANCE VIDEO INTELLIGENCE BRIEF</span>
                       <span class="badge badge-blue text-xs font-mono" id="liveBriefTimestamp">JUST NOW</span>
                     </div>
-                    <p id="liveBriefDescription" class="text-sm" style="line-height: 1.6; color: var(--text); margin: 0;">
-                      <!-- Populated dynamically -->
-                    </p>
+                    <p id="liveBriefDescription" class="text-sm" style="line-height: 1.6; color: var(--text); margin: 0;"></p>
                   </div>
 
-                  <!-- Metrics Grid -->
                   <div class="detail-grid mb-12">
                     <div class="detail-item">
                       <div class="detail-lbl">Footage Duration &amp; Rate</div>
@@ -1840,7 +1830,6 @@
                     </div>
                   </div>
 
-                  <!-- ANPR Detected Plates Table -->
                   <div class="card mb-12" style="background: rgba(15, 23, 42, 0.4);">
                     <div class="card-hdr flex items-center justify-between" style="padding: 8px 12px;">
                       <span class="text-xs font-bold text-muted uppercase">ANPR Detected Plates &amp; Registry Cross-Audit</span>
@@ -1860,22 +1849,17 @@
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
-                        <tbody id="livePlatesTableBody">
-                          <!-- Populated dynamically -->
-                        </tbody>
+                        <tbody id="livePlatesTableBody"></tbody>
                       </table>
                     </div>
                   </div>
 
-                  <!-- Keyframe Gallery -->
                   <div class="card" id="liveKeyframesCard" style="background: rgba(15, 23, 42, 0.3);">
                     <div class="card-hdr" style="padding: 8px 12px;">
                       <span class="text-xs font-bold text-muted uppercase">Sample Keyframes with Plate &amp; Vehicle Localization</span>
                     </div>
                     <div class="card-body" style="padding: 10px;">
-                      <div class="flex gap-10" id="liveKeyframesGallery" style="overflow-x: auto; padding-bottom: 6px;">
-                        <!-- Populated dynamically -->
-                      </div>
+                      <div class="flex gap-10" id="liveKeyframesGallery" style="overflow-x: auto; padding-bottom: 6px;"></div>
                     </div>
                   </div>
 

@@ -1081,7 +1081,7 @@ a:hover { text-decoration: underline; }
   gap: 12px;
 }
 
-/* ─── Live Video Ingest & ANPR Intelligence (Live Tracking Bottom) ─── */
+/* Video Ingestion */
 .dash-grid .live-video-ingest-area {
   grid-row: 3 / 4;
   grid-column: 1 / 3;

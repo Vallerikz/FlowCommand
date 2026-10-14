@@ -4373,9 +4373,6 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // SURVEILLANCE VIDEO INGESTION & ANPR SCENE INTELLIGENCE
-  // ═══════════════════════════════════════════════════════════
   function initLiveVideoIngestion() {
     const uploadZone = document.getElementById('liveVideoUploadZone');
     const fileInput = document.getElementById('liveVideoFileInput');
@@ -4412,7 +4409,6 @@
     let currentObjectUrl = null;
     let isProcessing = false;
 
-    // Helper: stage file for inspection
     function stageVideoFile(file) {
       if (!file) return;
       stagedFile = file;
@@ -4450,7 +4446,6 @@
       notify(`[SURVEILLANCE INGEST] ${file.name} staged for ANPR processing.`, 'info');
     }
 
-    // Helper: reset state
     function resetLiveIngestState() {
       stagedFile = null;
       if (currentObjectUrl) {
@@ -4485,7 +4480,6 @@
       }
     }
 
-    // Setup Drag and Drop
     uploadZone.addEventListener('click', () => {
       if (fileInput) fileInput.click();
     });
@@ -4532,14 +4526,12 @@
       });
     }
 
-    // Progress updater helper
     function setProgress(pct, statusText) {
       if (progressBar) progressBar.style.width = `${pct}%`;
       if (progressPct) progressPct.textContent = `${pct}%`;
       if (statusLabel) statusLabel.textContent = statusText;
     }
 
-    // Render Analysis Results
     function renderResults(data) {
       if (!data) return;
 
@@ -4554,7 +4546,6 @@
       if (metricPlates) metricPlates.textContent = `${(data.plates || []).length} Plate${(data.plates || []).length === 1 ? '' : 's'}`;
       if (metricLoS) metricLoS.textContent = m.level_of_service || 'LOS C (Stable Flow)';
 
-      // Render Detected Plates Table
       if (platesTableBody) {
         platesTableBody.innerHTML = '';
         const plates = data.plates || [];
@@ -4565,7 +4556,6 @@
         } else {
           plates.forEach(p => {
             const tr = document.createElement('tr');
-
             const isFlagged = p.status === 'FLAGGED' || (p.badge_class && p.badge_class.includes('red'));
             const badgeClass = isFlagged ? 'badge-red' : (p.badge_class || 'badge-green');
             const statusLabel = p.status_label || (isFlagged ? 'Active Bulletin' : 'Verified Match');
@@ -4602,7 +4592,6 @@
         }
       }
 
-      // Render Keyframe Gallery
       if (keyframesGallery) {
         keyframesGallery.innerHTML = '';
         const keyframes = data.keyframes || [];
@@ -4617,7 +4606,6 @@
             keyframesGallery.appendChild(card);
           });
         } else {
-          // Provide placeholder visual sample cards
           const sampleKeyframes = [
             { time: '2.4s', desc: 'Plate Localization (Lane 1)', icon: '🚗' },
             { time: '6.8s', desc: 'Vehicle Ingress (Lane 2)', icon: '🚙' },
@@ -4648,7 +4636,6 @@
         monitorBadge.className = 'badge badge-green';
       }
 
-      // Smooth scroll to results
       setTimeout(() => {
         if (resultsContainer) {
           resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -4656,7 +4643,6 @@
       }, 100);
     }
 
-    // Execute Ingestion Pipeline
     async function executeLiveAnalysis(isDemo) {
       if (isProcessing) return;
       isProcessing = true;
@@ -4710,7 +4696,7 @@
         await new Promise(r => setTimeout(r, 200));
 
         if (!data || !data.success) {
-          // Robust client-side fallback if backend is offline or returned an error
+          // Fallback if backend server is unreachable
           const jName = (junctionSelect && junctionSelect.options[junctionSelect.selectedIndex].text) || 'CAM-05';
           const filename = stagedFile ? stagedFile.name : 'pune_cctv_sample_cam05.mp4';
           data = {
@@ -4789,7 +4775,6 @@
 
     if (btnDemo) {
       btnDemo.addEventListener('click', () => {
-        // Load demo sample clip
         uploadTitle.textContent = 'pune_cctv_sample_cam05.mp4 (14.8 MB)';
         uploadSub.textContent = 'Preset: Deccan Gymkhana Surveillance Feed • 1080p @ 25 FPS';
         fileMeta.textContent = 'pune_cctv_sample_cam05.mp4 • 14.8 MB';
