@@ -63,13 +63,14 @@ yarn-error.log*
 .coverage
 htmlcov/
 
-# Release Bundle Exclusion (Full source maintained on 'develop' branch)
-backend/
-css/
-js/
-assets/
-scripts/
-tools/
-*.html
-requirements.txt
-.env.example
+# Binaries & ML Models (never commit)
+*.exe
+*.pt
+*.onnx
+*.weights
+
+# Pinokio
+pinokio/ENVIRONMENT
+
+# Claude / AI agent configs
+.claude/

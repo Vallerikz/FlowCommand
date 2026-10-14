@@ -1,0 +1,327 @@
+{
+  "meta": {
+    "city": "Pune",
+    "problem_code": "SIH26127",
+    "crs": "EPSG:4326",
+    "coordinate_order": ["lon", "lat", "height_m"],
+    "datum": "WGS84",
+    "authority": "PMC / PCMC Adaptive Traffic Control",
+    "notes": "Eight operational smart intersections used by the FlowCommand gods-eye Cesium layer. Distances are along-road shortest-path metres, not great-circle."
+  },
+  "intersections": [
+    {
+      "id": "university_chowk",
+      "name": "University Chowk",
+      "local_name": "Pune University / Ganeshkhind Chowk",
+      "roads": ["Ganeshkhind Road", "Senapati Bapat Road"],
+      "ward": "Aundh-University",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8296, 18.5413, 562],
+      "approaches": [
+        {"id": "N", "name": "Ganeshkhind Rd NB (Aundh)", "bearing_deg": 348.0, "lanes": 3, "sat_flow_pcu_ph": 1650},
+        {"id": "E", "name": "SB Road EB (Shivajinagar)", "bearing_deg": 78.0, "lanes": 3, "sat_flow_pcu_ph": 1600},
+        {"id": "S", "name": "Ganeshkhind Rd SB (University)", "bearing_deg": 168.0, "lanes": 3, "sat_flow_pcu_ph": 1650},
+        {"id": "W", "name": "SB Road WB (Pashan / ITO)", "bearing_deg": 258.0, "lanes": 3, "sat_flow_pcu_ph": 1600}
+      ],
+      "cameras": [
+        {
+          "id": "uni_n_anpr",
+          "approach": "N",
+          "pose": {"heading_deg": 168.0, "pitch_deg": -18.0, "fov_deg": 52.0, "height_m": 7.5},
+          "role": "ANPR"
+        },
+        {
+          "id": "uni_e_anpr",
+          "approach": "E",
+          "pose": {"heading_deg": 258.0, "pitch_deg": -16.0, "fov_deg": 48.0, "height_m": 7.2},
+          "role": "ANPR"
+        },
+        {
+          "id": "uni_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 140.0, "pitch_deg": -42.0, "fov_deg": 78.0, "height_m": 14.0},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "swargate_jedhe_chowk",
+      "name": "Swargate Jedhe Chowk",
+      "local_name": "Jedhe Chowk / Swargate Bus Stand",
+      "roads": ["Satara Road", "Shankar Sheth Road", "Tilak Road"],
+      "ward": "Swargate",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8569, 18.5008, 568],
+      "approaches": [
+        {"id": "N", "name": "Satara Rd NB (Shivaji Nagar / Tilak)", "bearing_deg": 8.0, "lanes": 4, "sat_flow_pcu_ph": 1800},
+        {"id": "E", "name": "Shankar Sheth Rd EB (Gultekdi)", "bearing_deg": 96.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "S", "name": "Satara Rd SB (Katraj / NH48)", "bearing_deg": 188.0, "lanes": 4, "sat_flow_pcu_ph": 1800},
+        {"id": "W", "name": "Tilak Rd WB (Deccan / Sarasbaug)", "bearing_deg": 276.0, "lanes": 3, "sat_flow_pcu_ph": 1550}
+      ],
+      "cameras": [
+        {
+          "id": "swg_s_anpr",
+          "approach": "S",
+          "pose": {"heading_deg": 8.0, "pitch_deg": -17.0, "fov_deg": 50.0, "height_m": 8.0},
+          "role": "ANPR"
+        },
+        {
+          "id": "swg_n_anpr",
+          "approach": "N",
+          "pose": {"heading_deg": 188.0, "pitch_deg": -17.0, "fov_deg": 50.0, "height_m": 8.0},
+          "role": "ANPR"
+        },
+        {
+          "id": "swg_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 200.0, "pitch_deg": -38.0, "fov_deg": 82.0, "height_m": 16.0},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "nal_stop_chowk",
+      "name": "Nal Stop Chowk",
+      "local_name": "Nal Stop / Karve Road Chowk",
+      "roads": ["Karve Road", "Late GA Kulkarni Path", "Bhandarkar Road"],
+      "ward": "Erandwane",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8267, 18.5091, 565],
+      "poi": {
+        "deenanath_mangeshkar_hospital": {"coordinates_wgs84": [73.8295, 18.5028, 564], "distance_m": 1020}
+      },
+      "approaches": [
+        {"id": "N", "name": "Bhandarkar / Law College Rd NB", "bearing_deg": 18.0, "lanes": 2, "sat_flow_pcu_ph": 1400},
+        {"id": "E", "name": "Karve Rd EB (Deccan / Goodluck)", "bearing_deg": 82.0, "lanes": 3, "sat_flow_pcu_ph": 1600},
+        {"id": "S", "name": "Karve Rd SB (Sinhagad / Warje)", "bearing_deg": 198.0, "lanes": 3, "sat_flow_pcu_ph": 1600},
+        {"id": "W", "name": "Karve Rd WB (Kothrud / Chandni)", "bearing_deg": 262.0, "lanes": 3, "sat_flow_pcu_ph": 1600}
+      ],
+      "cameras": [
+        {
+          "id": "nal_e_anpr",
+          "approach": "E",
+          "pose": {"heading_deg": 262.0, "pitch_deg": -15.0, "fov_deg": 46.0, "height_m": 6.8},
+          "role": "ANPR"
+        },
+        {
+          "id": "nal_w_anpr",
+          "approach": "W",
+          "pose": {"heading_deg": 82.0, "pitch_deg": -15.0, "fov_deg": 46.0, "height_m": 6.8},
+          "role": "ANPR"
+        },
+        {
+          "id": "nal_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 110.0, "pitch_deg": -40.0, "fov_deg": 74.0, "height_m": 12.5},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "chandni_chowk",
+      "name": "Chandni Chowk",
+      "local_name": "NDA-Pashan / Mumbai-Bangalore Highway Chowk",
+      "roads": ["Mumbai-Bangalore Highway (NH48)", "NDA-Pashan Road", "Bavdhan Road"],
+      "ward": "Bavdhan-Pashan",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.7797, 18.5065, 610],
+      "approaches": [
+        {"id": "N", "name": "NH48 NB (Mumbai / Baner ramp)", "bearing_deg": 22.0, "lanes": 4, "sat_flow_pcu_ph": 1900},
+        {"id": "E", "name": "Pashan Rd EB (University / SB Rd)", "bearing_deg": 92.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "S", "name": "NH48 SB (Bangalore / Katraj)", "bearing_deg": 202.0, "lanes": 4, "sat_flow_pcu_ph": 1900},
+        {"id": "W", "name": "NDA Rd WB (Khadakwasla / NDA)", "bearing_deg": 272.0, "lanes": 2, "sat_flow_pcu_ph": 1300}
+      ],
+      "cameras": [
+        {
+          "id": "chn_n_anpr",
+          "approach": "N",
+          "pose": {"heading_deg": 202.0, "pitch_deg": -14.0, "fov_deg": 44.0, "height_m": 9.0},
+          "role": "ANPR"
+        },
+        {
+          "id": "chn_s_anpr",
+          "approach": "S",
+          "pose": {"heading_deg": 22.0, "pitch_deg": -14.0, "fov_deg": 44.0, "height_m": 9.0},
+          "role": "ANPR"
+        },
+        {
+          "id": "chn_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 175.0, "pitch_deg": -36.0, "fov_deg": 80.0, "height_m": 18.0},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "katraj_naka",
+      "name": "Katraj Wonder City / Old Katraj Naka",
+      "local_name": "Old Katraj Naka",
+      "roads": ["Satara Road / NH48", "Katraj-Kondhwa Road", "Pune-Satara Road"],
+      "ward": "Katraj",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8587, 18.4475, 602],
+      "approaches": [
+        {"id": "N", "name": "Satara Rd NB (Swargate)", "bearing_deg": 4.0, "lanes": 4, "sat_flow_pcu_ph": 1850},
+        {"id": "E", "name": "Kondhwa Rd EB (Undri / Pisoli)", "bearing_deg": 94.0, "lanes": 3, "sat_flow_pcu_ph": 1500},
+        {"id": "S", "name": "NH48 SB (Satara / Bangalore)", "bearing_deg": 184.0, "lanes": 4, "sat_flow_pcu_ph": 1850},
+        {"id": "W", "name": "Katraj-Dehu Rd WB (Bharati Vidyapeeth)", "bearing_deg": 274.0, "lanes": 2, "sat_flow_pcu_ph": 1350}
+      ],
+      "cameras": [
+        {
+          "id": "ktj_n_anpr",
+          "approach": "N",
+          "pose": {"heading_deg": 184.0, "pitch_deg": -16.0, "fov_deg": 48.0, "height_m": 8.5},
+          "role": "ANPR"
+        },
+        {
+          "id": "ktj_s_anpr",
+          "approach": "S",
+          "pose": {"heading_deg": 4.0, "pitch_deg": -16.0, "fov_deg": 48.0, "height_m": 8.5},
+          "role": "ANPR"
+        },
+        {
+          "id": "ktj_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 210.0, "pitch_deg": -40.0, "fov_deg": 76.0, "height_m": 15.0},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "hinjewadi_shivaji_chowk",
+      "name": "Hinjewadi Shivaji Chowk (Phase 1)",
+      "local_name": "Shivaji Chowk Hinjewadi Phase 1",
+      "roads": ["Hinjewadi Main Road", "Maan Road", "Phase 1-Phase 2 Link"],
+      "ward": "Hinjewadi (PCMC)",
+      "agency": "PCMC",
+      "rto": "MH14",
+      "coordinates_wgs84": [73.7389, 18.5912, 574],
+      "approaches": [
+        {"id": "N", "name": "Maan Rd NB (Phase 2 / Wakad)", "bearing_deg": 12.0, "lanes": 3, "sat_flow_pcu_ph": 1600},
+        {"id": "E", "name": "Hinjewadi Main EB (Baner / Aundh)", "bearing_deg": 102.0, "lanes": 4, "sat_flow_pcu_ph": 1750},
+        {"id": "S", "name": "Phase 1 Spine SB (Rajiv Gandhi Infotech)", "bearing_deg": 192.0, "lanes": 3, "sat_flow_pcu_ph": 1600},
+        {"id": "W", "name": "Maan-Hinjewadi WB (Phase 3)", "bearing_deg": 282.0, "lanes": 3, "sat_flow_pcu_ph": 1550}
+      ],
+      "cameras": [
+        {
+          "id": "hnj_e_anpr",
+          "approach": "E",
+          "pose": {"heading_deg": 282.0, "pitch_deg": -15.0, "fov_deg": 50.0, "height_m": 7.8},
+          "role": "ANPR"
+        },
+        {
+          "id": "hnj_w_anpr",
+          "approach": "W",
+          "pose": {"heading_deg": 102.0, "pitch_deg": -15.0, "fov_deg": 50.0, "height_m": 7.8},
+          "role": "ANPR"
+        },
+        {
+          "id": "hnj_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 125.0, "pitch_deg": -38.0, "fov_deg": 80.0, "height_m": 14.5},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "deccan_gymkhana",
+      "name": "Deccan Gymkhana / Goodluck Chowk",
+      "local_name": "Goodluck Chowk",
+      "roads": ["Fergusson College Road", "Jangli Maharaj Road", "Prabhat Road"],
+      "ward": "Deccan Gymkhana",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8415, 18.5167, 561],
+      "approaches": [
+        {"id": "N", "name": "FC Road NB (Sancheti / Shivajinagar)", "bearing_deg": 16.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "E", "name": "JM Road EB (Shivaji Nagar)", "bearing_deg": 98.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "S", "name": "FC Road SB (Goodluck / Tilak)", "bearing_deg": 196.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "W", "name": "Prabhat / Karve Rd WB (Nal Stop)", "bearing_deg": 278.0, "lanes": 3, "sat_flow_pcu_ph": 1500}
+      ],
+      "cameras": [
+        {
+          "id": "dec_n_anpr",
+          "approach": "N",
+          "pose": {"heading_deg": 196.0, "pitch_deg": -17.0, "fov_deg": 47.0, "height_m": 7.0},
+          "role": "ANPR"
+        },
+        {
+          "id": "dec_w_anpr",
+          "approach": "W",
+          "pose": {"heading_deg": 98.0, "pitch_deg": -16.0, "fov_deg": 46.0, "height_m": 6.9},
+          "role": "ANPR"
+        },
+        {
+          "id": "dec_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 155.0, "pitch_deg": -44.0, "fov_deg": 72.0, "height_m": 13.0},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    },
+    {
+      "id": "sancheti_chowk",
+      "name": "Sancheti Hospital Chowk",
+      "local_name": "Sancheti Chowk / Shivajinagar",
+      "roads": ["Fergusson College Road", "Jangli Maharaj Road", "Gokhale Road"],
+      "ward": "Shivajinagar",
+      "agency": "PMC",
+      "rto": "MH12",
+      "coordinates_wgs84": [73.8512, 18.5284, 558],
+      "poi": {
+        "ruby_hall_clinic": {"coordinates_wgs84": [73.8765, 18.5336, 556], "distance_m": 3685}
+      },
+      "approaches": [
+        {"id": "N", "name": "FC Road NB (University / Modern College)", "bearing_deg": 14.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "E", "name": "Gokhale / Sassoon Rd EB (Ruby Hall)", "bearing_deg": 96.0, "lanes": 3, "sat_flow_pcu_ph": 1500},
+        {"id": "S", "name": "FC Road SB (Deccan / Goodluck)", "bearing_deg": 194.0, "lanes": 3, "sat_flow_pcu_ph": 1550},
+        {"id": "W", "name": "JM Road WB (Police Grounds)", "bearing_deg": 276.0, "lanes": 3, "sat_flow_pcu_ph": 1500}
+      ],
+      "cameras": [
+        {
+          "id": "san_s_anpr",
+          "approach": "S",
+          "pose": {"heading_deg": 14.0, "pitch_deg": -16.0, "fov_deg": 48.0, "height_m": 7.4},
+          "role": "ANPR"
+        },
+        {
+          "id": "san_e_anpr",
+          "approach": "E",
+          "pose": {"heading_deg": 276.0, "pitch_deg": -15.0, "fov_deg": 46.0, "height_m": 7.2},
+          "role": "ANPR"
+        },
+        {
+          "id": "san_overview",
+          "approach": "OVERVIEW",
+          "pose": {"heading_deg": 130.0, "pitch_deg": -40.0, "fov_deg": 75.0, "height_m": 13.5},
+          "role": "PTZ_OVERVIEW"
+        }
+      ]
+    }
+  ],
+  "road_graph": {
+    "units": "metres",
+    "metric": "along_road",
+    "edges": [
+      {"from": "hinjewadi_shivaji_chowk", "to": "university_chowk", "name": "Hinjewadi-Baner-Aundh-Ganeshkhind", "distance_m": 15200, "free_flow_kmh": 42},
+      {"from": "hinjewadi_shivaji_chowk", "to": "chandni_chowk", "name": "Hinjewadi-Baner-Pashan-NH48", "distance_m": 14100, "free_flow_kmh": 48},
+      {"from": "chandni_chowk", "to": "university_chowk", "name": "Pashan-SB Road", "distance_m": 8900, "free_flow_kmh": 40},
+      {"from": "chandni_chowk", "to": "nal_stop_chowk", "name": "Karve / Paud / Kothrud", "distance_m": 6800, "free_flow_kmh": 32},
+      {"from": "university_chowk", "to": "sancheti_chowk", "name": "Ganeshkhind-FC / Modern College", "distance_m": 3600, "free_flow_kmh": 28},
+      {"from": "university_chowk", "to": "deccan_gymkhana", "name": "Ganeshkhind-FC Road", "distance_m": 4100, "free_flow_kmh": 28},
+      {"from": "university_chowk", "to": "nal_stop_chowk", "name": "SB Road-Law College-Karve", "distance_m": 4900, "free_flow_kmh": 30},
+      {"from": "sancheti_chowk", "to": "deccan_gymkhana", "name": "FC Road", "distance_m": 2200, "free_flow_kmh": 24},
+      {"from": "nal_stop_chowk", "to": "deccan_gymkhana", "name": "Karve-Prabhat-Goodluck", "distance_m": 2400, "free_flow_kmh": 22},
+      {"from": "deccan_gymkhana", "to": "swargate_jedhe_chowk", "name": "Tilak / Bajirao Road", "distance_m": 3300, "free_flow_kmh": 26},
+      {"from": "sancheti_chowk", "to": "swargate_jedhe_chowk", "name": "JM Road-Shivaji Nagar-Swargate", "distance_m": 4300, "free_flow_kmh": 26},
+      {"from": "swargate_jedhe_chowk", "to": "katraj_naka", "name": "Satara Road / NH48", "distance_m": 8100, "free_flow_kmh": 45},
+      {"from": "nal_stop_chowk", "to": "swargate_jedhe_chowk", "name": "Karve-Tilak-Swargate", "distance_m": 4500, "free_flow_kmh": 24},
+      {"from": "katraj_naka", "to": "deccan_gymkhana", "name": "via Swargate (not direct arterial)", "distance_m": 11400, "free_flow_kmh": 36}
+    ]
+  }
+}
