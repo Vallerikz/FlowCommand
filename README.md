@@ -2,10 +2,14 @@
   <img src="https://raw.githubusercontent.com/Vallerikz/FlowCommand/main/assets/logo.png" alt="FlowCommand by Urban Flow" width="220" />
 </p>
 
+<h3 align="center">FlowCommand — Vehicle Intelligence & Movement Tracking System</h3>
+<p align="center"><code>SIH26127</code> · Intelligent Traffic Management System for Urban India</p>
+
 ## Smart India Hackathon 2026 — Team Submission
 
-**Problem Statement:** Intelligent Traffic Management System for Urban India  
-**Target Deployment:** Pune City Traffic Command & Smart Intersections
+**Problem Statement ID:** SIH26127 — Intelligent Traffic Management System for Urban India  
+**Target Deployment:** Pune City Traffic Command & Smart Intersections  
+**3D Situational Awareness:** Integrated with [gods-eye-view](https://github.com/bilawalsidhu/gods-eye-view) CesiumJS spatial console
 
 ---
 
@@ -71,9 +75,19 @@ You can directly download the standalone launcher without downloading the entire
 FlowCommand/
 ├── backend/
 │   ├── main.py                     # FastAPI application entrypoint, CORS & security headers
+│   ├── api/
+│   │   └── main.py                 # Gods-eye-view WebSocket & REST endpoints (Pune telemetry)
+│   ├── cv_pipeline/
+│   │   └── anpr_tracker.py         # Multi-condition Indian ANPR + fuzzy trajectory linker
+│   ├── optimizer/
+│   │   └── signal_controller.py    # Webster signal optimizer + Pune TOD baseline fallback
+│   ├── data/
+│   │   └── pune_intersections.json # 8 smart intersections, road graph, camera registry
 │   ├── junction_router.py          # ATSC telemetry, regulation overrides, video ingestion
 │   ├── traffic_engine.py           # Pure synchronous ATSC state machine (PCU load arbiter)
 │   ├── video_engine.py             # Optional OpenCV + YOLOv8 MJPEG corridor streaming daemon
+│   ├── tests/
+│   │   └── test_engine.py          # ATSC engine unit tests
 │   ├── requirements.txt            # Python dependencies (FastAPI, SlowAPI, OpenCV, etc.)
 │   ├── routers/
 │   │   ├── auth.py                 # RBAC directory, RFC 6238 TOTP, SMS dispatch, session tokens
@@ -82,12 +96,33 @@ FlowCommand/
 │   │   └── vehicle.py              # Plate query and RTSP stream binding configurations
 │   ├── services/
 │   │   ├── anpr_engine.py          # Classical OpenCV contour filtering + Tesseract OCR
+│   │   ├── sms_service.py          # Pluggable SMS gateway (Twilio / Fast2SMS / webhook)
 │   │   ├── traffic_modulation.py   # 2D digitalized lane-occupancy grid and signal builder
+│   │   ├── traffic_simulation.py   # Simulated traffic flow generator
 │   │   ├── vehicle_registry.py     # Registry interface (Official API / Verified Demo Records)
-│   │   └── video_ingest.py         # Full-duration MOG2 background-subtraction vehicle density parser
+│   │   ├── video_ingest.py         # MOG2 background-subtraction vehicle density parser
+│   │   └── video_tracker.py        # Multi-object tracker with trajectory linking
 │   └── utils/
 │       ├── plate_validator.py      # Standard Indian license plate regex normalizer & validator
 │       └── rate_limiter.py         # SlowAPI IP/Session rate-limiting middleware
+├── frontend/                       # Gods-eye-view CesiumJS 3D spatial console integration
+│   ├── src/
+│   │   ├── layers/
+│   │   │   ├── pune-junctions/     # Real-time junction congestion + 3D signal totems
+│   │   │   ├── pune-cctv/          # CCTV viewshed cones + occlusion blind spots
+│   │   │   ├── anpr-trajectories/  # Cross-camera license plate path visualization
+│   │   │   └── green-corridor/     # Emergency vehicle route preemption overlay
+│   │   ├── styles/
+│   │   │   └── claheNightShader.js # CLAHE/glare/Sobel PostProcessStage for night feeds
+│   │   ├── ui/
+│   │   │   └── imagerySplit.js     # Static Timer vs AI Adaptive split-screen comparison
+│   │   └── voice/
+│   │       ├── actionSchemas.js    # Voice command parameter schemas
+│   │       └── gevActions.js       # Client-side voice action dispatcher
+│   ├── server/providers/openai/
+│   │   └── tools.js                # OpenAI Realtime function-calling tool definitions
+│   └── public/scenes/
+│       └── pune-sih-demo.json      # SIH demo scenario scene config
 ├── css/
 │   └── styles.css                  # Unified design system, glassmorphism HUD, cross-browser CSS
 ├── js/
@@ -99,13 +134,24 @@ FlowCommand/
 │   ├── i18n.js                     # Bilingual dictionary (English & Hindi)
 │   ├── sanitize.js                 # XSS prevention, safe DOM builder, plate sanitization
 │   └── telemetry_socket.js         # WebSocket auto-reconnect stream handler
-├── vims-frontend-export/           # Modern TanStack / Vite React frontend component library
+├── tools/launcher/
+│   ├── FlowCommand.cs              # Self-extracting .exe installer (C# 5, .NET 4.8)
+│   ├── FlowCommand.ico             # Application icon
+│   └── build.bat                   # Build script for FlowCommand.exe
+├── scripts/
+│   ├── start.bat                   # Windows startup script
+│   └── start.sh                    # Linux/macOS startup script
+├── assets/
+│   ├── favicon.svg                 # SVG traffic signal favicon
+│   ├── logo.png                    # FlowCommand logo
+│   ├── logo-mark.png               # Logo mark (dark)
+│   └── logo-mark-light.png         # Logo mark (light)
 ├── citizen.html                    # Citizen Services Portal
 ├── command.html                    # Maharashtra Police Pune Command Centre interface
 ├── dashboard.html                  # ICCC Command Centre dashboard view
 ├── index.html                      # Central Command Gateway (Dual Officer/Citizen Login)
 ├── .env.example                    # Template of all environment variables
-└── .gitignore                      # Git ignore rules for Python, Node, media, and secrets
+└── requirements.txt                # Root-level Python dependencies
 ```
 
 ---
@@ -256,6 +302,9 @@ Open `http://localhost:3000/index.html` in your browser.
 | **ANPR** | `POST` | `/api/anpr/scan-video` | End-to-end plate localization across full video |
 | **Registry** | `POST` | `/api/vehicle/lookup` | Indian license plate registry cross-reference |
 | **Telemetry** | `WS` | `/ws/telemetry` | Surveillance alerts & violation broadcast |
+| **GEV** | `WS` | `/ws/pune-telemetry` | 2 Hz junction state broadcast for gods-eye-view |
+| **GEV** | `GET` | `/api/cctv/pune-pack` | Camera registry with pose and coordinates |
+| **GEV** | `GET` | `/api/anpr/trajectory/{plate}` | GeoJSON cross-camera trajectory reconstruction |
 
 ---
 
