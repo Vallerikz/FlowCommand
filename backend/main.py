@@ -79,11 +79,14 @@ async def get_system_time():
     }
 
 # ── Include Routers ──
+from backend.api.main import api_router
+
 app.include_router(auth.router)
 app.include_router(telemetry.router)
 app.include_router(vehicle.router)
 app.include_router(anpr.router)
 app.include_router(junction_router.router)
+app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn

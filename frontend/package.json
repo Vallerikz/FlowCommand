@@ -1,0 +1,20 @@
+{
+  "name": "flowcommand-gods-eye-view",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "FlowCommand SIH26127 3D Spatial Intelligence Console for Pune Smart Intersections",
+  "scripts": {
+    "format": "node scripts/format.mjs --write",
+    "format:check": "node scripts/format.mjs --check",
+    "check:boundaries": "node scripts/check-import-directions.mjs && node scripts/check-package-boundaries.mjs"
+  },
+  "keywords": [
+    "cesium",
+    "spatial-intelligence",
+    "flowcommand",
+    "sih26127",
+    "pune-traffic"
+  ],
+  "author": "FlowCommand Team",
+  "license": "MIT"
+}
