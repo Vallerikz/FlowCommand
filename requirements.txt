@@ -1,0 +1,4 @@
+# Canonical dependency list lives in backend/requirements.txt
+# This stub is kept so launchers and docs that reference ./requirements.txt
+# (start.bat, README_PORTABLE.md) keep working with a single source of truth.
+-r backend/requirements.txt

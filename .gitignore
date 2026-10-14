@@ -62,14 +62,3 @@ yarn-error.log*
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Release Bundle Exclusion (Full source maintained on 'develop' branch)
-backend/
-css/
-js/
-assets/
-scripts/
-tools/
-*.html
-requirements.txt
-.env.example
