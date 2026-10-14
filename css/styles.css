@@ -1081,6 +1081,39 @@ a:hover { text-decoration: underline; }
   gap: 12px;
 }
 
+/* ─── Live Video Ingest & ANPR Intelligence (Live Tracking Bottom) ─── */
+.dash-grid .live-video-ingest-area {
+  grid-row: 3 / 4;
+  grid-column: 1 / 3;
+  margin-top: 4px;
+}
+
+.video-monitor-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  position: relative;
+}
+
+.live-ingest-keyframe-card {
+  background: var(--slate, #1e293b);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  min-width: 160px;
+  text-align: center;
+}
+
+.live-ingest-keyframe-img {
+  width: 144px;
+  height: 81px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* ─── Stats Cards (Right Column) ─── */
 .stat-card {
   background: var(--bg-card);
@@ -3046,6 +3079,9 @@ textarea.form-input {
   .dash-grid .bottom-area {
     grid-column: 1;
     grid-template-columns: 1fr;
+  }
+  .dash-grid .live-video-ingest-area {
+    grid-column: 1;
   }
 }
 
